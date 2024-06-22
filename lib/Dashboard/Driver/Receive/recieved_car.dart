@@ -112,7 +112,10 @@ class _ReceiveState extends State<Receive> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus(); // Ẩn bàn phím
+      },
       child: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -246,8 +249,6 @@ class _ReceiveState extends State<Receive> {
                     ),
                   ),
                 ),
-                
-                
                 SizedBox(height: 20),
                 Align(
                   alignment: Alignment.topLeft,

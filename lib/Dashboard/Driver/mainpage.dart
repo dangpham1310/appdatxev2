@@ -4,6 +4,7 @@ import './Home/home.dart';
 import './PickCar/pickcar.dart';
 import './Receive/recieved_car.dart';
 import 'History/history.dart';
+import 'Profile/profile.dart';
 
 void main() {
   runApp(DashboardApp());
@@ -12,7 +13,7 @@ void main() {
 class DashboardApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return CupertinoApp(
       home: Dashboard(),
     );
   }
@@ -50,22 +51,26 @@ class _DashboardState extends State<Dashboard> {
                   PickCar(),
                   Receive(),
                   HistoryPage(),
-                  PickCar(),
+                  ProfilePage(),
                 ],
               ),
             ),
-            CupertinoTabBar(
-              backgroundColor: Colors.white,
-              activeColor: Color(0xFF40B59F),
-              items: [
-                _bottomNavigationBarItem(Icons.home, 'Trang Chủ'),
-                _bottomNavigationBarItem(Icons.car_rental, 'Đặt Xe'),
-                _bottomNavigationBarItem(Icons.list, 'Nhận Xe'),
-                _bottomNavigationBarItem(Icons.history, 'Lịch Sử'),
-                _bottomNavigationBarItem(Icons.person, 'Hồ Sơ'),
-              ],
-              onTap: _onTabTapped,
-              currentIndex: _currentIndex,
+            // Ensure the CupertinoTabBar remains fixed at the bottom
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: CupertinoTabBar(
+                backgroundColor: Colors.white,
+                activeColor: Color(0xFF40B59F),
+                items: [
+                  _bottomNavigationBarItem(Icons.home, 'Trang Chủ'),
+                  _bottomNavigationBarItem(Icons.car_rental, 'Đặt Xe'),
+                  _bottomNavigationBarItem(Icons.list, 'Nhận Xe'),
+                  _bottomNavigationBarItem(Icons.history, 'Lịch Sử'),
+                  _bottomNavigationBarItem(Icons.person, 'Hồ Sơ'),
+                ],
+                onTap: _onTabTapped,
+                currentIndex: _currentIndex,
+              ),
             ),
           ],
         ),

@@ -154,35 +154,50 @@ class _PickCarDash2State extends State<PickCarDash2> {
 
   Widget _buildPriceTextField() {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8), // Adjust the radius as needed
-        border: Border.all(
-          color: Colors.blueGrey.shade300,
-          width: 1.5,
-        ),
-      ),
-      child: CupertinoTextField(
-        placeholder: 'Nhập Giá',
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        keyboardType: TextInputType.number,
-        prefix: Container(
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8), // Adjust the radius as needed
+          border: Border.all(
+            color: Colors.blueGrey.shade300,
+            width: 1.5,
           ),
-          child: Icon(
-            CupertinoIcons.money_dollar,
+        ),
+        child: CupertinoTextField(
+          placeholder: 'Nhập Giá',
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          keyboardType: TextInputType.number,
+          prefix: Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
+            child: Icon(
+              CupertinoIcons.money_dollar,
+              color: Colors.blueGrey.shade800,
+            ),
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          placeholderStyle: TextStyle(
+            fontWeight: FontWeight.w100, // Making the placeholder bold
             color: Colors.blueGrey.shade800,
           ),
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius:
-              BorderRadius.circular(8), // Adjust to match the outer container
-        ),
-      ),
-    );
+          prefixMode: OverlayVisibilityMode
+              .notEditing, // To show the prefix even when not editing
+          suffix: Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 10),
+            child: Text(
+              'K VND',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.blueGrey.shade800,
+              ),
+            ),
+          ),
+        ));
   }
 
   Widget _buildPhoneTextField() {

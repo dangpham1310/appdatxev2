@@ -6,13 +6,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'recent.dart';
 import 'pickcar_dash2.dart';
 
-void main() async {
-  // Initialize date formatting for Vietnamese
-  await initializeDateFormatting('vi', null);
-
-  runApp(PickCarGroup());
-}
-
 class PickCarGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -59,7 +52,9 @@ class _PickCarState extends State<PickCar> {
                     minimumDate: DateTime(2015, 8),
                     maximumDate: DateTime(2101),
                     onDateTimeChanged: (DateTime newDateTime) {
-                      selectedDate = newDateTime;
+                      setState(() {
+                        selectedDate = newDateTime;
+                      });
                     },
                   ),
                 ),
@@ -107,7 +102,9 @@ class _PickCarState extends State<PickCar> {
                       mode: CupertinoDatePickerMode.time,
                       initialDateTime: DateTime.now(),
                       onDateTimeChanged: (DateTime newDateTime) {
-                        selectedTime = TimeOfDay.fromDateTime(newDateTime);
+                        setState(() {
+                          selectedTime = TimeOfDay.fromDateTime(newDateTime);
+                        });
                       },
                     ),
                   ),
@@ -134,7 +131,10 @@ class _PickCarState extends State<PickCar> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus(); // Ẩn bàn phím
+      },
       child: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
