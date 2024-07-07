@@ -1,27 +1,38 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../Dashboard/Driver/mainpage.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../Dashboard/Customer/mainpage.dart';
 
-class PasswordScreen extends StatefulWidget {
-  const PasswordScreen({Key? key}) : super(key: key);
+class PasswordScreenCustomer extends StatefulWidget {
+  const PasswordScreenCustomer({Key? key}) : super(key: key);
 
   @override
   _PasswordScreenState createState() => _PasswordScreenState();
 }
 
-class _PasswordScreenState extends State<PasswordScreen> {
+class _PasswordScreenState extends State<PasswordScreenCustomer> {
   late List<TextEditingController> _controllers;
   late List<FocusNode> _focusNodes;
   final _scrollController = ScrollController(); // Add ScrollController
-
+  String phone = '';
   @override
   void initState() {
     super.initState();
     _controllers = List.generate(6, (index) => TextEditingController());
     _focusNodes = List.generate(6, (index) => FocusNode());
+    _loadPhone();
+  }
+
+  void _loadPhone() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      phone = prefs.getString('phone') ?? '';
+    });
   }
 
   @override
@@ -30,21 +41,45 @@ class _PasswordScreenState extends State<PasswordScreen> {
     String enteredOTP =
         _controllers.map((controller) => controller.text).join();
 
-    // Check if entered OTP is correct
-    if (enteredOTP == '123456') {
-      // Navigate to DriverPage if OTP is correct
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
+    ;
+    Future<void> _sendPassword() async {
+      final url = 'https://api.dantay.vn/API/authentication/login';
+
+      final response = await http.post(
+        Uri.parse(url),
+        body: {'phone': phone, 'password': enteredOTP},
       );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Mật Khẩu Sai'),
-          backgroundColor: Colors.red, // Background color of the Snackbar
-        ),
-      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+
+        if (responseData['accessToken'] != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('accessToken', responseData['accessToken']);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => DashboardApp()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Mật Khẩu không đúng'),
+            ),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Đã xảy ra lỗi'),
+          ),
+        );
+      }
     }
+
+    _sendPassword();
+
+    ;
   }
 
   void dispose() {
@@ -227,9 +262,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
                       ElevatedButton(
                         onPressed: _checkOTP,
                         style: ElevatedButton.styleFrom(
-                          primary: Color.fromARGB(
-                              255, 70, 196, 173), // Background color
-                          onPrimary: Colors.black, // Text color
+                          foregroundColor: Colors.black,
+                          backgroundColor:
+                              Color.fromARGB(255, 70, 196, 173), // Text color
                         ),
                         child: Text('Xác Nhận'),
                       )

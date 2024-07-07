@@ -1,23 +1,149 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import './../../../register/welcome.dart';
 
-class Information extends StatelessWidget {
+class Information extends StatefulWidget {
+  const Information({Key? key}) : super(key: key);
+
+  @override
+  State<Information> createState() => _InformationState();
+}
+
+class _InformationState extends State<Information> {
+  late String accessToken;
+  late Map<String, dynamic> driverInfo;
+  int isFirstLoad = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    driverInfo = {};
+    _loadProfile();
+  }
+
+  void _loadProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    accessToken = prefs.getString('accessToken') ?? '';
+    isFirstLoad = prefs.getInt("loadFirstTime") ?? 1;
+    print("loadFirstTime : $isFirstLoad");
+    if (isFirstLoad == 1) {
+      // Fetch driver information using accessToken for the first time
+      _fetchDriverInfo();
+      isFirstLoad = prefs.setInt("loadFirstTime", 0) as int;
+      print("loadFirstTime : $isFirstLoad");
+    } else {
+      // Load driver information from cache
+      _loadCachedDriverInfo();
+    }
+  }
+
+  void _fetchDriverInfo() async {
+    final url = 'https://api.dantay.vn/API/authentication/reload';
+    final response = await http.post(
+      Uri.parse(url),
+      body: {'accessToken': accessToken},
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      if (responseBody['message'] != "fail") {
+        setState(() {
+          driverInfo = responseBody; // Update driverInfo with fetched data
+          _cacheDriverInfo(driverInfo);
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to fetch profile data'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to load profile'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _loadCachedDriverInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? cachedDriverInfo = prefs.getString('driverInfo');
+
+    if (cachedDriverInfo != null) {
+      setState(() {
+        driverInfo = jsonDecode(cachedDriverInfo);
+      });
+    } else {
+      // If no cached data is found, fetch from the server
+      _fetchDriverInfo();
+    }
+  }
+
+  void _cacheDriverInfo(Map<String, dynamic> info) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('driverInfo', jsonEncode(info));
+  }
+
+  void _reloadDriverInfo() async {
+    final url = 'https://api.dantay.vn/API/authentication/reload';
+    final response = await http.post(
+      Uri.parse(url),
+      body: {'accessToken': accessToken},
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      if (responseBody['message'] != "fail") {
+        setState(() {
+          driverInfo = responseBody; // Update driverInfo with fetched data
+          _cacheDriverInfo(driverInfo);
+        });
+
+        // Update loadFirstTime to 1
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setInt('loadFirstTime', 1);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to reload profile data'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to reload profile'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle:
-            Text("Thông Tin Cá Nhân", style: TextStyle(color: Colors.white)),
+        middle: Text(
+          "Thông Tin Cá Nhân",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Color(0xFF40B59F),
         leading: GestureDetector(
           onTap: () {
-            // Handle the back button tap here
             Navigator.of(context).pop();
           },
           child: Container(
             child: Icon(
               CupertinoIcons.back,
-              color: Colors.white, // Set the color of the back button
+              color: Colors.white,
             ),
           ),
         ),
@@ -37,19 +163,22 @@ class Information extends StatelessWidget {
                   ),
                   SizedBox(width: 10),
                   Expanded(
-                      child: CupertinoTextField(
-                    placeholder: 'Họ và tên',
-                    prefix: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Icon(
-                        CupertinoIcons.person_solid,
-                        color: Color(0xFF40B59F),
+                    child: CupertinoTextField(
+                      placeholder: 'Họ và tên',
+                      prefix: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Icon(
+                          CupertinoIcons.person_solid,
+                          color: Color(0xFF40B59F),
+                        ),
                       ),
+                      controller:
+                          TextEditingController(text: driverInfo['name']),
+                      readOnly: true,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     ),
-                    controller: TextEditingController(text: 'Vũ Văn Lợi'),
-                    readOnly: true,
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                  )),
+                  ),
                 ],
               ),
               SizedBox(height: 10),
@@ -62,7 +191,7 @@ class Information extends StatelessWidget {
                     SizedBox(width: 5),
                     Expanded(
                       child: Text(
-                        'Địa chỉ: 123 Đường ABC, Quận XYZ, TP.HCM',
+                        'Địa chỉ: ${driverInfo['address'] ?? ''}',
                         style: TextStyle(
                           color: CupertinoColors.inactiveGray,
                         ),
@@ -76,9 +205,11 @@ class Information extends StatelessWidget {
                 placeholder: 'Số điện thoại',
                 prefix:
                     Icon(CupertinoIcons.phone_solid, color: Color(0xFF40B59F)),
-                controller: TextEditingController(text: '0899996922'),
+                controller:
+                    TextEditingController(text: driverInfo['phone'] ?? ''),
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 keyboardType: TextInputType.phone,
+                readOnly: true,
               ),
               SizedBox(height: 20),
               Text('Thông tin xe',
@@ -88,7 +219,7 @@ class Information extends StatelessWidget {
                 children: [
                   Icon(CupertinoIcons.car_detailed, color: Color(0xFF40B59F)),
                   SizedBox(width: 5),
-                  Text('Tên Xe: Vios'),
+                  Text('Tên Xe: ${driverInfo['vehicleType'] ?? ''}'),
                 ],
               ),
               Divider(),
@@ -96,7 +227,7 @@ class Information extends StatelessWidget {
                 children: [
                   Icon(CupertinoIcons.number, color: Color(0xFF40B59F)),
                   SizedBox(width: 5),
-                  Text('Biển Số Xe: 18A13845'),
+                  Text('Biển Số Xe: ${driverInfo['numberPlate'] ?? ''}'),
                 ],
               ),
               Divider(),
@@ -104,7 +235,7 @@ class Information extends StatelessWidget {
                 children: [
                   Icon(CupertinoIcons.person_2, color: Color(0xFF40B59F)),
                   SizedBox(width: 5),
-                  Text('Số chỗ: 4 chỗ'),
+                  Text('Số chỗ: ${driverInfo['vehicleSeat'] ?? ''}'),
                 ],
               ),
               Divider(),
@@ -117,22 +248,16 @@ class Information extends StatelessWidget {
                 children: [
                   Column(
                     children: [
-                      Image.network(
-                        'https://th.bing.com/th/id/OIP.Q8faPAB94taMrjToDsj3AwHaEp?rs=1&pid=ImgDetMain',
-                        width: 150,
-                        height: 150,
-                      ),
+                      _buildImage(
+                          driverInfo['driverLicenseFrontUrl'], 'Mặt Trước'),
                       SizedBox(height: 5),
                       Text('Mặt Trước'),
                     ],
                   ),
                   Column(
                     children: [
-                      Image.network(
-                        'https://th.bing.com/th/id/OIP.Q8faPAB94taMrjToDsj3AwHaEp?rs=1&pid=ImgDetMain',
-                        width: 150,
-                        height: 150,
-                      ),
+                      _buildImage(
+                          driverInfo['driverLicenseBackUrl'], 'Mặt Sau'),
                       SizedBox(height: 5),
                       Text('Mặt Sau'),
                     ],
@@ -145,16 +270,8 @@ class Information extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Image.network(
-                    'https://th.bing.com/th/id/OIP.THGKrfVAQSM7viki4CjQXAHaFj?w=2048&h=1536&rs=1&pid=ImgDetMain',
-                    width: 150,
-                    height: 150,
-                  ),
-                  Image.network(
-                    'https://th.bing.com/th/id/OIP.YIaIdbnkm0q60M8LdOyTzAHaFj?w=728&h=546&rs=1&pid=ImgDetMain',
-                    width: 150,
-                    height: 150,
-                  ),
+                  _buildImage(driverInfo['carFrontUrl'], 'Car Front'),
+                  _buildImage(driverInfo['carBackUrl'], 'Car Back'),
                 ],
               ),
               SizedBox(height: 20),
@@ -178,8 +295,14 @@ class Information extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     CupertinoButton(
-                      onPressed: () {
-                        // Handle Đăng Xuất action
+                      onPressed: () async  {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        await prefs.clear();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Welcome()),
+                        );
                       },
                       color: CupertinoColors.systemGrey,
                       child: Row(
@@ -199,5 +322,37 @@ class Information extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildImage(String? imageUrl, String placeholder) {
+    return imageUrl != null && imageUrl.isNotEmpty
+        ? Image.network(
+            imageUrl,
+            width: 150,
+            height: 150,
+            errorBuilder: (context, error, stackTrace) {
+              _reloadDriverInfo(); // Reload driver info if image fails to load
+              return Container(
+                width: 150,
+                height: 150,
+                color: CupertinoColors.systemGrey,
+                child: Icon(
+                  CupertinoIcons.clear,
+                  size: 50,
+                  color: CupertinoColors.white,
+                ),
+              );
+            },
+          )
+        : Container(
+            width: 150,
+            height: 150,
+            color: CupertinoColors.systemGrey,
+            child: Icon(
+              CupertinoIcons.clear,
+              size: 50,
+              color: CupertinoColors.white,
+            ),
+          );
   }
 }

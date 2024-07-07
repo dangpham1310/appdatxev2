@@ -127,8 +127,7 @@ class HistoryPage extends StatelessWidget {
                         builder: (context) => DetailsPage(
                           startPoint: startPoint,
                           endPoint: endPoint,
-                          bookerPhoneNumber: '0123456789',
-                          customerPhoneNumber: '0987654321',
+                          DriverPhoneNumber: '0987654321',
                         ),
                       ),
                     );

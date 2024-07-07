@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'done.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import './done.dart';
 
 class DriverGiayTo extends StatefulWidget {
   const DriverGiayTo({Key? key}) : super(key: key);
@@ -13,18 +15,105 @@ class DriverGiayTo extends StatefulWidget {
 }
 
 class _DriverGiayToState extends State<DriverGiayTo> {
-  List<XFile?> _images =
-      List<XFile?>.filled(6, null); // Separate list to track images
+  List<XFile?> _images = List<XFile?>.filled(6, null);
   final _licensePlateController = TextEditingController();
-  final _addressController = TextEditingController();
+
   final ImagePicker _picker = ImagePicker();
+  String phone = '';
+  String name = '';
+  String password = '';
+  String role = 'driver';
+  String referencePhone = '';
+  String vehicleType = '';
+  int vehicleSeat = 0;
+  String numberPlate = '';
+  String address = '';
+  String brandCar = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadPhone();
+  }
 
   Future<void> _pickImage(int index) async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        _images[index] = image;
-      });
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        setState(() {
+          _images[index] = image;
+        });
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+    }
+  }
+
+  Future<void> _loadPhone() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      phone = prefs.getString('phone') ?? '';
+      print(phone);
+      name = prefs.getString('name') ?? '';
+      password = prefs.getString('password') ?? '';
+      referencePhone = prefs.getString('referencePhone') ?? '';
+      address = prefs.getString('address') ?? '';
+      vehicleSeat = prefs.getInt('vehicleType') ?? 0;
+      brandCar = prefs.getString('brandCar') ?? '';
+    });
+  }
+
+  Future<void> _sendDataToServer() async {
+    var uri =
+        Uri.parse('https://api.dantay.vn/API/authentication/create_driver');
+    var request = http.MultipartRequest('POST', uri)
+      ..fields['phone'] = phone
+      ..fields['name'] = name
+      ..fields['password'] = password
+      ..fields['reference'] = referencePhone
+      ..fields['vehicleType'] = brandCar
+      ..fields['address'] = address
+      ..fields['vehicleSeat'] = vehicleSeat.toString()
+      ..fields['numberPlate'] = _licensePlateController.text;
+
+    // Attach images if they are picked
+    for (int i = 0; i < _images.length; i++) {
+      print("images i:$i");
+      if (_images[i] != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+          _getFieldNameForImage(i),
+          _images[i]!.path,
+        ));
+      }
+    }
+
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      print('Uploaded!');
+    } else {
+      print('Upload failed: ${response.statusCode}');
+    }
+  }
+
+  String _getFieldNameForImage(int index) {
+    switch (index) {
+      case 0:
+        return 'driverLicenseFront';
+      case 1:
+        return 'driverLicenseBack';
+      case 2:
+        return 'carFront';
+      case 3:
+        return 'carBack';
+      case 4:
+        return 'nationalCardFront';
+      case 5:
+        return 'nationalCardBack';
+      default:
+        return 'image$index';
     }
   }
 
@@ -283,6 +372,10 @@ class _DriverGiayToState extends State<DriverGiayTo> {
                     Center(
                       child: CupertinoButton(
                         onPressed: () {
+                          // Print base64 strings for debugging
+                          print(_images.map((img) => img?.path));
+                          _sendDataToServer();
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(

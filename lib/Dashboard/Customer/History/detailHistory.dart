@@ -5,14 +5,14 @@ import 'package:url_launcher/url_launcher.dart';
 class DetailsPage extends StatelessWidget {
   final String startPoint;
   final String endPoint;
-  final String bookerPhoneNumber;
-  final String customerPhoneNumber;
+
+  final String DriverPhoneNumber;
 
   DetailsPage({
     required this.startPoint,
     required this.endPoint,
-    required this.bookerPhoneNumber,
-    required this.customerPhoneNumber,
+    r,
+    required this.DriverPhoneNumber,
   });
 
   @override
@@ -152,22 +152,12 @@ class DetailsPage extends StatelessWidget {
               ),
               SizedBox(height: 32.0),
               Text(
-                'Số điện thoại người đặt:',
+                'Số điện thoại Tài Xế',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.0),
               ),
               SizedBox(height: 4.0),
               Text(
-                bookerPhoneNumber,
-                style: TextStyle(fontSize: 13.0, color: Colors.grey),
-              ),
-              SizedBox(height: 16.0),
-              Text(
-                'Số điện thoại khách hàng:',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.0),
-              ),
-              SizedBox(height: 4.0),
-              Text(
-                customerPhoneNumber,
+                DriverPhoneNumber,
                 style: TextStyle(fontSize: 14.0, color: Colors.grey),
               ),
               SizedBox(height: 32.0),
@@ -188,7 +178,7 @@ class DetailsPage extends StatelessWidget {
                         EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
                     color: CupertinoColors.activeBlue,
                     onPressed: () {
-                      _launchCaller(customerPhoneNumber);
+                      _launchCaller(DriverPhoneNumber);
                     },
                     child: Text('Liên hệ'),
                   ),

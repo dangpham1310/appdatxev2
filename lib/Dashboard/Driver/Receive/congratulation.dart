@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CongratulationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text("Chúc Mừng"),
+        middle: Text("Nhận Chuyến Thành Công",
+            style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF40B59F),
         leading: GestureDetector(
           onTap: () {
@@ -96,6 +98,26 @@ class CongratulationPage extends StatelessWidget {
                   label: "Ghi chú:",
                   value: "Có mang theo chó mèo",
                 ),
+                SizedBox(height: 10),
+                _buildInfoRow(
+                  icon: CupertinoIcons.phone,
+                  label: "Số điện thoại đặt:",
+                  value: "0123 456 789",
+                ),
+                SizedBox(height: 10),
+                _buildInfoRow(
+                  icon: CupertinoIcons.phone,
+                  label: "Số điện thoại khách:",
+                  value: "0987 654 321",
+                ),
+                SizedBox(height: 20),
+                CupertinoButton(
+                  color: Color(0xFF40B59F),
+                  child: Text("Gọi khách"),
+                  onPressed: () {
+                    _launchCaller("0987 654 321");
+                  },
+                ),
                 SizedBox(height: 20),
                 CupertinoButton(
                   color: Color(0xFF40B59F),
@@ -158,5 +180,15 @@ class CongratulationPage extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _launchCaller(String phoneNumber) async {
+    final url = 'tel:$phoneNumber';
+    print("Call");
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'input_giayto.dart';
 import './password_input_field/password_input_field.dart';
 
@@ -18,9 +19,10 @@ class _DriverInputState extends State<DriverInput> {
   final _confirmPasswordController = TextEditingController();
   final _addressController = TextEditingController();
   final _referencePhoneController = TextEditingController();
+  final _brandCar = TextEditingController();
   int _selectedVehicleType = 0;
 
-  void _validateInputs() {
+  void _validateInputs() async {
     String errorMessage = '';
     if (_nameController.text.isEmpty) {
       errorMessage = 'Vui lòng điền đầy đủ thông tin';
@@ -35,6 +37,15 @@ class _DriverInputState extends State<DriverInput> {
     if (errorMessage.isNotEmpty) {
       _showErrorDialog(errorMessage);
     } else {
+      // Save data to SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('name', _nameController.text);
+      await prefs.setString('password', _passwordController.text);
+      await prefs.setString('address', _addressController.text);
+      await prefs.setString('referencePhone', _referencePhoneController.text);
+      await prefs.setInt('vehicleType', _selectedVehicleType);
+      await prefs.setString('brandCar', _brandCar.text);
+
       // Change to the next screen
       Navigator.push(
         context,
@@ -115,7 +126,7 @@ class _DriverInputState extends State<DriverInput> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      SizedBox(height: 20.0),
+                      SizedBox(height: 10.0),
                       Text(
                         "Nhập Mật Khẩu",
                         style: TextStyle(
@@ -123,11 +134,18 @@ class _DriverInputState extends State<DriverInput> {
                             fontWeight: FontWeight.w900,
                             color: Colors.blueGrey[600]),
                       ),
-                      PasswordInputField(
+                      CupertinoTextField(
                         controller: _passwordController,
-                        placeholder: 'Mật Khẩu (Điền 6 số)',
+                        placeholder: 'Nhập 6 Số',
+                        maxLength: 6,
+                        keyboardType: TextInputType.number,
+                        padding: EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
-                      SizedBox(height: 20.0),
+                      SizedBox(height: 10.0),
                       Text(
                         "Xác Nhận Mật Khẩu",
                         style: TextStyle(
@@ -135,10 +153,20 @@ class _DriverInputState extends State<DriverInput> {
                             fontWeight: FontWeight.w900,
                             color: Colors.blueGrey[600]),
                       ),
-                      PasswordInputField(
+                      SizedBox(height: 10.0),
+                      CupertinoTextField(
                         controller: _confirmPasswordController,
-                        placeholder: 'Xác Nhận Mật Khẩu',
+                        placeholder: 'Nhập 6 Số',
+                        maxLength: 6,
+                        keyboardType: TextInputType.number,
+                        padding: EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
+                      SizedBox(height: 20.0),
+                      Divider(),
                       SizedBox(height: 20.0),
                       Center(
                         child: CupertinoTextField(
@@ -225,6 +253,20 @@ class _DriverInputState extends State<DriverInput> {
                             ),
                           ),
                         ],
+                      ),
+                      SizedBox(height: 5.0),
+                      Center(
+                        child: CupertinoTextField(
+                          controller:
+                              _brandCar, // Use different controller for address
+                          placeholder: 'Hãng Xe',
+                          keyboardType: TextInputType.text,
+                          padding: EdgeInsets.all(12.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
                       ),
                       SizedBox(height: 20.0),
                       Center(

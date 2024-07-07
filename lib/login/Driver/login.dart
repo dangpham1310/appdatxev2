@@ -1,27 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'driver_customer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../Dashboard/Driver/mainpage.dart';
 
-class OTPScreen extends StatefulWidget {
-  const OTPScreen({Key? key}) : super(key: key);
+class PasswordScreen extends StatefulWidget {
+  const PasswordScreen({Key? key}) : super(key: key);
 
   @override
-  _OTPScreenState createState() => _OTPScreenState();
+  _PasswordScreenState createState() => _PasswordScreenState();
 }
 
-class _OTPScreenState extends State<OTPScreen> {
-  final TextEditingController _otpController = TextEditingController();
-  final _scrollController = ScrollController();
+class _PasswordScreenState extends State<PasswordScreen> {
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   String phone = '';
 
   @override
   void initState() {
     super.initState();
     _loadPhone();
-    Future.delayed(Duration(milliseconds: 500), sendOTPfromServer);
   }
 
   Future<void> _loadPhone() async {
@@ -31,47 +32,29 @@ class _OTPScreenState extends State<OTPScreen> {
     });
   }
 
-  Future<void> sendOTPfromServer() async {
-    var url =
-        Uri.parse('https://api.dantay.vn/API/authentication/register/$phone');
-    await http.post(url);
-  }
+  void _checkOTP() async {
+    String enteredOTP = _controller.text;
+    final url = 'https://api.dantay.vn/API/authentication/login';
+    final response = await http.post(Uri.parse(url), body: {
+      'phone': phone,
+      'password': enteredOTP,
+    });
+    final Map<String, dynamic> responseBody = jsonDecode(response.body);
+    if (responseBody['message'] != "fail") {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('accessToken', responseBody['accessToken']);
+      await prefs.setString("name", responseBody['name']);
+      await prefs.setString("coin", responseBody['coin'].toString());
+      await prefs.setInt("loadFirstTime", 1);
 
-  Future<void> _checkOTP() async {
-    String enteredOTP = _otpController.text;
-    if (enteredOTP.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('OTP phải có 6 chữ số.'),
-          backgroundColor: Colors.red,
-        ),
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
       );
-      return;
-    }
-
-    var url = Uri.parse('https://api.dantay.vn/API/authentication/checkOTP');
-    var response =
-        await http.post(url, body: {'phone': phone, 'OTP': enteredOTP});
-
-    if (response.statusCode == 200) {
-      var jsonResponse = jsonDecode(response.body);
-      if (jsonResponse["message"] == "success") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Driver_Customer()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('OTP Không Chính Xác. Vui Lòng Thử Lại.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Server error. Please try again later.'),
+          content: Text('Mật Khẩu Sai lè rồi tài x'),
           backgroundColor: Colors.red,
         ),
       );
@@ -80,7 +63,8 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   void dispose() {
-    _otpController.dispose();
+    _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -89,13 +73,12 @@ class _OTPScreenState extends State<OTPScreen> {
     return Material(
       child: Scaffold(
         body: SingleChildScrollView(
-          controller: _scrollController,
           child: Stack(
             children: [
               Container(
                 color: Colors.white,
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height / 1,
+                height: MediaQuery.of(context).size.height,
               ),
               Container(
                 decoration: BoxDecoration(
@@ -115,9 +98,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      SizedBox(
-                        height: 110,
-                      ),
+                      SizedBox(height: 110),
                       Transform.scale(
                         scale: 1.0,
                         child: Image.asset(
@@ -138,9 +119,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      SizedBox(
-                        height: 110,
-                      ),
+                      SizedBox(height: 110),
                       Transform.scale(
                         scale: 2.0,
                         child: Image.asset(
@@ -162,7 +141,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Vui lòng nhập OTP đã được gửi qua Zalo',
+                        'Vui lòng nhập Mật Khẩu',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -170,16 +149,19 @@ class _OTPScreenState extends State<OTPScreen> {
                           fontFamily: 'Pacifico',
                         ),
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
+                      SizedBox(height: 15),
                       Container(
                         width: 240,
                         child: CupertinoTextField(
-                          controller: _otpController,
+                          controller: _controller,
+                          focusNode: _focusNode,
                           keyboardType: TextInputType.number,
-                          maxLength: 6,
                           textAlign: TextAlign.center,
+                          maxLength: 6,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(6),
+                          ],
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(color: Colors.grey),
@@ -187,28 +169,14 @@ class _OTPScreenState extends State<OTPScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.80,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
+                      SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: _checkOTP,
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
                           backgroundColor: Color.fromARGB(255, 70, 196, 173),
                         ),
-                        child: Text('Xác Nhận OTP'),
+                        child: Text('Xác Nhận'),
                       ),
                     ],
                   ),

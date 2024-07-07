@@ -12,7 +12,6 @@ class _RecentState extends State<Recent> {
   final String pickUpPoint = "Địa chỉ điểm đón";
   final String destination = "Địa chỉ điểm đến";
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(

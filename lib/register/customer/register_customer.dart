@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../driver/password_input_field/password_input_field.dart';
-
-const double _kItemExtent = 32.0;
-const List<String> _vehicleTypes = ['Xe 4 Chỗ', 'Xe 7 Chỗ'];
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:water_reminder/Dashboard/Customer/mainpage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class CustomerInput extends StatefulWidget {
   const CustomerInput({Key? key}) : super(key: key);
+
   @override
   _CustomerInputState createState() => _CustomerInputState();
 }
@@ -15,11 +16,24 @@ class _CustomerInputState extends State<CustomerInput> {
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _addressController = TextEditingController();
   final _referencePhoneController = TextEditingController();
-  int _selectedVehicleType = 0;
+  String phone = "";
 
-  void _validateInputs() {
+  @override
+  void initState() {
+    super.initState();
+
+    _loadPhone();
+  }
+
+  Future<void> _loadPhone() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      phone = prefs.getString('phone') ?? '';
+    });
+  }
+
+  void _validateInputs() async {
     String errorMessage = '';
     if (_nameController.text.isEmpty) {
       errorMessage = 'Vui lòng điền đầy đủ thông tin';
@@ -34,13 +48,41 @@ class _CustomerInputState extends State<CustomerInput> {
     if (errorMessage.isNotEmpty) {
       _showErrorDialog(errorMessage);
     } else {
-      // Change to the next screen
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => DriverGiayTo(),
-      //   ),
-      // );
+      bool success = await _saveData();
+      // if (success) {
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => Dashboard(),
+      //     ),
+      //   );
+      // } else {
+      //   _showErrorDialog('Đăng ký thất bại. Vui lòng thử lại.');
+      // }
+    }
+  }
+
+  Future<bool> _saveData() async {
+    try {
+      var uri =
+          Uri.parse('https://api.dantay.vn/API/authentication/create_customer');
+      var response = await http.post(uri, body: {
+        'phone': phone,
+        'name': _nameController.text,
+        'password': _passwordController.text,
+        'reference': _referencePhoneController.text,
+      });
+
+      if (response.statusCode == 200) {
+        var jsonResponse = json.decode(response.body);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('accessToken', jsonResponse['accessToken']);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
     }
   }
 
@@ -123,9 +165,17 @@ class _CustomerInputState extends State<CustomerInput> {
                             color: Colors.blueGrey[600]),
                       ),
                       SizedBox(height: 10.0), // SizedBox to add spacing
-                      PasswordInputField(
+                      CupertinoTextField(
                         controller: _passwordController,
-                        placeholder: 'Mật Khẩu (Điền 6 số)',
+                        placeholder: 'Mật Khâu',
+                        keyboardType: TextInputType.number,
+                        obscureText: true,
+                        maxLength: 6,
+                        padding: EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
                       SizedBox(height: 20.0),
                       Text(
@@ -136,15 +186,22 @@ class _CustomerInputState extends State<CustomerInput> {
                             color: Colors.blueGrey[600]),
                       ),
                       SizedBox(height: 10.0),
-                      PasswordInputField(
+                      CupertinoTextField(
                         controller: _confirmPasswordController,
                         placeholder: 'Xác Nhận Mật Khẩu',
+                        keyboardType: TextInputType.number,
+                        obscureText: true,
+                        maxLength: 6,
+                        padding: EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
                       SizedBox(height: 20.0),
                       Center(
                         child: CupertinoTextField(
-                          controller:
-                              _referencePhoneController, // Use different controller for address
+                          controller: _referencePhoneController,
                           placeholder: 'Số Điện Thoại Người Giới Thiệu',
                           keyboardType: TextInputType.number,
                           padding: EdgeInsets.all(12.0),
@@ -179,29 +236,12 @@ class _CustomerInputState extends State<CustomerInput> {
     );
   }
 
-  void _showDialog(Widget child) {
-    showCupertinoModalPopup<void>(
-      context: context,
-      builder: (BuildContext context) => Container(
-        height: 216,
-        padding: const EdgeInsets.only(top: 6.0),
-        margin:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        color: CupertinoColors.systemBackground.resolveFrom(context),
-        child: SafeArea(
-          top: false,
-          child: child,
-        ),
-      ),
-    );
-  }
-
   @override
   void dispose() {
     _nameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _addressController.dispose();
+    _referencePhoneController.dispose();
     super.dispose();
   }
 }

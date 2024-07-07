@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import './driver/inputname.dart';
 import './customer/register_customer.dart';
 
-class DriverPage extends StatelessWidget {
-  const DriverPage({Key? key}) : super(key: key);
+class Driver_Customer extends StatelessWidget {
+  const Driver_Customer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +46,7 @@ class DriverPage extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF40B59F), // Green background color
-                      onPrimary: Colors.white, // Text color
+                      foregroundColor: Colors.white, backgroundColor: Color(0xFF40B59F), // Text color
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10), // Round border
                       ),
@@ -69,8 +68,7 @@ class DriverPage extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF40B59F), // Green background color
-                      onPrimary: Colors.white, // Text color
+                      foregroundColor: Colors.white, backgroundColor: Color(0xFF40B59F), // Text color
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10), // Round border
                       ),

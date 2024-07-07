@@ -1,7 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import './OTPScreen.dart';
-import '../login/login.dart'; // Import your PasswordScreen widget
+import '../login/Driver/login.dart'; // Import your PasswordScreen widget
+import '../login/Customer/login.dart'; // Import your PasswordScreenCustomer widget
 
 class NextScreen extends StatelessWidget {
   final TextEditingController _phoneController = TextEditingController();
@@ -55,37 +60,8 @@ class NextScreen extends StatelessWidget {
                 left: 0,
                 right: 0,
                 child: GestureDetector(
-                  onTap: () {
-                    // Check if phone number is '0923150572'
-                    if (_phoneController.text == '0923150572') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PasswordScreen()),
-                      );
-                    } else {
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  OTPScreen(),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            var begin = Offset(0.5, 0.0);
-                            var end = Offset.zero;
-                            var curve = Curves.easeInOut;
-                            var tween = Tween(begin: begin, end: end)
-                                .chain(CurveTween(curve: curve));
-                            var offsetAnimation = animation.drive(tween);
-                            return SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            );
-                          },
-                        ),
-                      );
-                    }
+                  onTap: () async {
+                    await _postNumber(context);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -134,8 +110,7 @@ class NextScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 55, vertical: 5.0),
                   child: CupertinoTextField(
                     controller: _phoneController,
-                    keyboardType:
-                        TextInputType.phone, // Set keyboard type to phone
+                    keyboardType: TextInputType.phone,
                     prefix: Padding(
                       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                       child: Icon(
@@ -165,5 +140,75 @@ class NextScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _postNumber(BuildContext context) async {
+    final phone = _phoneController.text;
+
+    if (phone.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Bạn Phải nhập số điện thoại'),
+        ),
+      );
+      return;
+    }
+
+    final url = 'https://api.dantay.vn/API/authentication/login_register';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {'phone': phone},
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        final message = responseBody['message'];
+        final role = responseBody['role'];
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('phone', phone);
+        print('Role: $role');
+        if (message == 'login') {
+          if (role == "driver") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PasswordScreen()),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PasswordScreenCustomer()),
+            );
+          }
+        } else if (message == 'register') {
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  OTPScreen(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                var begin = Offset(0.5, 0.0);
+                var end = Offset.zero;
+                var curve = Curves.easeInOut;
+                var tween = Tween(begin: begin, end: end)
+                    .chain(CurveTween(curve: curve));
+                var offsetAnimation = animation.drive(tween);
+                return SlideTransition(
+                  position: offsetAnimation,
+                  child: child,
+                );
+              },
+            ),
+          );
+        }
+      } else {
+        print('Server error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +17,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String name = 'Loading...';
-  String coin = '\$100.00';
+  int coin = 100;
 
   @override
   void initState() {
@@ -26,14 +28,28 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
-    name = prefs.getString('name') ?? 'Loading...';
-    coin = prefs.getString('coin') ?? '\$100.00';
+
     if (accessToken != null) {
       var response = await http.post(
-        Uri.parse('https://api.dantay.vn/API/authentication/getCoin'),
+        Uri.parse('https://api.dantay.vn/API/authentication/getProfile'),
         body: {'accessToken': accessToken},
       );
-      var data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['coin'] != 'fail') {
+          setState(() {
+            name = data['name'];
+            coin = data['coin'];
+          });
+        } else {
+          // Handle the failure case here
+          print('Failed to load profile');
+        }
+      } else {
+        // Handle the error case here
+        print('Error fetching profile');
+      }
     }
   }
 
@@ -93,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          "\$" + coin,
+                          "\$" + coin.toString(),
                           style: TextStyle(
                             color: CupertinoColors.white,
                             fontSize: 16,
