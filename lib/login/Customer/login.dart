@@ -56,6 +56,8 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
         if (responseData['accessToken'] != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('accessToken', responseData['accessToken']);
+          await prefs.setBool('isLoggedInDriver', false); // Set the login flag
+          await prefs.setBool('isLoggedInCustomer', true);
 
           Navigator.push(
             context,

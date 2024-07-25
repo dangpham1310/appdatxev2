@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:ffi';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import './../../Customer/PickCar/congratulation.dart';
 
 class PickCarDash2 extends StatefulWidget {
   @override
@@ -8,6 +13,44 @@ class PickCarDash2 extends StatefulWidget {
 
 class _PickCarDash2State extends State<PickCarDash2> {
   String selectedSeat = ''; // Default selected seat number
+  double distance = 0.0; // Default distance
+  int price = 0; // Default price
+  double constPrice = 0.0; // Default price
+  @override
+  void initState() {
+    super.initState();
+    _initializeSavedRole();
+  }
+
+  Future<double> postData(double currentDistance) async {
+    String url = 'https://api.dantay.vn/api/price';
+
+    final response = await http.post(
+      Uri.parse(url),
+      body: {'distance': '${currentDistance / 1000}'},
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> parsedJson = json.decode(response.body);
+      print(
+          'Distance: ${currentDistance / 1000} - Price: ${parsedJson['price']}');
+      return parsedJson['price'];
+    }
+    throw Exception('Failed to load data');
+  }
+
+  Future<void> _initializeSavedRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    double savedDistance = prefs.getDouble('distance') ?? 0.0;
+    double fetchedPrice = await postData(savedDistance);
+    int roundedPrice = fetchedPrice.round(); // Convert to integer by rounding
+
+    setState(() {
+      distance = savedDistance;
+      price = roundedPrice; // Convert back to double if needed
+      constPrice = fetchedPrice;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +113,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                         Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Text(
-                            'Giá Đề Xuất: 100K VND',
+                            'Giá Đề Xuất: $price nghìn VND',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -100,7 +143,21 @@ class _PickCarDash2State extends State<PickCarDash2> {
                 Center(
                   child: CupertinoButton(
                     onPressed: () {
-                      // Handle button press
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => PickCarDone(
+                            tripDate: '2024-07-21',
+                            tripTime: '14:00',
+                            pickupPoint: 'Cái này để địa chỉ',
+                            destination: 'Này cũng để địa chỉ',
+                            duration: '30 phút',
+                            seats: '2 ghế',
+                            notes: 'Đưa theo tài liệu quan trọng.',
+                            price: "100",
+                          ),
+                        ),
+                      );
                     },
                     color: Color(0xFF276F61),
                     child: Text('Đặt Xe'),
@@ -300,7 +357,19 @@ class _PickCarDash2State extends State<PickCarDash2> {
               onPressed: () {
                 setState(() {
                   selectedSeat = seat;
+                  print("Selected Seat $selectedSeat");
+                  if (selectedSeat == "1") {
+                    price = (constPrice * 1).round();
+                  } else if (selectedSeat == "2") {
+                    price = (constPrice * 1.9).round();
+                  } else if (selectedSeat == "Bao 4") {
+                    price = (constPrice * 2.8).round();
+                  } else if (selectedSeat == "Bao 7") {
+                    price = (constPrice * 3.7).round();
+                  }
+                  print("updatePrice: $price");
                 });
+
                 Navigator.pop(context); // Close the modal sheet
               },
               child: Text(seat),

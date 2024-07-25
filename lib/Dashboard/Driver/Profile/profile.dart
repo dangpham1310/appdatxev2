@@ -26,14 +26,31 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
-    name = prefs.getString('name') ?? 'Loading...';
-    coin = prefs.getString('coin') ?? '\$100.00';
+    setState(() {
+      name = prefs.getString('name') ?? 'Loading...';
+      coin = prefs.getString('coin') ?? '\$100.00';
+    });
+
     if (accessToken != null) {
       var response = await http.post(
         Uri.parse('https://api.dantay.vn/API/authentication/getCoin'),
         body: {'accessToken': accessToken},
       );
-      var data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['coin'] != 'fail') {
+          setState(() {
+            coin = data['coin'];
+          });
+        } else {
+          // Handle the failure case here
+          print('Failed to load profile');
+        }
+      } else {
+        // Handle the error case here
+        print('Error fetching profile');
+      }
     }
   }
 
@@ -93,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          "\$" + coin,
+                          coin,
                           style: TextStyle(
                             color: CupertinoColors.white,
                             fontSize: 16,

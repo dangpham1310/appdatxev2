@@ -59,7 +59,7 @@ class CongratulationPage extends StatelessWidget {
                 SizedBox(height: 20),
                 _buildInfoRow(
                   icon: CupertinoIcons.location_solid,
-                  label: "Điểm đi:",
+                  label: "Điểm đón:",
                   value: "Nhà Nghỉ An Khánh, Vũ Bản, Bình Lục, Hà Nam",
                 ),
                 SizedBox(height: 10),

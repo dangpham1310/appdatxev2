@@ -1,9 +1,43 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import "./phone_screen.dart";
+import '../Dashboard/Driver/mainpage.dart';
+import '../Dashboard/Customer/mainpage.dart';
 
-class Welcome extends StatelessWidget {
+class Welcome extends StatefulWidget {
   const Welcome({Key? key}) : super(key: key);
+
+  @override
+  _WelcomeState createState() => _WelcomeState();
+}
+
+class _WelcomeState extends State<Welcome> {
+  @override
+  void initState() {
+    super.initState();
+    _checkAutoLogin();
+  }
+
+  Future<void> _checkAutoLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    bool isLoggedInDriver = prefs.getBool('isLoggedInDriver') ?? false;
+    bool isLoggedInCustomer = prefs.getBool('isLoggedInCustomer') ?? false;
+    print(isLoggedInDriver);
+    print(isLoggedInCustomer);
+    if (isLoggedInDriver) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardDriver()),
+      );
+    } else if (isLoggedInCustomer) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

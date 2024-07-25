@@ -46,10 +46,12 @@ class _PasswordScreenState extends State<PasswordScreen> {
       await prefs.setString("name", responseBody['name']);
       await prefs.setString("coin", responseBody['coin'].toString());
       await prefs.setInt("loadFirstTime", 1);
+      await prefs.setBool('isLoggedInDriver', true); // Set the login flag
+      await prefs.setBool('isLoggedInCustomer', false); // Set the login flag
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
+        MaterialPageRoute(builder: (context) => DashboardDriver()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

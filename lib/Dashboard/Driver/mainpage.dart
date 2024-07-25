@@ -6,25 +6,12 @@ import './Receive/recieved_car.dart';
 import 'History/history.dart';
 import 'Profile/profile.dart';
 
-void main() {
-  runApp(DashboardApp());
-}
-
-class DashboardApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoApp(
-      home: Dashboard(),
-    );
-  }
-}
-
-class Dashboard extends StatefulWidget {
+class DashboardDriver extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends State<DashboardDriver> {
   int _currentIndex = 0;
 
   void _onTabTapped(int index) {
