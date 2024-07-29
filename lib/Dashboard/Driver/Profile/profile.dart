@@ -16,6 +16,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String name = 'Loading...';
   String coin = '\$100.00';
+  String phone = '';
 
   @override
   void initState() {
@@ -42,6 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
         if (data['coin'] != 'fail') {
           setState(() {
             coin = data['coin'];
+            phone = data['phone'];
           });
         } else {
           // Handle the failure case here
@@ -51,6 +53,8 @@ class _ProfilePageState extends State<ProfilePage> {
         // Handle the error case here
         print('Error fetching profile');
       }
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('phone', phone);
     }
   }
 

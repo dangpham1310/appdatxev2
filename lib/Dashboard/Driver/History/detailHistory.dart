@@ -7,13 +7,14 @@ class DetailsPage extends StatelessWidget {
   final String endPoint;
   final String bookerPhoneNumber;
   final String customerPhoneNumber;
+  final int idHistory;
 
-  DetailsPage({
-    required this.startPoint,
-    required this.endPoint,
-    required this.bookerPhoneNumber,
-    required this.customerPhoneNumber,
-  });
+  DetailsPage(
+      {required this.startPoint,
+      required this.endPoint,
+      required this.bookerPhoneNumber,
+      required this.customerPhoneNumber,
+      required this.idHistory});
 
   @override
   Widget build(BuildContext context) {

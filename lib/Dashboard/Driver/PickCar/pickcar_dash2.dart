@@ -12,6 +12,12 @@ class PickCarDash2 extends StatefulWidget {
 }
 
 class _PickCarDash2State extends State<PickCarDash2> {
+  TextEditingController _priceController = TextEditingController();
+  TextEditingController _phonenumberController = TextEditingController();
+  TextEditingController _phonenumberpickController = TextEditingController();
+  TextEditingController _noteController = TextEditingController();
+
+  String phone = '';
   String selectedSeat = ''; // Default selected seat number
   double distance = 0.0; // Default distance
   int price = 0; // Default price
@@ -24,7 +30,6 @@ class _PickCarDash2State extends State<PickCarDash2> {
 
   Future<double> postData(double currentDistance) async {
     String url = 'https://api.dantay.vn/api/price';
-
     final response = await http.post(
       Uri.parse(url),
       body: {'distance': '${currentDistance / 1000}'},
@@ -43,6 +48,8 @@ class _PickCarDash2State extends State<PickCarDash2> {
     final prefs = await SharedPreferences.getInstance();
     double savedDistance = prefs.getDouble('distance') ?? 0.0;
     double fetchedPrice = await postData(savedDistance);
+    final accessToken = prefs.getString('accessToken');
+    phone = await prefs.getString('phone') ?? '';
     int roundedPrice = fetchedPrice.round(); // Convert to integer by rounding
 
     setState(() {
@@ -142,19 +149,101 @@ class _PickCarDash2State extends State<PickCarDash2> {
                 SizedBox(height: 20),
                 Center(
                   child: CupertinoButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      Future<String> getPhoneAndSave() async {
+                        final prefs = await SharedPreferences.getInstance();
+                        final accessToken =
+                            prefs.getString('accessToken') ?? '';
+
+                        String url =
+                            'https://api.dantay.vn/API/authentication/getPhone';
+
+                        try {
+                          final response = await http.post(
+                            Uri.parse(url),
+                            body: {'accessToken': accessToken},
+                          );
+
+                          if (response.statusCode == 200) {
+                            Map<String, dynamic> responseData =
+                                json.decode(response.body);
+                            String phone =
+                                responseData['phone'] ?? ''; // Handle null case
+                            print("This is phone: $phone");
+
+                            // Save the phone number to SharedPreferences
+                            await prefs.setString('phone', phone);
+
+                            return phone;
+                          } else {
+                            // Handle non-200 status codes
+                            print(
+                                'Failed to retrieve phone number: ${response.statusCode}');
+                            return '';
+                          }
+                        } catch (e) {
+                          // Handle exceptions
+                          print(
+                              'Error occurred while fetching phone number: $e');
+                          return '';
+                        }
+                      }
+
+                      Future<void> postData() async {
+                        String phone =
+                            await getPhoneAndSave(); // Get the phone number first
+                        print("pick phone with this phone number: $phone");
+                        String url = 'https://api.dantay.vn/api/pickcar';
+                        final prefs = await SharedPreferences.getInstance();
+                        final response = await http.post(
+                          Uri.parse(url),
+                          body: {
+                            'pickUp': prefs.getString('pickUp') ?? '',
+                            'pickDrop': prefs.getString('pickDrop') ?? '',
+                            'date': prefs.getString('date') ?? '',
+                            'time': prefs.getString('time') ?? '',
+                            'numberofSeat': selectedSeat,
+                            'price': _priceController.text,
+                            'phonenumber': _phonenumberController.text,
+                            'phonenumberpick':
+                                phone, // Use the phone number obtained
+                            'note': _noteController.text,
+                          },
+                        );
+
+                        if (response.statusCode == 200) {
+                          print("Post data successfully");
+                          print(response.body);
+                        } else {
+                          throw Exception('Failed to post data');
+                        }
+                      }
+
+                      void performPostDataOperation() async {
+                        await postData();
+                      }
+
+// Call this function where needed, for example, in your button's onPressed:
+                      performPostDataOperation();
+
+                      final prefs = await SharedPreferences.getInstance();
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
                           builder: (context) => PickCarDone(
-                            tripDate: '2024-07-21',
-                            tripTime: '14:00',
-                            pickupPoint: 'Cái này để địa chỉ',
-                            destination: 'Này cũng để địa chỉ',
-                            duration: '30 phút',
-                            seats: '2 ghế',
-                            notes: 'Đưa theo tài liệu quan trọng.',
-                            price: "100",
+                            tripDate: prefs.getString('date') ??
+                                'Ngày chuyến đi', // Ngày chuyến đi từ SharedPreferences
+                            tripTime: prefs.getString('time') ??
+                                'Giờ chuyến đi', // Giờ chuyến đi từ SharedPreferences
+                            pickupPoint: prefs.getString('pickUp') ??
+                                'Địa chỉ đón', // Điểm đón từ SharedPreferences
+                            destination: prefs.getString('pickDrop') ??
+                                'Địa chỉ đến', // Điểm đến từ SharedPreferences // Thay thế bằng thời gian thực tế nếu có
+                            seats: selectedSeat, // Số ghế đã chọn
+                            notes: _noteController
+                                .text, // Ghi chú từ trường nhập liệu ghi chú
+                            price: _priceController
+                                .text, // Giá từ trường nhập liệu giá
                           ),
                         ),
                       );
@@ -219,6 +308,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
           ),
         ),
         child: CupertinoTextField(
+          controller: _priceController,
           placeholder: 'Nhập Giá',
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           keyboardType: TextInputType.number,
@@ -267,6 +357,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
         ),
       ),
       child: CupertinoTextField(
+        controller: _phonenumberController,
         placeholder: 'Nhập Số Điện Thoại Khách',
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         keyboardType: TextInputType.number,
@@ -314,6 +405,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
             ],
           ),
           child: CupertinoTextField(
+            controller: _noteController,
             placeholder: 'Ghi Chú',
             padding: EdgeInsets.zero,
             keyboardType: keyboardType,

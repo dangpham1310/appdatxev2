@@ -511,14 +511,29 @@ class _PickCarState extends State<PickCar> {
                             color: Color(0xFF276F61),
                             child: Text("Xác Nhận"),
                             onPressed: () async {
+                              Future<void> saveTimeOfDay(TimeOfDay time) async {
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                final formattedTime =
+                                    '${time.hour}:${time.minute}';
+                                await prefs.setString('time', formattedTime);
+                              }
+
+                              saveTimeOfDay(selectedTime);
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
                               await prefs.setString(
-                                  'pickUpPoint', _pickUpController.text);
+                                  'pickUp', _pickUpController.text);
                               await prefs.setString(
-                                  'destination', _dropOffController.text);
+                                  'pickDrop', _dropOffController.text);
+                              await prefs.setString('date', formattedDate);
+                              await prefs.setString('time',
+                                  '${selectedTime.hour}:${selectedTime.minute}');
+                              await prefs.setString(
+                                  'seat', _seatController.text);
+
                               distance = await fetchDistance();
-                              print("Distance is: $distance");
+
                               await prefs.setDouble('distance', distance);
                               Navigator.of(context).push(
                                 CupertinoPageRoute(

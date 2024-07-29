@@ -7,7 +7,7 @@ class PickCarDone extends StatelessWidget {
   final String tripTime;
   final String pickupPoint;
   final String destination;
-  final String duration;
+
   final String seats; // Number of seats
   final String notes; // Additional notes
   final String price; // Trip price
@@ -17,7 +17,6 @@ class PickCarDone extends StatelessWidget {
     required this.tripTime,
     required this.pickupPoint,
     required this.destination,
-    required this.duration,
     required this.seats,
     required this.notes,
     required this.price,
@@ -72,11 +71,7 @@ class PickCarDone extends StatelessWidget {
                 label: 'Điểm Đón:',
                 value: destination,
               ),
-              tripDetailRow(
-                icon: CupertinoIcons.clock,
-                label: 'Thời Gian:',
-                value: duration,
-              ),
+
               tripDetailRow(
                 icon: CupertinoIcons.person_2,
                 label: 'Số Ghế:',
