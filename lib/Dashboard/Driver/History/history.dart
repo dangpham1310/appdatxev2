@@ -43,8 +43,8 @@ class History {
       phonenumber: json['phonenumber'].toString(),
       phonenumberpick: json['phonenumberpick'].toString(),
       driverPhone: json['driverPhone'].toString(),
-      cancel: json['cancel'] == 1,
-      done: json['done'] == 1,
+      cancel: json['cancel'],
+      done: json['done'],
     );
   }
 }
@@ -107,6 +107,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         History history = historyList[index];
                         String status;
                         Color statusColor;
+                        print(history.cancel);
                         if (history.done) {
                           status = 'Hoàn thành';
                           statusColor = Color(0xFF40A7B5);

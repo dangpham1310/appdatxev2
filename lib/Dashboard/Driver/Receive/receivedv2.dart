@@ -1,20 +1,95 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'congratulation.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:intl/intl.dart';
+import './denied.dart';
+
+Future<List<Map<String, dynamic>>> fetchData(String accessToken, String time,
+    DateTime datetime, String pickUp, String pickDrop) async {
+  // Convert TimeOfDay to string
+  final timeString = time.toString();
+
+  // Convert DateTime to ISO8601 string
+  final dateString = datetime.toIso8601String();
+
+  final response = await http.post(
+    Uri.parse('https://api.dantay.vn/viewlist'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'accessToken': accessToken,
+      'time': timeString,
+      'date': dateString,
+      'pickUp': pickUp,
+      'pickDrop': pickDrop,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    List<Map<String, dynamic>> data =
+        List<Map<String, dynamic>>.from(json.decode(response.body));
+    return data;
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
 
 class ListReceive extends StatefulWidget {
-  const ListReceive({Key? key}) : super(key: key);
+  final String pickUpLocation;
+  final String dropOffLocation;
+  final TimeOfDay selectedTime;
+  final DateTime selectedDate;
+
+  const ListReceive({
+    Key? key,
+    required this.pickUpLocation,
+    required this.dropOffLocation,
+    required this.selectedTime,
+    required this.selectedDate,
+  }) : super(key: key);
 
   @override
   State<ListReceive> createState() => _ListReceiveState();
 }
 
 class _ListReceiveState extends State<ListReceive> {
-  List<bool> cardVisibility = [
-    true,
-    true,
-    true
-  ]; // Track visibility of each card
+  List<Map<String, dynamic>> data = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? accessToken = prefs.getString('accessToken');
+      final SendTime = widget.selectedTime.hour.toString() +
+          ":" +
+          widget.selectedTime.minute.toString();
+      if (accessToken != null) {
+        final fetchedData = await fetchData(
+          accessToken,
+          SendTime,
+          widget.selectedDate,
+          widget.pickUpLocation,
+          widget.dropOffLocation,
+        );
+        setState(() {
+          data = fetchedData;
+        });
+      } else {
+        throw Exception('Access token is null');
+      }
+    } catch (e) {
+      print('Failed to load data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,28 +111,27 @@ class _ListReceiveState extends State<ListReceive> {
         ),
       ),
       child: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildCard(0),
-                SizedBox(height: 10),
-                _buildCard(1),
-                SizedBox(height: 10),
-                _buildCard(2),
-              ],
-            ),
-          ),
-        ),
+        child: data.isEmpty
+            ? Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ListView.separated(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    return _buildCard(data[index]);
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: 10);
+                  },
+                ),
+              ),
       ),
     );
   }
 
-  Widget _buildCard(int index) {
+  Widget _buildCard(Map<String, dynamic> item) {
     return Visibility(
-      visible: cardVisibility[index],
+      visible: true,
       child: Dismissible(
         key: UniqueKey(),
         direction: DismissDirection.endToStart,
@@ -108,6 +182,8 @@ class _ListReceiveState extends State<ListReceive> {
                         ),
                       ),
                       onPressed: () {
+                        print(item['id']);
+                        print(item['price_to_receive']);
                         Navigator.of(context).pop(true); // Return true
                       },
                     ),
@@ -116,12 +192,34 @@ class _ListReceiveState extends State<ListReceive> {
               },
             );
             if (confirm == true) {
-              _hideCard(index);
-              Navigator.of(context).push(
-                CupertinoPageRoute(
-                  builder: (context) => CongratulationPage(),
-                ),
+              setState(() {
+                data.remove(item); // Remove the card from the list
+              });
+
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              String? accessToken = prefs.getString('accessToken');
+
+              final response = await http.post(
+                Uri.parse('https://api.dantay.vn/received'),
+                body: {
+                  'accessToken': accessToken,
+                  'id': item['id'],
+                },
               );
+
+              if (response.body == "Not enough money") {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (context) => DeniedPage(),
+                  ),
+                );
+              } else {
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (context) => CongratulationPage(),
+                  ),
+                );
+              }
             }
             return confirm;
           }
@@ -154,36 +252,35 @@ class _ListReceiveState extends State<ListReceive> {
                       children: [
                         _buildRow(
                           icon: CupertinoIcons.location_fill,
-                          text: 'Nhà Nghỉ An Khánh, Vũ Bản, Bình Lục, Hà nam',
+                          text: item['pickUp'],
                         ),
                         SizedBox(height: 5),
                         _buildRow(
                           icon: CupertinoIcons.location_solid,
-                          text:
-                              'Đại học Bách khoa Hà Nội, 1 Đại Cồ Việt, Bách Khoa, Hai Bà Trưng, Hà Nội',
+                          text: item['pickDrop'],
                         ),
                         SizedBox(height: 5),
                         _builTime(
                           icon: CupertinoIcons.time,
-                          text: '2024-3-12  -  Giờ: 16:42:00',
+                          text: '${item['date']} - Giờ: ${item['time']}',
                         ),
                         SizedBox(height: 5),
                         _buildDoubleRow(
                           icon1: CupertinoIcons.money_dollar_circle,
-                          text1: '240 nghìn VND',
+                          text1: '${item['price']} K VND',
                           icon2: CupertinoIcons.car_detailed,
-                          text2: '1 chỗ',
+                          text2: '${item['numberofSeat']} chỗ',
                         ),
                         SizedBox(height: 5),
                         _buildRow(
                           icon: CupertinoIcons.money_dollar_circle,
-                          text: 'Phí nhận: 48 nghìn VND',
+                          text: 'Phí nhận: ${item['price_to_receive']} VND',
                           textStyle: TextStyle(color: Colors.red),
                         ),
                         SizedBox(height: 5),
                         _buildRow(
                           icon: CupertinoIcons.text_bubble,
-                          text: 'Ghi chú: Có mang theo chó mèo',
+                          text: 'Ghi chú: ${item['note']}',
                           textStyle: TextStyle(color: Colors.blue),
                         ),
                       ],
@@ -196,12 +293,6 @@ class _ListReceiveState extends State<ListReceive> {
         ),
       ),
     );
-  }
-
-  void _hideCard(int index) {
-    setState(() {
-      cardVisibility[index] = false; // Hide the card
-    });
   }
 
   Widget _buildDoubleRow({

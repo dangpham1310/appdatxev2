@@ -169,6 +169,13 @@ class _InformationState extends State<Information> {
     }
   }
 
+  Future<void> clearCache() async {
+    // Clear image cache
+    PaintingBinding.instance.imageCache.clear();
+    // Optionally, also clear network image cache if used
+    PaintingBinding.instance.imageCache.clearLiveImages();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -339,6 +346,7 @@ class _InformationState extends State<Information> {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         await prefs.clear();
+                        await clearCache();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Welcome()),

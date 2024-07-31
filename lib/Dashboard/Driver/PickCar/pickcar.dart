@@ -125,7 +125,9 @@ class _PickCarState extends State<PickCar> {
   String savedRole = ''; // Define savedRole globally
 
   String? _savedRole;
-  String formattedDate = 'Chọn Ngày';
+  DateTime nowDate = DateTime.now();
+  String formattedDate = '';
+  String _TimeofDay = 'Chọn Giờ';
 
   @override
   void initState() {
@@ -149,6 +151,7 @@ class _PickCarState extends State<PickCar> {
 
     // Set the new selected time
     _selectedTime = TimeOfDay(hour: newHour, minute: newMinute);
+    formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
   }
 
   Future<void> _initializeSavedRole() async {
@@ -327,12 +330,13 @@ class _PickCarState extends State<PickCar> {
                   height: 200,
                   child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.date,
-                    initialDateTime: selectedDate,
+                    initialDateTime: DateTime.now(),
                     minimumDate: DateTime(2015, 8),
                     maximumDate: DateTime(2101),
                     onDateTimeChanged: (DateTime newDateTime) {
                       setState(() {
                         selectedDate = newDateTime;
+                        print(newDateTime);
                         formattedDate =
                             DateFormat('dd/MM/yyyy').format(newDateTime);
                       });
@@ -386,6 +390,9 @@ class _PickCarState extends State<PickCar> {
                       onDateTimeChanged: (DateTime newDateTime) {
                         setState(() {
                           selectedTime = TimeOfDay.fromDateTime(newDateTime);
+                          _TimeofDay = selectedTime.hour.toString() +
+                              ':' +
+                              selectedTime.minute.toString();
                         });
                       },
                     ),
@@ -407,6 +414,7 @@ class _PickCarState extends State<PickCar> {
     if (pickedTime != null && pickedTime != selectedTime) {
       setState(() {
         selectedTime = pickedTime;
+        print(selectedTime);
       });
     }
   }
@@ -495,7 +503,7 @@ class _PickCarState extends State<PickCar> {
                                             Color.fromARGB(255, 146, 129, 129)),
                                     SizedBox(width: 5),
                                     Text(
-                                      'Chọn Giờ',
+                                      '$_TimeofDay',
                                       style: TextStyle(color: Colors.black),
                                     ),
                                   ],

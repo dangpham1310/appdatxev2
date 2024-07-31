@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './recent.dart';
 import './receivedv2.dart';
 
@@ -16,8 +17,30 @@ class Receive extends StatefulWidget {
 class _ReceiveState extends State<Receive> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
-  String pickUpLocation = '';
-  String dropOffLocation = '';
+
+  DateTime nowDate = DateTime.now();
+  String formattedDate = '';
+  String _TimeofDay = 'Chọn Giờ';
+  TimeOfDay? _selectedTime = TimeOfDay.now();
+  TimeOfDay currentTime = TimeOfDay.now();
+
+  @override
+  void initState() {
+    super.initState();
+    TimeOfDay currentTime = TimeOfDay.now();
+
+    // Calculate the new time by adding 15 minutes
+    int newHour = currentTime.hour;
+    int newMinute = currentTime.minute + 0;
+    // Set the new selected time
+    _selectedTime = TimeOfDay(hour: newHour, minute: newMinute);
+    formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  }
+
+  TextEditingController _pickUpController = TextEditingController();
+  TextEditingController _dropOffController = TextEditingController();
+  String pickUpLocation = "";
+  String dropOffLocation = "";
 
   Future<void> _showDatePicker(BuildContext context) async {
     final DateTime? pickedDate = await showCupertinoModalPopup<DateTime>(
@@ -38,6 +61,8 @@ class _ReceiveState extends State<Receive> {
                     maximumDate: DateTime(2101),
                     onDateTimeChanged: (DateTime newDateTime) {
                       selectedDate = newDateTime;
+                      formattedDate =
+                          DateFormat('dd/MM/yyyy').format(newDateTime);
                     },
                   ),
                 ),
@@ -57,6 +82,7 @@ class _ReceiveState extends State<Receive> {
     if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
+        formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
       });
     }
   }
@@ -85,7 +111,12 @@ class _ReceiveState extends State<Receive> {
                       mode: CupertinoDatePickerMode.time,
                       initialDateTime: DateTime.now(),
                       onDateTimeChanged: (DateTime newDateTime) {
-                        selectedTime = TimeOfDay.fromDateTime(newDateTime);
+                        setState(() {
+                          selectedTime = TimeOfDay.fromDateTime(newDateTime);
+                          _TimeofDay = selectedTime.hour.toString() +
+                              ':' +
+                              selectedTime.minute.toString();
+                        });
                       },
                     ),
                   ),
@@ -106,6 +137,7 @@ class _ReceiveState extends State<Receive> {
     if (pickedTime != null && pickedTime != selectedTime) {
       setState(() {
         selectedTime = pickedTime;
+        print(selectedTime);
       });
     }
   }
@@ -153,8 +185,7 @@ class _ReceiveState extends State<Receive> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                             ),
-                            controller:
-                                TextEditingController(text: pickUpLocation),
+                            controller: _pickUpController,
                           ),
                         ),
                         SizedBox(height: 20),
@@ -176,8 +207,7 @@ class _ReceiveState extends State<Receive> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                             ),
-                            controller:
-                                TextEditingController(text: dropOffLocation),
+                            controller: _dropOffController,
                           ),
                         ),
                         SizedBox(height: 30),
@@ -198,7 +228,7 @@ class _ReceiveState extends State<Receive> {
                                         color: Colors.grey),
                                     SizedBox(width: 5),
                                     Text(
-                                      'Chọn Ngày',
+                                      formattedDate,
                                       style: TextStyle(color: Colors.black),
                                     ),
                                   ],
@@ -220,7 +250,7 @@ class _ReceiveState extends State<Receive> {
                                             Color.fromARGB(255, 146, 129, 129)),
                                     SizedBox(width: 5),
                                     Text(
-                                      'Chọn Giờ',
+                                      '$_TimeofDay',
                                       style: TextStyle(color: Colors.black),
                                     ),
                                   ],
@@ -236,10 +266,29 @@ class _ReceiveState extends State<Receive> {
                             color: Color(0xFF276F61),
                             child: Text("Xác Nhận"),
                             onPressed: () {
+                              Future<void> saveTimeOfDay(TimeOfDay time) async {
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                final formattedTime =
+                                    '${time.hour}:${time.minute}';
+                                await prefs.setString('time', formattedTime);
+                              }
+
+                              saveTimeOfDay(selectedTime);
+                              print(_pickUpController.text);
+                              print(_dropOffController.text);
+                              print(selectedTime);
+                              print(selectedDate);
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ListReceive(),
+                                  builder: (context) => ListReceive(
+                                    pickUpLocation: _pickUpController.text,
+                                    dropOffLocation: _dropOffController.text,
+                                    selectedTime: selectedTime,
+                                    selectedDate: selectedDate,
+                                  ),
                                 ),
                               );
                             },
@@ -263,12 +312,12 @@ class _ReceiveState extends State<Receive> {
                 Recent(
                   onLocationPickupSelected: (String location) {
                     setState(() {
-                      pickUpLocation = location;
+                      pickUpLocation = _pickUpController.text;
                     });
                   },
                   onLocationDestinationSelected: (String location) {
                     setState(() {
-                      dropOffLocation = location;
+                      dropOffLocation = _dropOffController.text;
                     });
                   },
                 ),
