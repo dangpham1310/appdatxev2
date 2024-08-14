@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './recent.dart';
 import './receivedv2.dart';
+import 'package:http/http.dart' as http;
 
 class Receive extends StatefulWidget {
   const Receive({super.key});
@@ -274,11 +277,25 @@ class _ReceiveState extends State<Receive> {
                                 await prefs.setString('time', formattedTime);
                               }
 
+                              Future<void> sendRecent() async {
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+
+                                String? phone = prefs.getString('phone') ?? '';
+
+                                final response = await http.post(
+                                    Uri.parse(
+                                        'https://api.dantay.vn/api/postRecent'),
+                                    body: {
+                                      'phone': phone,
+                                      'pickUp': _pickUpController.text,
+                                      'pickDrop': _dropOffController.text,
+                                    });
+                              }
+
+                              sendRecent();
+
                               saveTimeOfDay(selectedTime);
-                              print(_pickUpController.text);
-                              print(_dropOffController.text);
-                              print(selectedTime);
-                              print(selectedDate);
 
                               Navigator.push(
                                 context,

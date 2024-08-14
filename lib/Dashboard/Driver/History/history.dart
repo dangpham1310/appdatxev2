@@ -84,9 +84,6 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Future<void> refreshHistory() async {
-    setState(() {
-      isLoading = true;
-    });
     await fetchHistory();
   }
 
@@ -107,14 +104,15 @@ class _HistoryPageState extends State<HistoryPage> {
                         History history = historyList[index];
                         String status;
                         Color statusColor;
-                        print(history.cancel);
-                        if (history.done) {
+
+                        if (history.done && history.driverPhone.length > 6) {
                           status = 'Hoàn thành';
-                          statusColor = Color(0xFF40A7B5);
+                          statusColor = Color.fromARGB(255, 0, 147, 167);
                         } else if (history.cancel) {
                           status = 'Hủy';
                           statusColor = CupertinoColors.systemRed;
-                        } else if (history.driverPhone.length > 6) {
+                        } else if (history.driverPhone.length > 6 &&
+                            history.done == false) {
                           status = 'Đã nhận';
                           statusColor = CupertinoColors.activeGreen;
                         } else {

@@ -12,6 +12,47 @@ import 'recent.dart';
 import 'pickcar_dash2.dart';
 import 'package:http/http.dart' as http;
 
+void showDistanceErrorDialog(BuildContext context) {
+  showCupertinoDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: Text('Thông báo'),
+        content: Text('Vui lòng nhập lại Vị trí chính xác'),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void showTimeErrorDialog(BuildContext context) {
+  showCupertinoDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: Text('Thông báo'),
+        content: Text(
+            'Vui lòng nhập lại Thời gian chính xác, sau 15 phút tính từ hiện tại'),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 class PickCarGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -133,7 +174,7 @@ class _PickCarState extends State<PickCar> {
   void initState() {
     _isMounted = false;
     super.initState();
-    _initializeSavedRole();
+
     TimeOfDay currentTime = TimeOfDay.now();
 
     // Calculate the new time by adding 15 minutes
@@ -151,20 +192,7 @@ class _PickCarState extends State<PickCar> {
 
     // Set the new selected time
     _selectedTime = TimeOfDay(hour: newHour, minute: newMinute);
-    formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
-  }
-
-  Future<void> _initializeSavedRole() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _savedRole = prefs.getString('role');
-    });
-
-    if (_savedRole == 'driver') {
-      _titles = ['Trang Chủ', 'Danh Sách', 'Lịch Sử', 'Hồ Sơ'];
-    } else {
-      _titles = ['Trang Chủ', 'Lịch Sử', 'Hồ Sơ'];
-    }
+    formattedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
   }
 
   Future<double> postData(double currentDistance) async {
@@ -189,20 +217,6 @@ class _PickCarState extends State<PickCar> {
       print('Error: $error');
       return 0.0;
     }
-  }
-
-  Future<void> updatePrice() async {
-    setState(() {
-      if (_seatController.text == "1") {
-        Price = (constPrice * 1).ceilToDouble();
-      } else if (_seatController.text == "2") {
-        Price = (constPrice * 1.9).ceilToDouble();
-      } else if (_seatController.text == "Bao xe 4") {
-        Price = (constPrice * 2.7).ceilToDouble();
-      } else if (_seatController.text == "Bao xe 7") {
-        Price = (constPrice * 3.5).ceilToDouble();
-      }
-    });
   }
 
   Future<void> updateDistance() async {
@@ -419,7 +433,6 @@ class _PickCarState extends State<PickCar> {
     }
   }
 
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -503,7 +516,7 @@ class _PickCarState extends State<PickCar> {
                                             Color.fromARGB(255, 146, 129, 129)),
                                     SizedBox(width: 5),
                                     Text(
-                                      '$_TimeofDay',
+                                      _TimeofDay,
                                       style: TextStyle(color: Colors.black),
                                     ),
                                   ],
@@ -527,6 +540,32 @@ class _PickCarState extends State<PickCar> {
                                 await prefs.setString('time', formattedTime);
                               }
 
+                              if (formattedDate ==
+                                  DateFormat('dd/MM/yyyy').format(nowDate)) {
+                                DateTime nowDate = DateTime.now();
+
+                                final nowPlus15Minutes =
+                                    nowDate.add(Duration(minutes: 15));
+                                final selectedDateTime = DateTime(
+                                    nowDate.year,
+                                    nowDate.month,
+                                    nowDate.day,
+                                    selectedTime.hour,
+                                    selectedTime.minute);
+
+                                print(
+                                    "This is Selected Date Time: $selectedDateTime");
+                                print(
+                                    "This is Selected nowPlus15Minutes: $nowPlus15Minutes");
+                                if (formattedDate ==
+                                    DateFormat('dd/MM/yyyy').format(nowDate)) {
+                                  if (selectedDateTime
+                                      .isBefore(nowPlus15Minutes)) {
+                                    showTimeErrorDialog(context);
+                                    return;
+                                  }
+                                }
+                              }
                               saveTimeOfDay(selectedTime);
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
@@ -541,6 +580,10 @@ class _PickCarState extends State<PickCar> {
                                   'seat', _seatController.text);
 
                               distance = await fetchDistance();
+                              if (distance == 0) {
+                                showDistanceErrorDialog(context);
+                                return;
+                              }
 
                               await prefs.setDouble('distance', distance);
                               Navigator.of(context).push(

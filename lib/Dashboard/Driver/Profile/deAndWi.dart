@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Import the services package for clipboard
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import the services package for clipboard
 
 class NapRutPage extends StatefulWidget {
   @override
@@ -8,8 +9,23 @@ class NapRutPage extends StatefulWidget {
 }
 
 class _NapRutPageState extends State<NapRutPage> {
+  String phoneNumber = "";
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  void _loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    String phone = prefs.getString('phone') ?? '';
+    setState(() {
+      phoneNumber = phone;
+    });
+  }
+
   final String accountNumber = '7777799999123';
-  final String phoneNumber = "0899996922"; // Account number to be copied
+// Account number to be copied
   final List<String> amounts = [
     '1,000,000 VND',
     '2,000,000 VND',

@@ -284,7 +284,9 @@ class _InformationState extends State<Information> {
                 children: [
                   Icon(CupertinoIcons.person_2, color: Color(0xFF40B59F)),
                   SizedBox(width: 5),
-                  Text('Số chỗ: ${driverInfo['vehicleSeat'] ?? ''}'),
+                  Text(
+                    'Số chỗ: ${driverInfo['vehicleSeat'] == "0" ? "4 chỗ" : driverInfo['vehicleSeat'] == "1" ? "7 chỗ" : ''}',
+                  ),
                 ],
               ),
               Divider(),

@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Recent extends StatefulWidget {
   final Function(String) onLocationPickupSelected;
@@ -16,6 +19,38 @@ class Recent extends StatefulWidget {
 }
 
 class _RecentState extends State<Recent> {
+  List<Map<String, String>> recentLocations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRecentLocations();
+  }
+
+  Future<void> fetchRecentLocations() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? phone = prefs.getString('phone') ?? '';
+
+    final response = await http.post(
+      Uri.parse('https://api.dantay.vn/api/getRecent'),
+      body: {'phone': phone},
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      setState(() {
+        recentLocations = data
+            .map((json) => {
+                  'pickUp': json['pickUp'].toString(),
+                  'pickDrop': json['pickDrop'].toString(),
+                })
+            .toList();
+      });
+    } else {
+      throw Exception('Failed to load recent locations');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -23,109 +58,55 @@ class _RecentState extends State<Recent> {
         child: Column(
           children: [
             SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                color: CupertinoColors.white,
-                borderRadius: BorderRadius.circular(12.0),
-                border: Border.all(color: CupertinoColors.white),
+            if (recentLocations.isNotEmpty)
+              ...recentLocations.map((location) => Container(
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: CupertinoColors.white,
+                      borderRadius: BorderRadius.circular(12.0),
+                      border: Border.all(color: CupertinoColors.white),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildRow(
+                          icon: CupertinoIcons.location_fill,
+                          text: location['pickUp'] ?? '',
+                          onTap: () {
+                            widget.onLocationPickupSelected(
+                                location['pickUp'] ?? '');
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        _buildRow(
+                          icon: CupertinoIcons.location_solid,
+                          text: location['pickDrop'] ?? '',
+                          onTap: () {
+                            widget.onLocationDestinationSelected(
+                                location['pickDrop'] ?? '');
+                          },
+                        ),
+                      ],
+                    ),
+                  ))
+            else
+              Center(
+                child: Text(
+                  'No recent locations found.',
+                  style: TextStyle(
+                      fontSize: 16, color: CupertinoColors.systemGrey),
+                ),
               ),
-              child: Column(
-                children: [
-                  _buildRow(
-                    icon: CupertinoIcons.location_fill,
-                    text: 'Hà Nội',
-                    onTap: () {
-                      widget.onLocationPickupSelected('Hà Nội');
-                    },
-                  ),
-                  SizedBox(height: 10), // Divider between rows
-                  _buildRow(
-                    icon: CupertinoIcons.location_solid,
-                    text: 'Nam Định',
-                    onTap: () {
-                      widget.onLocationDestinationSelected('Nam Định');
-                    },
-                  ),
-                ],
-              ),
-            ),
-            
-            
-            SizedBox(height: 5),
-            Divider(),
-            SizedBox(height: 5),
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                color: CupertinoColors.white,
-                borderRadius: BorderRadius.circular(12.0),
-                border: Border.all(color: CupertinoColors.white),
-              ),
-              child: Column(
-                children: [
-                  _buildRow(
-                    icon: CupertinoIcons.location_fill,
-                    text: 'Hải Phòng',
-                    onTap: () {
-                      widget.onLocationPickupSelected('Hải Phòng');
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _buildRow(
-                    icon: CupertinoIcons.location_solid,
-                    text: 'Đà Nẵng',
-                    onTap: () {
-                      widget.onLocationDestinationSelected('Đà Nẵng');
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 5),
-            Divider(),
-            SizedBox(height: 5),
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                color: CupertinoColors.white,
-                borderRadius: BorderRadius.circular(12.0),
-                border: Border.all(color: CupertinoColors.white),
-              ),
-              child: Column(
-                children: [
-                  _buildRow(
-                    icon: CupertinoIcons.location_fill,
-                    text: 'Thành Phố Hồ Chí Minh',
-                    onTap: () {
-                      widget.onLocationPickupSelected('Thành Phố Hồ Chí Minh');
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _buildRow(
-                    icon: CupertinoIcons.location_solid,
-                    text: 'Hải Phòng',
-                    onTap: () {
-                      widget.onLocationDestinationSelected('Hải Phòng');
-                    },
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildRow(
-      {required IconData icon,
-      required String text,
-      required VoidCallback onTap}) {
+  Widget _buildRow({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
@@ -140,7 +121,7 @@ class _RecentState extends State<Recent> {
             child: Icon(
               icon,
               color: Colors.white,
-              size: 16, // Adjust icon size here
+              size: 16,
             ),
           ),
           SizedBox(width: 30),
@@ -155,6 +136,16 @@ class _RecentState extends State<Recent> {
       ),
     );
   }
+}
 
-
+void main() {
+  runApp(CupertinoApp(
+    home: Scaffold(
+      body: Recent(
+        onLocationPickupSelected: (pickup) => print('Pickup: $pickup'),
+        onLocationDestinationSelected: (destination) =>
+            print('Destination: $destination'),
+      ),
+    ),
+  ));
 }

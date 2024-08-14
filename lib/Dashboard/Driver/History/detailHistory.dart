@@ -36,6 +36,7 @@ class _DetailsPageState extends State<DetailsPage> {
   Future<Map<String, dynamic>> fetchDetails(int idHistory) async {
     final prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('accessToken') ?? '';
+    final phone = prefs.getString('phone') ?? '';
 
     final response = await http.post(
       Uri.parse('https://api.dantay.vn/api/details'),
@@ -217,66 +218,217 @@ class _DetailsPageState extends State<DetailsPage> {
                       ],
                     ),
                     SizedBox(height: 32.0),
-                    Text(
-                      'Số điện thoại người đặt:',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 13.0),
-                    ),
-                    SizedBox(height: 4.0),
-                    Text(
-                      widget.bookerPhoneNumber,
-                      style: TextStyle(fontSize: 13.0, color: Colors.grey),
-                    ),
+                    Row(children: [
+                      Column(
+                        children: [
+                          Center(
+                            child: Text(
+                              'Số điện thoại người đặt',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 13.0),
+                            ),
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(
+                            widget.bookerPhoneNumber,
+                            style:
+                                TextStyle(fontSize: 13.0, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Column(
+                        children: [
+                          Center(
+                            child: Text(
+                              'Số điện thoại khách hàng',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 13.0),
+                            ),
+                          ),
+                          SizedBox(height: 4.0),
+                          Center(
+                            child: Text(
+                              widget.customerPhoneNumber,
+                              style:
+                                  TextStyle(fontSize: 14.0, color: Colors.grey),
+                            ),
+                          )
+                        ],
+                      )
+                    ]),
                     SizedBox(height: 16.0),
-                    Text(
-                      'Số điện thoại khách hàng:',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 13.0),
-                    ),
-                    SizedBox(height: 4.0),
-                    Text(
-                      widget.customerPhoneNumber,
-                      style: TextStyle(fontSize: 14.0, color: Colors.grey),
+                    Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            'Số điện thoại Tài Xế',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 13.0),
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(
+                            driver["phone"] ?? 'Chưa thể hiển thị',
+                            style:
+                                TextStyle(fontSize: 14.0, color: Colors.grey),
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 32.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CupertinoButton(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 32.0, vertical: 12.0),
-                          color: CupertinoColors.systemGrey,
-                          onPressed: () {
-                            // Handle support action
-                          },
-                          child: Text('Bạn cần hỗ trợ?'),
-                        ),
-                        CupertinoButton(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 32.0, vertical: 12.0),
-                          color: CupertinoColors.activeBlue,
-                          onPressed: () {
-                            _launchCaller(widget.customerPhoneNumber);
-                          },
-                          child: Text('Liên hệ'),
-                        ),
-                      ],
-                    ),
+                    if (driver["phone"] !=
+                        "Chưa có thông tin số điện thoại tài xế") ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CupertinoButton(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 32.0, vertical: 12.0),
+                            color: CupertinoColors.systemGrey,
+                            onPressed: () {
+                              // Handle support action
+                              _showSupportDialog(context);
+                            },
+                            child: Text('Bạn cần hỗ trợ?'),
+                          ),
+                          CupertinoButton(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 32.0, vertical: 12.0),
+                            color: CupertinoColors.activeBlue,
+                            onPressed: () async {
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+
+                              final phone = prefs.getString('phone') ?? '';
+                              if (widget.bookerPhoneNumber != driver["phone"]) {
+                                if (phone == driver["phone"]) {
+                                  _launchCaller(widget.customerPhoneNumber);
+                                } else {
+                                  _launchCaller(driver["phone"]);
+                                }
+                              } else {
+                                _launchCaller(widget.customerPhoneNumber);
+                              }
+                            },
+                            child: Text('Liên hệ'),
+                          ),
+                        ],
+                      ),
+                    ],
                     SizedBox(height: 16.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CupertinoButton(
-                          color: CupertinoColors.systemRed,
-                          onPressed: () {
-                            // Handle cancel booking action
-                          },
-                          child: Text('Hủy chuyến',
+                    if (history["done"] == false &&
+                        history["cancel"] == false) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CupertinoButton(
+                            color: CupertinoColors.systemRed,
+                            onPressed: () async {
+                              bool? confirm = await showCupertinoDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CupertinoAlertDialog(
+                                    title: Text(
+                                      "Xác nhận hủy chuyến",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: CupertinoColors.systemRed,
+                                      ),
+                                    ),
+                                    content: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: Text(
+                                        "Bạn có chắc chắn muốn hủy chuyến này không?",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        child: Text(
+                                          "Không",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: CupertinoColors.systemBlue,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(
+                                              false); // User cancels the dialog
+                                        },
+                                      ),
+                                      CupertinoDialogAction(
+                                        child: Text(
+                                          "Có",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: CupertinoColors.systemRed,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Future<void> postData() async {
+                                            final prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            final accessToken = prefs
+                                                    .getString('accessToken') ??
+                                                '';
+
+                                            final response = await http.post(
+                                              Uri.parse(
+                                                  'https://api.dantay.vn/cancel'),
+                                              headers: {
+                                                'Content-Type':
+                                                    'application/x-www-form-urlencoded',
+                                              },
+                                              body: {
+                                                'accessToken': accessToken,
+                                                'id':
+                                                    widget.idHistory.toString()
+                                              },
+                                            );
+
+                                            print(response.body);
+
+                                            if (response.statusCode == 200) {
+                                              print("it is work");
+                                            } else {
+                                              print(
+                                                  'Error: ${response.statusCode}');
+                                              throw Exception(
+                                                  'Failed to load details');
+                                            }
+                                          }
+
+                                          postData();
+                                          Navigator.of(context).pop(
+                                              true); // User confirms the cancellation
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+
+                              if (confirm == true) {
+                                Navigator.of(context)
+                                    .pop(); // Close the current page after cancellation
+                              }
+                            },
+                            child: Text(
+                              'Hủy chuyến',
                               style: TextStyle(
-                                  fontSize: 14.0, fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                    ),
+                                  fontSize: 14.0, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ]
                   ],
                 ),
               );
@@ -294,5 +446,155 @@ class _DetailsPageState extends State<DetailsPage> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+}
+
+void _showSupportDialog(BuildContext context) {
+  showCupertinoDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AnimatedDialog(
+        child: CupertinoAlertDialog(
+          title: Text(
+            'Khiếu nại',
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: CupertinoTextField(
+            placeholder: 'Nhập nội dung khiếu nại của bạn...',
+            maxLines: 5,
+            padding: EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: CupertinoColors.white,
+              borderRadius: BorderRadius.circular(8.0),
+              border: Border.all(color: CupertinoColors.systemGrey, width: 1.0),
+            ),
+            style: TextStyle(fontSize: 16.0),
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Text(
+                'Hủy',
+                style: TextStyle(
+                  color: CupertinoColors.systemRed,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                'Gửi',
+                style: TextStyle(
+                  color: CupertinoColors.activeGreen,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                // Xử lý khiếu nại tại đây
+                Navigator.of(context).pop(); // Đóng dialog khi gửi
+
+                // Hiển thị thông báo cảm ơn
+                _showThankYouDialog(context);
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+void _showThankYouDialog(BuildContext context) {
+  showCupertinoDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AnimatedDialog(
+        child: CupertinoAlertDialog(
+          title: Text(
+            'Cảm ơn',
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            'Cảm ơn bạn đã gửi khiếu nại. Chúng tôi sẽ xem xét và phản hồi sớm nhất có thể.',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Text(
+                'OK',
+                style: TextStyle(
+                  color: CupertinoColors.activeBlue,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Đóng dialog cảm ơn
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+class AnimatedDialog extends StatefulWidget {
+  final Widget child;
+
+  const AnimatedDialog({Key? key, required this.child}) : super(key: key);
+
+  @override
+  _AnimatedDialogState createState() => _AnimatedDialogState();
+}
+
+class _AnimatedDialogState extends State<AnimatedDialog>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    )..forward();
+
+    _scaleAnimation =
+        Tween<double>(begin: 0.9, end: 1.0).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+    _opacityAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: FadeTransition(
+        opacity: _opacityAnimation,
+        child: widget.child,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

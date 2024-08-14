@@ -190,9 +190,16 @@ class _PickCarDash2State extends State<PickCarDash2> {
                       }
 
                       Future<void> postData() async {
+                        if (selectedSeat.isEmpty) {
+                          return;
+                        } else if (_priceController.text.isEmpty) {
+                          return;
+                        } else if (_phonenumberController.text.isEmpty) {
+                          return;
+                        }
+
                         String phone =
                             await getPhoneAndSave(); // Get the phone number first
-                        print("pick phone with this phone number: $phone");
                         String url = 'https://api.dantay.vn/api/pickcar';
                         final prefs = await SharedPreferences.getInstance();
                         final response = await http.post(
@@ -223,30 +230,321 @@ class _PickCarDash2State extends State<PickCarDash2> {
                         await postData();
                       }
 
-// Call this function where needed, for example, in your button's onPressed:
-                      performPostDataOperation();
+                      void showConfirmDialog() async {
+                        final prefs = await SharedPreferences.getInstance();
 
-                      final prefs = await SharedPreferences.getInstance();
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => PickCarDone(
-                            tripDate: prefs.getString('date') ??
-                                'Ngày chuyến đi', // Ngày chuyến đi từ SharedPreferences
-                            tripTime: prefs.getString('time') ??
-                                'Giờ chuyến đi', // Giờ chuyến đi từ SharedPreferences
-                            pickupPoint: prefs.getString('pickUp') ??
-                                'Địa chỉ đón', // Điểm đón từ SharedPreferences
-                            destination: prefs.getString('pickDrop') ??
-                                'Địa chỉ đến', // Điểm đến từ SharedPreferences // Thay thế bằng thời gian thực tế nếu có
-                            seats: selectedSeat, // Số ghế đã chọn
-                            notes: _noteController
-                                .text, // Ghi chú từ trường nhập liệu ghi chú
-                            price: _priceController
-                                .text, // Giá từ trường nhập liệu giá
-                          ),
-                        ),
-                      );
+                        // Retrieve stored values from SharedPreferences
+                        final pickUp = prefs.getString('pickUp') ?? 'Điểm Đón';
+                        final dropOff =
+                            prefs.getString('pickDrop') ?? 'Điểm Đến';
+                        final date = prefs.getString('date') ?? 'Ngày';
+                        final time = prefs.getString('time') ?? 'Giờ';
+                        final pickprice = _priceController.text;
+                        final phoneNumber = _phonenumberController.text;
+                        final note = _noteController.text;
+
+                        showCupertinoDialog(
+                          context: context,
+                          builder: (context) {
+                            return CupertinoAlertDialog(
+                              title: Text('Xác Nhận Thông Tin'),
+                              content: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                      height: 10), // Add some space at the top
+                                  Row(
+                                    children: [
+                                      Icon(CupertinoIcons.location,
+                                          size: 20,
+                                          color: CupertinoColors.systemGrey),
+                                      SizedBox(width: 8),
+                                      Text('Điểm Đón: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Flexible(
+                                        child: Text(
+                                          pickUp,
+                                          style: TextStyle(
+                                              color:
+                                                  CupertinoColors.systemGrey),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5), // Add space between rows
+                                  Row(
+                                    children: [
+                                      Icon(CupertinoIcons.location_fill,
+                                          size: 20,
+                                          color: CupertinoColors.systemGrey),
+                                      SizedBox(width: 8),
+                                      Text('Điểm Đến: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Flexible(
+                                        child: Text(
+                                          dropOff,
+                                          style: TextStyle(
+                                              color:
+                                                  CupertinoColors.systemGrey),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Icon(CupertinoIcons.calendar,
+                                          size: 20,
+                                          color: CupertinoColors.systemGrey),
+                                      SizedBox(width: 8),
+                                      Text('Ngày: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Flexible(
+                                        child: Text(
+                                          date,
+                                          style: TextStyle(
+                                              color:
+                                                  CupertinoColors.systemGrey),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Icon(CupertinoIcons.time,
+                                          size: 20,
+                                          color: CupertinoColors.systemGrey),
+                                      SizedBox(width: 8),
+                                      Text('Giờ: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Flexible(
+                                        child: Text(
+                                          time,
+                                          style: TextStyle(
+                                              color:
+                                                  CupertinoColors.systemGrey),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Icon(CupertinoIcons.person,
+                                          size: 20,
+                                          color: CupertinoColors.systemGrey),
+                                      SizedBox(width: 8),
+                                      Text('Số Ghế: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text(selectedSeat,
+                                          style: TextStyle(
+                                              color:
+                                                  CupertinoColors.systemGrey)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Icon(CupertinoIcons.money_dollar,
+                                          size: 20,
+                                          color: CupertinoColors.systemGrey),
+                                      SizedBox(width: 8),
+                                      Text('Giá: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text(pickprice,
+                                          style: TextStyle(
+                                              color:
+                                                  CupertinoColors.systemGrey)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Icon(CupertinoIcons.phone,
+                                          size: 20,
+                                          color: CupertinoColors.systemGrey),
+                                      SizedBox(width: 8),
+                                      Text('Số Điện Thoại: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Text(phoneNumber,
+                                          style: TextStyle(
+                                              color:
+                                                  CupertinoColors.systemGrey)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Icon(CupertinoIcons.text_bubble,
+                                          size: 20,
+                                          color: CupertinoColors.systemGrey),
+                                      SizedBox(width: 8),
+                                      Text('Ghi Chú: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
+                                      Flexible(
+                                        child: Text(
+                                          note,
+                                          style: TextStyle(
+                                              color:
+                                                  CupertinoColors.systemGrey),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                      height:
+                                          10), // Add some space at the bottom
+                                ],
+                              ),
+                              actions: [
+                                CupertinoDialogAction(
+                                  child: Text('Hủy'),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                CupertinoDialogAction(
+                                  child: Text('Xác Nhận'),
+                                  onPressed: () async {
+                                    performPostDataOperation();
+
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+
+                                    if (selectedSeat.isEmpty ||
+                                        _priceController.text.isEmpty ||
+                                        _phonenumberController.text.isEmpty) {
+                                      return;
+                                    } else if (price >=
+                                        (int.tryParse(_priceController.text) ??
+                                            0)) {
+                                      return;
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) => PickCarDone(
+                                            tripDate: prefs.getString('date') ??
+                                                'Ngày chuyến đi', // Ngày chuyến đi từ SharedPreferences
+                                            tripTime: prefs.getString('time') ??
+                                                'Giờ chuyến đi', // Giờ chuyến đi từ SharedPreferences
+                                            pickupPoint: prefs
+                                                    .getString('pickUp') ??
+                                                'Địa chỉ đón', // Điểm đón từ SharedPreferences
+                                            destination: prefs
+                                                    .getString('pickDrop') ??
+                                                'Địa chỉ đến', // Điểm đến từ SharedPreferences // Thay thế bằng thời gian thực tế nếu có
+                                            seats:
+                                                selectedSeat, // Số ghế đã chọn
+                                            notes: _noteController
+                                                .text, // Ghi chú từ trường nhập liệu ghi chú
+                                            price: _priceController
+                                                .text, // Giá từ trường nhập liệu giá
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+
+                      Future<void> checkInformation() async {
+                        if (selectedSeat.isEmpty) {
+                          showCupertinoDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                title: Text('Thông Báo'),
+                                content: Text('Vui lòng chọn số lượng ghế'),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else if (_priceController.text.isEmpty) {
+                          showCupertinoDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                title: Text('Thông Báo'),
+                                content: Text('Vui lòng nhập giá'),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else if (_phonenumberController.text.isEmpty) {
+                          showCupertinoDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                title: Text('Thông Báo'),
+                                content:
+                                    Text('Vui lòng nhập số điện thoại khách'),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else if (price >=
+                            (int.tryParse(_priceController.text) ?? 0)) {
+                          showCupertinoDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                title: Text('Thông Báo'),
+                                content: Text(
+                                    'Vui lòng nhập Giá lớn hơn giá đề xuất'),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          showConfirmDialog();
+                        }
+                      }
+
+                      await checkInformation();
                     },
                     color: Color(0xFF276F61),
                     child: Text('Đặt Xe'),
@@ -457,7 +755,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                   } else if (selectedSeat == "Bao 4") {
                     price = (constPrice * 2.8).round();
                   } else if (selectedSeat == "Bao 7") {
-                    price = (constPrice * 3.7).round();
+                    price = (constPrice * 3.5).round();
                   }
                   print("updatePrice: $price");
                 });
