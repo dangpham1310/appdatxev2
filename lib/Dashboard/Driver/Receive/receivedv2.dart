@@ -198,6 +198,7 @@ class _ListReceiveState extends State<ListReceive> {
 
               SharedPreferences prefs = await SharedPreferences.getInstance();
               String? accessToken = prefs.getString('accessToken');
+              String? FCMToken = prefs.getString('FCMToken');
 
               final response = await http.post(
                 Uri.parse('https://api.dantay.vn/received'),
@@ -214,6 +215,20 @@ class _ListReceiveState extends State<ListReceive> {
                   ),
                 );
               } else {
+                print("FCMToken: $FCMToken");
+                print("accessToken: $accessToken");
+                print("id: ${item['id']}");
+
+                final response = await http.post(
+                  Uri.parse('https://api.dantay.vn/api/receiveNotification'),
+                  body: {
+                    'accessToken': accessToken,
+                    'id': item['id'],
+                    "FCMToken": FCMToken,
+                  },
+                );
+                print("This is body: ${response.body}");
+
                 Navigator.of(context).push(
                   CupertinoPageRoute(
                     builder: (context) => CongratulationPage(),

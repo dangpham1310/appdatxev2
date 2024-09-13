@@ -1,10 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './Home/home.dart';
 import './PickCar/pickcar.dart';
 import './Receive/recieved_car.dart';
 import 'History/history.dart';
 import 'Profile/profile.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 
 class DashboardDriver extends StatefulWidget {
   @override
@@ -13,6 +21,13 @@ class DashboardDriver extends StatefulWidget {
 
 class _DashboardState extends State<DashboardDriver> {
   int _currentIndex = 0;
+
+  // create init
+  @override
+  void initState() {
+    super.initState();
+    RunDashboardDriver();
+  }
 
   void _onTabTapped(int index) {
     setState(() {
@@ -72,4 +87,22 @@ class _DashboardState extends State<DashboardDriver> {
       label: label,
     );
   }
+}
+
+void RunDashboardDriver() async {
+
+
+
+  Future<void> postData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('FCMToken') ?? '';
+    String url = 'https://api.dantay.vn/api/FCMTokenDriver';
+    final response = await http.post(
+      Uri.parse(url),
+      body: {'FCMToken': '${token}'},
+    );
+    print(response.body);
+  }
+
+  postData();
 }

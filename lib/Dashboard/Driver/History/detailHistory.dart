@@ -378,6 +378,9 @@ class _DetailsPageState extends State<DetailsPage> {
                                             final accessToken = prefs
                                                     .getString('accessToken') ??
                                                 '';
+                                            final FCMToken =
+                                                prefs.getString('FCMToken') ??
+                                                    '';
 
                                             final response = await http.post(
                                               Uri.parse(
@@ -393,7 +396,20 @@ class _DetailsPageState extends State<DetailsPage> {
                                               },
                                             );
 
-                                            print(response.body);
+                                            final response2 = await http.post(
+                                              Uri.parse(
+                                                  'https://api.dantay.vn/api/cancelNotification'),
+                                              headers: {
+                                                'Content-Type':
+                                                    'application/x-www-form-urlencoded',
+                                              },
+                                              body: {
+                                                'accessToken': accessToken,
+                                                'id':
+                                                    widget.idHistory.toString(),
+                                                "FCMToken": FCMToken
+                                              },
+                                            );
 
                                             if (response.statusCode == 200) {
                                               print("it is work");

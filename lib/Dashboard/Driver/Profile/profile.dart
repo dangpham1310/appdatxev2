@@ -17,6 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String name = 'Loading...';
   String coin = '\$100.00';
   String phone = '';
+  String FCMToken = '';
 
   @override
   void initState() {
@@ -27,7 +28,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
+
+    // Fetch FCMToken from SharedPreferences
     setState(() {
+      FCMToken = prefs.getString('FCMToken') ?? '';
       name = prefs.getString('name') ?? 'Loading...';
       coin = prefs.getString('coin') ?? '\$100.00';
     });
@@ -40,20 +44,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
+
         if (data['coin'] != 'fail') {
           setState(() {
             coin = data['coin'].toString();
             phone = data['phone'];
           });
         } else {
-          // Xử lý trường hợp thất bại
           print('Failed to load profile');
         }
       } else {
-        // Xử lý trường hợp lỗi
         print('Error fetching profile');
       }
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+
       prefs.setString('phone', phone);
     }
   }
@@ -132,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             Positioned(
                               bottom: 0,
-                              top: 0, // Điều chỉnh để di chuyển icon ra ngoài
+                              top: 0, // Adjust this to move the icon down
                               left:
                                   MediaQuery.of(context).size.width * 0.5 - 50,
                               child: Container(
@@ -257,6 +260,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       Center(
                           child: Text("version: 1.0.0",
+                              style: TextStyle(color: Colors.grey))),
+                      Center(
+                          child: Text("FCM Token: $FCMToken",
                               style: TextStyle(color: Colors.grey))),
                     ],
                   ),

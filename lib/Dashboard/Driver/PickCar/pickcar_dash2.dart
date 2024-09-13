@@ -29,10 +29,15 @@ class _PickCarDash2State extends State<PickCarDash2> {
   }
 
   Future<double> postData(double currentDistance) async {
+    final prefs = await SharedPreferences.getInstance();
     String url = 'https://api.dantay.vn/api/price';
     final response = await http.post(
       Uri.parse(url),
-      body: {'distance': '${currentDistance / 1000}'},
+      body: {
+        'distance': '${currentDistance / 1000}',
+        "pickUp": prefs.getString('pickUp') ?? "",
+        "pickDrop": prefs.getString('pickDrop') ?? "",
+      },
     );
 
     if (response.statusCode == 200) {
@@ -224,10 +229,46 @@ class _PickCarDash2State extends State<PickCarDash2> {
                         } else {
                           throw Exception('Failed to post data');
                         }
+
+                        String url2 =
+                            'https://api.dantay.vn/api/sendNotification';
+
+                        final response2 = await http.post(
+                          Uri.parse(url2),
+                          body: {
+                            'pickUp': prefs.getString('pickUp') ?? '',
+                            'pickDrop': prefs.getString('pickDrop') ?? '',
+                          },
+                        );
+
+                        try {
+                          final response = await http.post(
+                            Uri.parse(
+                                'https://api.dantay.vn/api/getLastestHistory'),
+                            body: {
+                              'accessToken': prefs.getString('accessToken') ??
+                                  '', // Get the stored access token
+                              'FCMToken': prefs.getString('FCMToken') ??
+                                  '', // Get the stored FCM token
+                            },
+                          );
+
+                          if (response.statusCode == 200) {
+                            final responseBody = jsonDecode(response.body);
+                            // Handle the response if needed
+                            print('Response from server: $responseBody');
+                          } else {
+                            print(
+                                'Failed to send tokens. Status code: ${response.statusCode}');
+                          }
+                        } catch (e) {
+                          print('Error occurred: $e');
+                        }
                       }
 
-                      void performPostDataOperation() async {
+                      Future performPostDataOperation() async {
                         await postData();
+                        return true;
                       }
 
                       void showConfirmDialog() async {
@@ -449,8 +490,13 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                                 selectedSeat, // Số ghế đã chọn
                                             notes: _noteController
                                                 .text, // Ghi chú từ trường nhập liệu ghi chú
-                                            price: _priceController
-                                                .text, // Giá từ trường nhập liệu giá
+                                            price: _priceController.text,
+                                            accessToken: prefs
+                                                    .getString("accessToken") ??
+                                                '',
+                                            FCMToken:
+                                                prefs.getString("FCMToken") ??
+                                                    '',
                                           ),
                                         ),
                                       );

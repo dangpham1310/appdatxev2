@@ -97,7 +97,12 @@ class _InformationState extends State<Information> {
 
   Future<void> _saveImagesPermanently() async {
     final directory = await getApplicationDocumentsDirectory();
-    final dio = Dio();
+    final dio = Dio(
+      BaseOptions(
+        connectTimeout: Duration(seconds: 100),
+        receiveTimeout: Duration(seconds: 100), // 100 seconds
+      ),
+    );
 
     await _downloadAndSaveImage(dio, driverInfo['driverLicenseFrontUrl'],
         '${directory.path}/driverLicenseFront.png');
@@ -418,6 +423,7 @@ class _InformationState extends State<Information> {
             child: CupertinoActivityIndicator(),
           );
         }
+        ;
       },
     );
   }

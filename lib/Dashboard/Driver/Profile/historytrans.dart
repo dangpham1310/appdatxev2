@@ -1,51 +1,92 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HistoryTransactionPage extends StatelessWidget {
-  List<Transaction> transactionData = [
-    Transaction(
-      title: 'Nạp Tiền',
-      date: '20 Tháng Sáu, 2024',
-      amount: 125.75,
-    ),
-    Transaction(
-      title: 'Rút Tiền',
-      date: '18 Tháng Sáu, 2024',
-      amount: -50.00,
-    ),
-    Transaction(
-      title: 'Tiền Hoa Hồng',
-      date: '15 Tháng Sáu, 2024',
-      amount: 200.00,
-    ),
-  ];
+class HistoryTransactionPage extends StatefulWidget {
+  @override
+  _HistoryTransactionPageState createState() => _HistoryTransactionPageState();
+}
+
+class _HistoryTransactionPageState extends State<HistoryTransactionPage> {
+  late Future<List<Transaction>> transactionData;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTransactions();
+  }
+
+  void _loadTransactions() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? accessToken = prefs.getString('accessToken');
+
+    if (accessToken != null && accessToken.isNotEmpty) {
+      setState(() {
+        transactionData = fetchTransactions(accessToken);
+      });
+    } else {
+      setState(() {
+        transactionData = Future.error('No access token found');
+      });
+    }
+  }
+
+  Future<List<Transaction>> fetchTransactions(String accessToken) async {
+    final response = await http.post(
+      Uri.parse('https://api.dantay.vn/lsgd'),
+      body: {'accessToken': accessToken},
+    );
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((data) => Transaction.fromJson(data)).toList();
+    } else {
+      throw Exception('Failed to load transactions');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle:
-            Text("Lịch Sử Giao Dịch", style: TextStyle(color: Colors.white)),
+        middle: Text(
+          "Lịch Sử Giao Dịch",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Color(0xFF40B59F),
         leading: GestureDetector(
           onTap: () {
-            // Handle the back button tap here
             Navigator.of(context).pop();
           },
           child: Container(
             child: Icon(
               CupertinoIcons.back,
-              color: Colors.white, // Set the color of the back button
+              color: Colors.white,
             ),
           ),
         ),
       ),
       child: SafeArea(
-        child: ListView.builder(
-          itemCount: transactionData.length,
-          itemBuilder: (context, index) {
-            return TransactionListItem(
-              transaction: transactionData[index],
-            );
+        child: FutureBuilder<List<Transaction>>(
+          future: transactionData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No transactions found'));
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return TransactionListItem(
+                      transaction: snapshot.data![index]);
+                },
+              );
+            }
           },
         ),
       ),
@@ -61,10 +102,13 @@ class TransactionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color boxColor = (transaction.title == 'Nạp Tiền' ||
-            transaction.title == 'Tiền Hoa Hồng')
-        ? Color(0xFF40B59F).withOpacity(0.3)
-        : Colors.red.withOpacity(0.3);
+    Color boxColor = transaction.type == "+"
+        ? Color(0xFF40B59F).withOpacity(0.2)
+        : Colors.red.withOpacity(0.2);
+
+    IconData icon = transaction.type == "+"
+        ? CupertinoIcons.arrow_down
+        : CupertinoIcons.arrow_up;
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -83,32 +127,63 @@ class TransactionListItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            transaction.title,
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 8.0),
+          // Display Transaction ID without truncating it
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Icon(icon,
+                  color: transaction.type == "+" ? Colors.green : Colors.red),
+              SizedBox(width: 8),
+              // Ensure the Transaction ID is always fully visible
               Text(
-                transaction.date,
+                'Mã số giao dịch: ${transaction.id}',
                 style: TextStyle(
                   fontSize: 14.0,
                   color: CupertinoColors.systemGrey,
                 ),
               ),
-              Text(
-                '\$${transaction.amount.toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
+            ],
+          ),
+          SizedBox(height: 8),
+          // Row for Date and Amount
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Use Flexible for the date
+              Flexible(
+                flex: 2,
+                child: Text(
+                  'Thời Gian: ${transaction.date}',
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: CupertinoColors.systemGrey,
+                  ),
+                  overflow: TextOverflow.ellipsis, // Prevent overflow
+                ),
+              ),
+              SizedBox(width: 10),
+              // Use Flexible for the amount
+              Flexible(
+                flex: 1,
+                child: Text(
+                  '${transaction.type} \$${transaction.amount.abs().toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: transaction.type == "+" ? Colors.green : Colors.red,
+                  ),
+                  overflow: TextOverflow.ellipsis, // Prevent overflow
                 ),
               ),
             ],
+          ),
+          SizedBox(height: 8),
+          // Display total amount at the bottom
+          Text(
+            'Tổng Cộng: \$${transaction.total.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontSize: 14.0,
+              color: CupertinoColors.systemGrey,
+            ),
           ),
         ],
       ),
@@ -117,9 +192,26 @@ class TransactionListItem extends StatelessWidget {
 }
 
 class Transaction {
-  final String title;
+  final int id;
+  final String type;
   final String date;
   final double amount;
+  final double total;
 
-  Transaction({required this.title, required this.date, required this.amount});
+  Transaction(
+      {required this.id,
+      required this.type,
+      required this.date,
+      required this.amount,
+      required this.total});
+
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      id: json['id'] ?? 0,
+      type: json['type'] ?? '+',
+      date: json['date'] ?? '',
+      amount: json['amount']?.toDouble() ?? 0.0,
+      total: json['total']?.toDouble() ?? 0.0,
+    );
+  }
 }

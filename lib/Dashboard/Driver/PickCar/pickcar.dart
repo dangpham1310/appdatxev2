@@ -70,30 +70,6 @@ class PickCarGroup extends StatelessWidget {
   }
 }
 
-Future<double> postData(double currentDistance) async {
-  String url = 'https://api.dantay.vn/api/price';
-
-  try {
-    final response = await http.post(
-      Uri.parse(url),
-      body: {'distance': '${currentDistance / 1000}'},
-    );
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> parsedJson = json.decode(response.body);
-      print(
-          'Distance: ${currentDistance / 1000} - Price: ${parsedJson['price']}');
-      return parsedJson['price'];
-    } else {
-      print('Failed to post data. Status code: ${response.statusCode}');
-      return 0.0;
-    }
-  } catch (error) {
-    print('Error: $error');
-    return 0.0;
-  }
-}
-
 Position createPositionFromJson(Map<String, dynamic> json) {
   final location = json['geometry']['location'];
   final double latitude = location['lat'];
@@ -170,6 +146,7 @@ class _PickCarState extends State<PickCar> {
   String formattedDate = '';
   String _TimeofDay = 'Chọn Giờ';
 
+  bool _isLoading = false;
   @override
   void initState() {
     _isMounted = false;
@@ -195,39 +172,9 @@ class _PickCarState extends State<PickCar> {
     formattedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
   }
 
-  Future<double> postData(double currentDistance) async {
-    String url = 'https://api.dantay.vn/api/price';
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        body: {'distance': '${currentDistance / 1000}'},
-      );
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> parsedJson = json.decode(response.body);
-        print(
-            'Distance: ${currentDistance / 1000} - Price: ${parsedJson['price']}');
-        return parsedJson['price'];
-      } else {
-        print('Failed to post data. Status code: ${response.statusCode}');
-        return 0.0;
-      }
-    } catch (error) {
-      print('Error: $error');
-      return 0.0;
-    }
-  }
 
-  Future<void> updateDistance() async {
-    double newDistance = await fetchDistance();
-    double newPrice = await postData(newDistance);
-    setState(() {
-      distance = newDistance;
-      Price = newPrice;
-      constPrice = newPrice;
-    });
-  }
 
   Future<double> fetchDistance() async {
     final url = Uri.parse(
@@ -530,70 +477,86 @@ class _PickCarState extends State<PickCar> {
                           child: CupertinoButton(
                             borderRadius: BorderRadius.circular(15.0),
                             color: Color(0xFF276F61),
-                            child: Text("Xác Nhận"),
-                            onPressed: () async {
-                              Future<void> saveTimeOfDay(TimeOfDay time) async {
-                                final prefs =
-                                    await SharedPreferences.getInstance();
-                                final formattedTime =
-                                    '${time.hour}:${time.minute}';
-                                await prefs.setString('time', formattedTime);
-                              }
+                            child: _isLoading
+                                ? CupertinoActivityIndicator() // Hiển thị spinner khi đang loading
+                                : Text("Xác Nhận"),
+                            onPressed: _isLoading
+                                ? null // Vô hiệu hóa nút khi đang loading
+                                : () async {
+                                    setState(() {
+                                      _isLoading = true; // Bắt đầu loading
+                                    });
 
-                              if (formattedDate ==
-                                  DateFormat('dd/MM/yyyy').format(nowDate)) {
-                                DateTime nowDate = DateTime.now();
+                                    try {
+                                      Future<void> saveTimeOfDay(
+                                          TimeOfDay time) async {
+                                        final prefs = await SharedPreferences
+                                            .getInstance();
+                                        final formattedTime =
+                                            '${time.hour}:${time.minute}';
+                                        await prefs.setString(
+                                            'time', formattedTime);
+                                      }
 
-                                final nowPlus15Minutes =
-                                    nowDate.add(Duration(minutes: 15));
-                                final selectedDateTime = DateTime(
-                                    nowDate.year,
-                                    nowDate.month,
-                                    nowDate.day,
-                                    selectedTime.hour,
-                                    selectedTime.minute);
+                                      if (formattedDate ==
+                                          DateFormat('dd/MM/yyyy')
+                                              .format(nowDate)) {
+                                        DateTime nowDate = DateTime.now();
 
-                                print(
-                                    "This is Selected Date Time: $selectedDateTime");
-                                print(
-                                    "This is Selected nowPlus15Minutes: $nowPlus15Minutes");
-                                if (formattedDate ==
-                                    DateFormat('dd/MM/yyyy').format(nowDate)) {
-                                  if (selectedDateTime
-                                      .isBefore(nowPlus15Minutes)) {
-                                    showTimeErrorDialog(context);
-                                    return;
-                                  }
-                                }
-                              }
-                              saveTimeOfDay(selectedTime);
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              await prefs.setString(
-                                  'pickUp', _pickUpController.text);
-                              await prefs.setString(
-                                  'pickDrop', _dropOffController.text);
-                              await prefs.setString('date', formattedDate);
-                              await prefs.setString('time',
-                                  '${selectedTime.hour}:${selectedTime.minute}');
-                              await prefs.setString(
-                                  'seat', _seatController.text);
+                                        final nowPlus15Minutes =
+                                            nowDate.add(Duration(minutes: 15));
+                                        final selectedDateTime = DateTime(
+                                            nowDate.year,
+                                            nowDate.month,
+                                            nowDate.day,
+                                            selectedTime.hour,
+                                            selectedTime.minute);
 
-                              distance = await fetchDistance();
-                              if (distance == 0) {
-                                showDistanceErrorDialog(context);
-                                return;
-                              }
+                                        if (formattedDate ==
+                                            DateFormat('dd/MM/yyyy')
+                                                .format(nowDate)) {
+                                          if (selectedDateTime
+                                              .isBefore(nowPlus15Minutes)) {
+                                            showTimeErrorDialog(context);
+                                            return;
+                                          }
+                                        }
+                                      }
+                                      saveTimeOfDay(selectedTime);
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      await prefs.setString(
+                                          'pickUp', _pickUpController.text);
+                                      await prefs.setString(
+                                          'pickDrop', _dropOffController.text);
+                                      await prefs.setString(
+                                          'date', formattedDate);
+                                      await prefs.setString('time',
+                                          '${selectedTime.hour}:${selectedTime.minute}');
+                                      await prefs.setString(
+                                          'seat', _seatController.text);
 
-                              await prefs.setDouble('distance', distance);
-                              Navigator.of(context).push(
-                                CupertinoPageRoute(
-                                  builder: (context) => PickCarDash2(),
-                                ),
-                              );
-                            },
+                                      distance = await fetchDistance();
+                                      if (distance == 0) {
+                                        showDistanceErrorDialog(context);
+                                        return;
+                                      }
+
+                                      await prefs.setDouble(
+                                          'distance', distance);
+                                      Navigator.of(context).push(
+                                        CupertinoPageRoute(
+                                          builder: (context) => PickCarDash2(),
+                                        ),
+                                      );
+                                    } finally {
+                                      setState(() {
+                                        _isLoading = false; // Kết thúc loading
+                                      });
+                                    }
+                                  },
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
