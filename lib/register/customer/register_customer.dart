@@ -49,16 +49,16 @@ class _CustomerInputState extends State<CustomerInput> {
       _showErrorDialog(errorMessage);
     } else {
       bool success = await _saveData();
-      // if (success) {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => Dashboard(),
-      //     ),
-      //   );
-      // } else {
-      //   _showErrorDialog('Đăng ký thất bại. Vui lòng thử lại.');
-      // }
+      if (success) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DashboardApp(),
+          ),
+        );
+      } else {
+        _showErrorDialog('Đăng ký thất bại. Vui lòng thử lại.');
+      }
     }
   }
 

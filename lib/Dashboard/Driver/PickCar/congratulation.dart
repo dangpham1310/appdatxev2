@@ -122,7 +122,7 @@ class _PickCarDoneState extends State<PickCarDone> {
                     onPressed: () {
                       Navigator.of(context).pushAndRemoveUntil(
                         CupertinoPageRoute(
-                            builder: (context) => DashboardApp()),
+                            builder: (context) => DashboardDriver()),
                         (route) => false,
                       );
                     },

@@ -289,7 +289,7 @@ class _ListReceiveState extends State<ListReceive> {
                         SizedBox(height: 5),
                         _buildRow(
                           icon: CupertinoIcons.money_dollar_circle,
-                          text: 'Phí nhận: ${item['price_to_receive']} VND',
+                          text: 'Tiền Cọc: ${item['price_to_receive']} VND',
                           textStyle: TextStyle(color: Colors.red),
                         ),
                         SizedBox(height: 5),

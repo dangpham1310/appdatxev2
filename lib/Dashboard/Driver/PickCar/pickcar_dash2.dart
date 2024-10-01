@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './../../Customer/PickCar/congratulation.dart';
+import "./congratulation.dart";
 
 class PickCarDash2 extends StatefulWidget {
   @override
@@ -125,7 +125,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                         Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Text(
-                            'Giá Đề Xuất: $price nghìn VND',
+                            'Giá ước lượng: $price nghìn VND',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -573,7 +573,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                               return CupertinoAlertDialog(
                                 title: Text('Thông Báo'),
                                 content: Text(
-                                    'Vui lòng nhập Giá lớn hơn giá đề xuất'),
+                                    'Vui lòng nhập Giá lớn hơn Giá ước lượng'),
                                 actions: [
                                   CupertinoDialogAction(
                                     child: Text('OK'),

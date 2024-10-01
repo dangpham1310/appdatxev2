@@ -83,7 +83,7 @@ class CongratulationPage extends StatelessWidget {
                 SizedBox(height: 10),
                 _buildInfoRow(
                   icon: CupertinoIcons.money_dollar_circle,
-                  label: "Phí nhận:",
+                  label: "Tiền Cọc:",
                   value: "48 nghìn VND",
                 ),
                 SizedBox(height: 10),

@@ -33,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       FCMToken = prefs.getString('FCMToken') ?? '';
       name = prefs.getString('name') ?? 'Loading...';
-      coin = prefs.getString('coin') ?? '\$100.00';
+      coin = prefs.getString('coin') ?? '\$';
     });
 
     if (accessToken != null) {

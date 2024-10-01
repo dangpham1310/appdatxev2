@@ -34,7 +34,7 @@ class _WelcomeState extends State<Welcome> {
     } else if (isLoggedInCustomer) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
+        MaterialPageRoute(builder: (context) => DashboardApp()),
       );
     }
   }

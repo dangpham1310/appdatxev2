@@ -1,30 +1,29 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './Home/home.dart';
 import './PickCar/pickcar.dart';
 import 'History/history.dart';
 import 'Profile/profile.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-void main() {
-  runApp(DashboardApp());
-}
-
-class DashboardApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoApp(
-      home: Dashboard(),
-    );
-  }
-}
-
-class Dashboard extends StatefulWidget {
+class DashboardApp extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends State<DashboardApp> {
   int _currentIndex = 0;
+
+  // create init
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _onTabTapped(int index) {
     setState(() {

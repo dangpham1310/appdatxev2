@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import the services package for clipboard
+import 'package:http/http.dart' as http;
 
 class NapRutPage extends StatefulWidget {
   @override
@@ -19,26 +20,41 @@ class _NapRutPageState extends State<NapRutPage> {
   void _loadData() async {
     final prefs = await SharedPreferences.getInstance();
     String phone = prefs.getString('phone') ?? '';
+    String accessToken = prefs.getString('accessToken') ?? '';
     setState(() {
       phoneNumber = phone;
+      accessToken = accessToken;
     });
   }
 
   final String accountNumber = '7777799999123';
 // Account number to be copied
   final List<String> amounts = [
-    '1,000,000 VND',
-    '2,000,000 VND',
-    '3,000,000 VND',
-    '4,000,000 VND',
-    '5,000,000 VND',
-    '6,000,000 VND',
-    '7,000,000 VND',
-    '8,000,000 VND',
-    '9,000,000 VND',
-    '10,000,000 VND'
+    '100,000 VND',
+    '200,000 VND',
+    '300,000 VND',
+    '400,000 VND',
+    '500,000 VND',
+    '600,000 VND',
+    '700,000 VND',
+    '800,000 VND',
+    '900,000 VND',
+    '1,000,000 VND'
   ];
-  String selectedAmount = '1,000,000 VND';
+  String selectedAmount = '100,000 VND';
+  TextEditingController stkruttienController = TextEditingController();
+  TextEditingController bankNameController = TextEditingController();
+  TextEditingController chutaikhoanController = TextEditingController();
+  TextEditingController naptienController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Dispose controllers to avoid memory leaks
+    stkruttienController.dispose();
+    bankNameController.dispose();
+    chutaikhoanController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,8 +207,32 @@ class _NapRutPageState extends State<NapRutPage> {
   }
 
   Widget _buildTextField(String placeholder) {
+    if (placeholder == "Số Tài Khoản") {
+      return CupertinoTextField(
+        placeholder: placeholder,
+        controller: stkruttienController, // Use the controller here
+        padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+        decoration: BoxDecoration(
+          color: CupertinoColors.white,
+          borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(color: CupertinoColors.systemGrey),
+        ),
+      );
+    } else if (placeholder == "Thông Tin Ngân Hàng") {
+      return CupertinoTextField(
+        placeholder: placeholder,
+        controller: bankNameController, // Use the controller here
+        padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+        decoration: BoxDecoration(
+          color: CupertinoColors.white,
+          borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(color: CupertinoColors.systemGrey),
+        ),
+      );
+    }
     return CupertinoTextField(
       placeholder: placeholder,
+      controller: chutaikhoanController, // Use the controller here
       padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       decoration: BoxDecoration(
         color: CupertinoColors.white,
@@ -205,6 +245,7 @@ class _NapRutPageState extends State<NapRutPage> {
   Widget _buildAmountField(String placeholder) {
     return CupertinoTextField(
       placeholder: placeholder,
+      controller: naptienController, // Use the controller here
       padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       keyboardType: TextInputType.number,
       decoration: BoxDecoration(
@@ -290,6 +331,65 @@ class _NapRutPageState extends State<NapRutPage> {
         padding: EdgeInsets.symmetric(vertical: 14.0),
         onPressed: () {
           // Implement your deposit or withdrawal logic here
+          if (text == 'Rút tiền') {
+            print("Rút Tiền");
+            // post to server accessToken, amount, accountNumber, bankName, accountName
+            void _withdraw() async {
+              final prefs = await SharedPreferences.getInstance();
+              String? accessToken = prefs.getString('accessToken');
+
+              if (accessToken != null && accessToken.isNotEmpty) {
+                final response = await http.post(
+                  Uri.parse('https://api.dantay.vn/api/ruttien'),
+                  body: {
+                    'accessToken': accessToken,
+                    'amount': selectedAmount,
+                    'stkruttien':
+                        stkruttienController.text, // Use controller's text
+                    'bankName':
+                        bankNameController.text, // Use controller's text
+                    'accountName':
+                        chutaikhoanController.text, // Use controller's text
+                  },
+                );
+                if (response.statusCode == 200) {
+                  print('Rút tiền thành công');
+                  _showSuccessDialog(context);
+                } else {
+                  _showFailWithDraw(context);
+                }
+              } else {
+                print('Không tìm thấy accessToken');
+              }
+            }
+
+            _withdraw();
+          } else {
+            void _deposit() async {
+              final prefs = await SharedPreferences.getInstance();
+              String? accessToken = prefs.getString('accessToken');
+
+              if (accessToken != null && accessToken.isNotEmpty) {
+                final response = await http.post(
+                  Uri.parse('https://api.dantay.vn/api/naptien'),
+                  body: {
+                    'accessToken': accessToken,
+                    'amount': naptienController.text,
+                  },
+                );
+                if (response.statusCode == 200) {
+                  print('Nạp tiền thành công');
+                  _showSuccessDialogNapTien(context);
+                } else {
+                  print('Nạp tiền thất bại');
+                }
+              } else {
+                print('Không tìm thấy accessToken');
+              }
+            }
+
+            _deposit();
+          }
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -309,4 +409,65 @@ class _NapRutPageState extends State<NapRutPage> {
       ),
     );
   }
+}
+
+void _showSuccessDialog(BuildContext context) {
+  showCupertinoDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: Text("Rút Tiền Thành Công"),
+        content: Text("Yêu cầu rút tiền của bạn đã được thực hiện thành công."),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop(); // Đóng dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showFailWithDraw(BuildContext context) {
+  showCupertinoDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: Text("Rút Tiền Thất Bại"),
+        content: Text(
+            "Yêu cầu rút tiền của bạn thất bại do số dư nhỏ hơn số tiền rút"),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop(); // Đóng dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showSuccessDialogNapTien(BuildContext context) {
+  showCupertinoDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: Text("Nạp Tiền Thành Công"),
+        content: Text("Yêu cầu Nạp tiền của bạn đã được thực hiện thành công."),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop(); // Đóng dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

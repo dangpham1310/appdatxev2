@@ -77,7 +77,7 @@ class _HistoryTransactionPageState extends State<HistoryTransactionPage> {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No transactions found'));
+              return Center(child: Text('Không Tìm Thấy Lịch Sử Giao Dịch'));
             } else {
               return ListView.builder(
                 itemCount: snapshot.data!.length,
@@ -135,7 +135,7 @@ class TransactionListItem extends StatelessWidget {
               SizedBox(width: 8),
               // Ensure the Transaction ID is always fully visible
               Text(
-                'Mã số giao dịch: ${transaction.id}',
+                '${transaction.content}',
                 style: TextStyle(
                   fontSize: 14.0,
                   color: CupertinoColors.systemGrey,
@@ -152,7 +152,7 @@ class TransactionListItem extends StatelessWidget {
               Flexible(
                 flex: 2,
                 child: Text(
-                  'Thời Gian: ${transaction.date}',
+                  '${transaction.date}',
                   style: TextStyle(
                     fontSize: 14.0,
                     color: CupertinoColors.systemGrey,
@@ -167,7 +167,7 @@ class TransactionListItem extends StatelessWidget {
                 child: Text(
                   '${transaction.type} \$${transaction.amount.abs().toStringAsFixed(2)}',
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: transaction.type == "+" ? Colors.green : Colors.red,
                   ),
@@ -185,6 +185,14 @@ class TransactionListItem extends StatelessWidget {
               color: CupertinoColors.systemGrey,
             ),
           ),
+          SizedBox(height: 8),
+          Text(
+            'Mã Số Giao dịch: ${transaction.id.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontSize: 10.0,
+              color: Color.fromARGB(255, 141, 82, 46),
+            ),
+          ),
         ],
       ),
     );
@@ -197,13 +205,15 @@ class Transaction {
   final String date;
   final double amount;
   final double total;
+  final String content;
 
   Transaction(
       {required this.id,
       required this.type,
       required this.date,
       required this.amount,
-      required this.total});
+      required this.total,
+      required this.content});
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
@@ -212,6 +222,7 @@ class Transaction {
       date: json['date'] ?? '',
       amount: json['amount']?.toDouble() ?? 0.0,
       total: json['total']?.toDouble() ?? 0.0,
+      content: json['content'] ?? '',
     );
   }
 }

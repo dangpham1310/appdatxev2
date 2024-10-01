@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +15,9 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String name = 'Loading...';
-  int coin = 100;
+  String coin = '\$100.00';
+  String phone = '';
+  String FCMToken = '';
 
   @override
   void initState() {
@@ -29,27 +29,35 @@ class _ProfilePageState extends State<ProfilePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
 
+    // Fetch FCMToken from SharedPreferences
+    setState(() {
+      FCMToken = prefs.getString('FCMToken') ?? '';
+      name = prefs.getString('name') ?? 'Loading...';
+      coin = prefs.getString('coin') ?? '\$100.00';
+    });
+
     if (accessToken != null) {
       var response = await http.post(
-        Uri.parse('https://api.dantay.vn/API/authentication/getProfile'),
+        Uri.parse('https://api.dantay.vn/API/authentication/getCoin'),
         body: {'accessToken': accessToken},
       );
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
+
         if (data['coin'] != 'fail') {
           setState(() {
-            name = data['name'];
-            coin = data['coin'];
+            coin = data['coin'].toString();
+            phone = data['phone'];
           });
         } else {
-          // Handle the failure case here
           print('Failed to load profile');
         }
       } else {
-        // Handle the error case here
         print('Error fetching profile');
       }
+
+      prefs.setString('phone', phone);
     }
   }
 
@@ -89,155 +97,179 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 200,
-                color: Color(0xFF40B59F),
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        margin: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: CupertinoColors.systemGrey,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          "\$" + coin.toString(),
-                          style: TextStyle(
-                            color: CupertinoColors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      top: 0, // Adjust to move the icon outside
-                      left: MediaQuery.of(context).size.width * 0.5 - 50,
-                      child: Container(
-                        height: 100,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                        child: Icon(
-                          CupertinoIcons.person_solid,
-                          size: 50,
-                          color: Color(0xFF40B59F),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          name,
-                          style: TextStyle(
-                            color: CupertinoColors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Tiện ích',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildIconButton(Icons.person, 'Thông Tin Cá Nhân', () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => Information(),
-                            ),
-                          );
-                        }),
-                        buildIconButton(
-                          CupertinoIcons.time,
-                          'Lịch Sử Giao Dịch',
-                          () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => HistoryTransactionPage(),
+        child: CustomScrollView(
+          slivers: [
+            CupertinoSliverRefreshControl(
+              onRefresh: _loadProfile,
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 200,
+                        color: Color(0xFF40B59F),
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                margin: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: CupertinoColors.systemGrey,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  coin,
+                                  style: TextStyle(
+                                    color: CupertinoColors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                            );
-                          },
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              top: 0, // Adjust this to move the icon down
+                              left:
+                                  MediaQuery.of(context).size.width * 0.5 - 50,
+                              child: Container(
+                                height: 100,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                ),
+                                child: Icon(
+                                  CupertinoIcons.person_solid,
+                                  size: 50,
+                                  color: Color(0xFF40B59F),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  name,
+                                  style: TextStyle(
+                                    color: CupertinoColors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildIconButton(
-                            CupertinoIcons.group, 'Giới Thiệu Bạn Bè', () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => InvitedFriendsPage(),
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Tiện ích',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                buildIconButton(
+                                    Icons.person, 'Thông Tin Cá Nhân', () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => Information(),
+                                    ),
+                                  );
+                                }),
+                                buildIconButton(
+                                  CupertinoIcons.time,
+                                  'Lịch Sử Giao Dịch',
+                                  () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (context) =>
+                                            HistoryTransactionPage(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
-                          );
-                        }),
-                        buildIconButton(CupertinoIcons.money_dollar, 'Nạp Rút',
-                            () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => NapRutPage(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                buildIconButton(
+                                    CupertinoIcons.group, 'Giới Thiệu Bạn Bè',
+                                    () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          InvitedFriendsPage(),
+                                    ),
+                                  );
+                                }),
+                                buildIconButton(
+                                    CupertinoIcons.money_dollar, 'Nạp Rút', () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => NapRutPage(),
+                                    ),
+                                  );
+                                }),
+                              ],
                             ),
-                          );
-                        }),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Text('Chính Sách',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildIconButton(CupertinoIcons.exclamationmark_circle,
-                            'Khiếu Nại', () {}),
-                        buildIconButton(
-                            CupertinoIcons.doc_text, 'Nội quy', () {}),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        buildIconButton(CupertinoIcons.lock_shield,
-                            'Chính Sách \nBảo Mật', () {}),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                ),
+                            SizedBox(height: 20),
+                            Text('Chính Sách',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                buildIconButton(
+                                    CupertinoIcons.exclamationmark_circle,
+                                    'Khiếu Nại',
+                                    () {}),
+                                buildIconButton(
+                                    CupertinoIcons.doc_text, 'Nội quy', () {}),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                buildIconButton(CupertinoIcons.lock_shield,
+                                    'Chính Sách \nBảo Mật', () {}),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                      Center(
+                          child: Text("version: 1.0.0",
+                              style: TextStyle(color: Colors.grey))),
+                      Center(
+                          child: Text("FCM Token: $FCMToken",
+                              style: TextStyle(color: Colors.grey))),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
