@@ -32,6 +32,10 @@ class _DriverInputState extends State<DriverInput> {
       errorMessage = 'Vui lòng xác nhận mật khẩu';
     } else if (_passwordController.text != _confirmPasswordController.text) {
       errorMessage = 'Mật khẩu và xác nhận mật khẩu không khớp';
+    } else if (_addressController.text.isEmpty) {
+      errorMessage = 'Vui lòng nhập địa chỉ';
+    } else if (_brandCar.text.isEmpty) {
+      errorMessage = 'Vui lòng nhập hãng xe';
     }
 
     if (errorMessage.isNotEmpty) {
@@ -278,6 +282,21 @@ class _DriverInputState extends State<DriverInput> {
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 10.0), // Add some space
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Text(
+                            'Bằng cách bấm Tiếp Theo, tôi đồng ý với điều khoản và điều kiện của ứng dụng',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black54,
                             ),
                           ),
                         ),

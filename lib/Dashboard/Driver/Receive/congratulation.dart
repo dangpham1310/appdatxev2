@@ -1,14 +1,62 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
-class CongratulationPage extends StatelessWidget {
+class CongratulationPage extends StatefulWidget {
+  final String id;
+
+  CongratulationPage(this.id);
+
+  @override
+  _CongratulationPageState createState() => _CongratulationPageState();
+}
+
+class _CongratulationPageState extends State<CongratulationPage> {
+  Map<String, dynamic>? travelData;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTravelData(widget.id);
+  }
+
+  Future<void> fetchTravelData(String id) async {
+    final url = Uri.parse('https://api.dannycode.site/get-history');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'id': id}),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          travelData = jsonDecode(response.body);
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load travel data');
+      }
+    } catch (error) {
+      print(error);
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text("Nhận Chuyến Thành Công",
-            style: TextStyle(color: Colors.white)),
+        middle: Text(
+          "Nhận Chuyến Thành Công",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Color(0xFF40B59F),
         leading: GestureDetector(
           onTap: () {
@@ -21,114 +69,98 @@ class CongratulationPage extends StatelessWidget {
         ),
       ),
       child: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  CupertinoIcons.check_mark_circled_solid,
-                  size: 100,
-                  color: Color(0xFF40B59F),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  "Chúc Mừng!",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF40B59F),
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : travelData == null
+                ? Center(child: Text('Error loading data'))
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildIconSection(),
+                        const SizedBox(height: 20),
+                        _buildTextSection(),
+                        const SizedBox(height: 20),
+                        _buildInfoRows(),
+                        const SizedBox(height: 20),
+                        _buildButtons(),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "Bạn đã nhận chuyến thành công!",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black87,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20),
-                Divider(
-                  thickness: 2,
-                  color: Color(0xFF40B59F),
-                ),
-                SizedBox(height: 20),
-                _buildInfoRow(
-                  icon: CupertinoIcons.location_solid,
-                  label: "Điểm đón:",
-                  value: "Nhà Nghỉ An Khánh, Vũ Bản, Bình Lục, Hà Nam",
-                ),
-                SizedBox(height: 10),
-                _buildInfoRow(
-                  icon: CupertinoIcons.location_solid,
-                  label: "Điểm đến:",
-                  value: "Đại học Bách khoa Hà Nội, 1 Đại Cồ Việt, Hà Nội",
-                ),
-                SizedBox(height: 10),
-                _buildInfoRow(
-                  icon: CupertinoIcons.time,
-                  label: "Thời gian:",
-                  value: "2024-3-12 - Giờ: 16:42:00",
-                ),
-                SizedBox(height: 10),
-                _buildInfoRow(
-                  icon: CupertinoIcons.money_dollar_circle,
-                  label: "Giá cước:",
-                  value: "240 nghìn VND",
-                ),
-                SizedBox(height: 10),
-                _buildInfoRow(
-                  icon: CupertinoIcons.money_dollar_circle,
-                  label: "Tiền Cọc:",
-                  value: "48 nghìn VND",
-                ),
-                SizedBox(height: 10),
-                _buildInfoRow(
-                  icon: CupertinoIcons.car_detailed,
-                  label: "Chỗ ngồi:",
-                  value: "1 chỗ",
-                ),
-                SizedBox(height: 10),
-                _buildInfoRow(
-                  icon: CupertinoIcons.text_bubble,
-                  label: "Ghi chú:",
-                  value: "Có mang theo chó mèo",
-                ),
-                SizedBox(height: 10),
-                _buildInfoRow(
-                  icon: CupertinoIcons.phone,
-                  label: "Số điện thoại đặt:",
-                  value: "0123 456 789",
-                ),
-                SizedBox(height: 10),
-                _buildInfoRow(
-                  icon: CupertinoIcons.phone,
-                  label: "Số điện thoại khách:",
-                  value: "0987 654 321",
-                ),
-                SizedBox(height: 20),
-                CupertinoButton(
-                  color: Color(0xFF40B59F),
-                  child: Text("Gọi khách"),
-                  onPressed: () {
-                    _launchCaller("0987 654 321");
-                  },
-                ),
-                SizedBox(height: 20),
-                CupertinoButton(
-                  color: Color(0xFF40B59F),
-                  child: Text("Quay lại trang chính"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
+      ),
+    );
+  }
+
+  Widget _buildIconSection() {
+    return Icon(
+      CupertinoIcons.check_mark_circled_solid,
+      size: 100,
+      color: Color(0xFF40B59F),
+    );
+  }
+
+  Widget _buildTextSection() {
+    return Column(
+      children: [
+        Text(
+          "Chúc Mừng!",
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF40B59F),
           ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          "Bạn đã nhận chuyến thành công!",
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.black87,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoRows() {
+    return Card(
+      elevation: 2,
+      color: Color(0xFFE8F5E9),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            _buildInfoRow(
+              icon: CupertinoIcons.location_solid,
+              label: "Điểm đón:",
+              value: travelData!['pickUp'],
+            ),
+            _buildInfoRow(
+              icon: CupertinoIcons.location_solid,
+              label: "Điểm đến:",
+              value: travelData!['pickDrop'],
+            ),
+            _buildInfoRow(
+              icon: CupertinoIcons.time,
+              label: "Thời gian:",
+              value: travelData!['time'],
+            ),
+            _buildInfoRow(
+              icon: CupertinoIcons.money_dollar_circle,
+              label: "Giá cước:",
+              value: "${travelData!['price']} VND",
+            ),
+            _buildInfoRow(
+              icon: CupertinoIcons.phone,
+              label: "Số điện thoại khách:",
+              value: travelData!['phonenumber'],
+            ),
+          ],
         ),
       ),
     );
@@ -139,44 +171,69 @@ class CongratulationPage extends StatelessWidget {
     required String label,
     required String value,
   }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: CupertinoColors.systemGrey),
+              color: Color(0xFF40B59F),
+            ),
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButtons() {
+    return Column(
       children: [
-        Container(
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: CupertinoColors.systemGrey),
-            color: Color(0xFF40B59F),
-          ),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 20,
-          ),
+        CupertinoButton(
+          color: Color(0xFF40B59F),
+          child: Text("Gọi khách"),
+          onPressed: () {
+            _launchCaller(travelData!['phonenumber']);
+          },
         ),
-        SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black54,
-                ),
-              ),
-            ],
-          ),
+        const SizedBox(height: 20),
+        CupertinoButton(
+          color: Color(0xFF40B59F),
+          child: Text("Quay lại trang chính"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
       ],
     );
@@ -184,7 +241,6 @@ class CongratulationPage extends StatelessWidget {
 
   void _launchCaller(String phoneNumber) async {
     final url = 'tel:$phoneNumber';
-    print("Call");
     if (await canLaunch(url)) {
       await launch(url);
     } else {

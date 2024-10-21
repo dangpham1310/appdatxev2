@@ -43,7 +43,7 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
 
     ;
     Future<void> _sendPassword() async {
-      final url = 'https://api.dantay.vn/API/authentication/login';
+      final url = 'https://api.dannycode.site/API/authentication/login';
 
       final response = await http.post(
         Uri.parse(url),

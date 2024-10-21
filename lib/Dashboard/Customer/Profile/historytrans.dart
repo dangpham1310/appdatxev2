@@ -35,7 +35,7 @@ class _HistoryTransactionPageState extends State<HistoryTransactionPage> {
 
   Future<List<Transaction>> fetchTransactions(String accessToken) async {
     final response = await http.post(
-      Uri.parse('https://api.dantay.vn/lsgd'),
+      Uri.parse('https://api.dannycode.site/lsgd'),
       body: {'accessToken': accessToken},
     );
 

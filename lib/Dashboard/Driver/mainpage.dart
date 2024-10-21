@@ -13,7 +13,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
 class DashboardDriver extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
@@ -90,13 +89,10 @@ class _DashboardState extends State<DashboardDriver> {
 }
 
 void RunDashboardDriver() async {
-
-
-
   Future<void> postData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('FCMToken') ?? '';
-    String url = 'https://api.dantay.vn/api/FCMTokenDriver';
+    String url = 'https://api.dannycode.site/api/FCMTokenDriver';
     final response = await http.post(
       Uri.parse(url),
       body: {'FCMToken': '${token}'},

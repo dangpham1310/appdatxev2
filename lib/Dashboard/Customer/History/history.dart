@@ -68,7 +68,7 @@ class _HistoryPageState extends State<HistoryPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('accessToken');
     final response = await http.post(
-      Uri.parse('https://api.dantay.vn/api/history'),
+      Uri.parse('https://api.dannycode.site/api/history'),
       body: {'accessToken': accessToken},
     );
 

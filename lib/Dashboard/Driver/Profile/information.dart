@@ -44,7 +44,7 @@ class _InformationState extends State<Information> {
   }
 
   void _fetchDriverInfo() async {
-    final url = 'https://api.dantay.vn/API/authentication/reload';
+    final url = 'https://api.dannycode.site/API/authentication/reload';
     final response = await http.post(
       Uri.parse(url),
       body: {'accessToken': accessToken},
@@ -138,7 +138,7 @@ class _InformationState extends State<Information> {
   }
 
   void _reloadDriverInfo() async {
-    final url = 'https://api.dantay.vn/API/authentication/reload';
+    final url = 'https://api.dannycode.site/API/authentication/reload';
     final response = await http.post(
       Uri.parse(url),
       body: {'accessToken': accessToken},
@@ -295,39 +295,6 @@ class _InformationState extends State<Information> {
                 ],
               ),
               Divider(),
-              SizedBox(height: 20),
-              Text('Ảnh bằng lái xe',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      _buildImage('driverLicenseFront', 'Mặt Trước'),
-                      SizedBox(height: 5),
-                      Text('Mặt Trước'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      _buildImage('driverLicenseBack', 'Mặt Sau'),
-                      SizedBox(height: 5),
-                      Text('Mặt Sau'),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Text('Ảnh xe', style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildImage('carFront', 'Car Front'),
-                  _buildImage('carBack', 'Car Back'),
-                ],
-              ),
               SizedBox(height: 20),
               Center(
                 child: Column(

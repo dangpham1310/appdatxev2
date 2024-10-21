@@ -86,6 +86,7 @@ class NotificationController {
   static Future<String> requestFirebaseToken() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     String? token = await messaging.getToken();
+    print('FCM Token: $token');
     if (token != null) {
       print('FCM Token: $token');
       return token;

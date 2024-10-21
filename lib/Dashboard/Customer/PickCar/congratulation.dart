@@ -97,7 +97,7 @@ class _PickCarDoneState extends State<PickCarDone> {
                 tripDetailRow(
                   icon: CupertinoIcons.money_dollar,
                   label: 'Giá:',
-                  value: '${widget.price} VND',
+                  value: '${widget.price} Nghìn VND',
                 ), // Trip price
                 SizedBox(height: 20),
                 Text(

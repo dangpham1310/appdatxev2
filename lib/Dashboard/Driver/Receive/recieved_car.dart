@@ -285,7 +285,7 @@ class _ReceiveState extends State<Receive> {
 
                                 final response = await http.post(
                                     Uri.parse(
-                                        'https://api.dantay.vn/api/postRecent'),
+                                        'https://api.dannycode.site/api/postRecent'),
                                     body: {
                                       'phone': phone,
                                       'pickUp': _pickUpController.text,

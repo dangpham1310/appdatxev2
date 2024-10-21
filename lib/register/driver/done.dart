@@ -10,7 +10,8 @@ class DriverDone extends StatelessWidget {
           appBar: AppBar(
             title: Text('Thông Báo'),
             centerTitle: true,
-            shadowColor: Colors.transparent,
+            shadowColor: Color.fromARGB(0, 251, 251, 251),
+            foregroundColor: Colors.white,
             backgroundColor: Colors.teal,
           ),
           body: Center(

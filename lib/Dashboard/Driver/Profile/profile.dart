@@ -7,6 +7,9 @@ import 'information.dart';
 import './historytrans.dart';
 import './reference.dart';
 import './deAndWi.dart';
+import 'khieunai.dart';
+import 'noiquy.dart';
+import 'chinh-sach-bao-mat.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -38,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (accessToken != null) {
       var response = await http.post(
-        Uri.parse('https://api.dantay.vn/API/authentication/getCoin'),
+        Uri.parse('https://api.dannycode.site/API/authentication/getCoin'),
         body: {'accessToken': accessToken},
       );
 
@@ -241,17 +244,38 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 buildIconButton(
                                     CupertinoIcons.exclamationmark_circle,
-                                    'Khiếu Nại',
-                                    () {}),
+                                    'Khiếu Nại', () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          DisputeResolutionPage(),
+                                    ),
+                                  );
+                                }),
                                 buildIconButton(
-                                    CupertinoIcons.doc_text, 'Nội quy', () {}),
+                                    CupertinoIcons.doc_text, 'Nội quy', () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => RulesPage(),
+                                    ),
+                                  );
+                                }),
                               ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 buildIconButton(CupertinoIcons.lock_shield,
-                                    'Chính Sách \nBảo Mật', () {}),
+                                    'Chính Sách \nBảo Mật', () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => ChinhSachPage(),
+                                    ),
+                                  );
+                                }),
                               ],
                             ),
                             SizedBox(height: 20),

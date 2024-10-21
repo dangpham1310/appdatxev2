@@ -26,7 +26,7 @@ class _InformationState extends State<Information> {
 
     if (accessToken != null) {
       var response = await http.post(
-        Uri.parse('https://api.dantay.vn/API/authentication/infoCustom'),
+        Uri.parse('https://api.dannycode.site/API/authentication/infoCustom'),
         body: {'accessToken': accessToken},
       );
 

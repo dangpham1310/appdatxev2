@@ -16,7 +16,7 @@ Future<List<Map<String, dynamic>>> fetchData(String accessToken, String time,
   final dateString = datetime.toIso8601String();
 
   final response = await http.post(
-    Uri.parse('https://api.dantay.vn/viewlist'),
+    Uri.parse('https://api.dannycode.site/viewlist'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -201,7 +201,7 @@ class _ListReceiveState extends State<ListReceive> {
               String? FCMToken = prefs.getString('FCMToken');
 
               final response = await http.post(
-                Uri.parse('https://api.dantay.vn/received'),
+                Uri.parse('https://api.dannycode.site/received'),
                 body: {
                   'accessToken': accessToken,
                   'id': item['id'],
@@ -220,7 +220,8 @@ class _ListReceiveState extends State<ListReceive> {
                 print("id: ${item['id']}");
 
                 final response = await http.post(
-                  Uri.parse('https://api.dantay.vn/api/receiveNotification'),
+                  Uri.parse(
+                      'https://api.dannycode.site/api/receiveNotification'),
                   body: {
                     'accessToken': accessToken,
                     'id': item['id'],
@@ -231,7 +232,7 @@ class _ListReceiveState extends State<ListReceive> {
 
                 Navigator.of(context).push(
                   CupertinoPageRoute(
-                    builder: (context) => CongratulationPage(),
+                    builder: (context) => CongratulationPage(item['id']),
                   ),
                 );
               }
@@ -282,14 +283,15 @@ class _ListReceiveState extends State<ListReceive> {
                         SizedBox(height: 5),
                         _buildDoubleRow(
                           icon1: CupertinoIcons.money_dollar_circle,
-                          text1: '${item['price']} K VND',
+                          text1: '${item['price']} Nghìn VND',
                           icon2: CupertinoIcons.car_detailed,
                           text2: '${item['numberofSeat']} chỗ',
                         ),
                         SizedBox(height: 5),
                         _buildRow(
                           icon: CupertinoIcons.money_dollar_circle,
-                          text: 'Tiền Cọc: ${item['price_to_receive']} VND',
+                          text:
+                              'Tiền Cọc: ${item['price_to_receive']} Nghìn VND',
                           textStyle: TextStyle(color: Colors.red),
                         ),
                         SizedBox(height: 5),

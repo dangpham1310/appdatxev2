@@ -39,7 +39,7 @@ class _DetailsPageState extends State<DetailsPage> {
     final phone = prefs.getString('phone') ?? '';
 
     final response = await http.post(
-      Uri.parse('https://api.dantay.vn/api/details'),
+      Uri.parse('https://api.dannycode.site/api/details'),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -384,7 +384,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
                                             final response = await http.post(
                                               Uri.parse(
-                                                  'https://api.dantay.vn/cancel'),
+                                                  'https://api.dannycode.site/cancel'),
                                               headers: {
                                                 'Content-Type':
                                                     'application/x-www-form-urlencoded',
@@ -398,7 +398,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
                                             final response2 = await http.post(
                                               Uri.parse(
-                                                  'https://api.dantay.vn/api/cancelNotification'),
+                                                  'https://api.dannycode.site/api/cancelNotification'),
                                               headers: {
                                                 'Content-Type':
                                                     'application/x-www-form-urlencoded',

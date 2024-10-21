@@ -172,13 +172,9 @@ class _PickCarState extends State<PickCar> {
     formattedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
   }
 
-
-
-
-
   Future<double> fetchDistance() async {
     final url = Uri.parse(
-        "https://api.dantay.vn/getdistance/${positionPickUp?.latitude}/${positionPickUp?.longitude}/${positionDropOff?.latitude}/${positionDropOff?.longitude}");
+        "https://api.dannycode.site/getdistance/${positionPickUp?.latitude}/${positionPickUp?.longitude}/${positionDropOff?.latitude}/${positionDropOff?.longitude}");
     try {
       final response = await http.get(url);
 
@@ -212,7 +208,8 @@ class _PickCarState extends State<PickCar> {
       // Set a new timer for 3 seconds
       _debounce = Timer(Duration(seconds: 1), () async {
         if (input.length >= 8) {
-          final url = Uri.parse('https://api.dantay.vn/autocomplete/$input');
+          final url =
+              Uri.parse('https://api.dannycode.site/autocomplete/$input');
 
           var response = await http.get(url);
 
@@ -252,7 +249,8 @@ class _PickCarState extends State<PickCar> {
       // Set a new timer for 3 seconds
       _debounce = Timer(Duration(seconds: 1), () async {
         if (input.length >= 8) {
-          final url = Uri.parse('https://api.dantay.vn/autocomplete/$input');
+          final url =
+              Uri.parse('https://api.dannycode.site/autocomplete/$input');
 
           var response = await http.get(url);
 
@@ -648,7 +646,7 @@ class _PickCarState extends State<PickCar> {
             });
 
             final url = Uri.parse(
-                'https://api.dantay.vn/buildlist/${coordinate['description']}');
+                'https://api.dannycode.site/buildlist/${coordinate['description']}');
             var response = await http.get(url);
             final jsonResponse = jsonDecode(response.body);
             detailsPickUp = jsonResponse['results'] as List<dynamic>;
@@ -759,7 +757,7 @@ class _PickCarState extends State<PickCar> {
             });
 
             final url = Uri.parse(
-                'https://api.dantay.vn/buildlist/${coordinate['description']}');
+                'https://api.dannycode.site/buildlist/${coordinate['description']}');
             var response = await http.get(url);
             final jsonResponse = jsonDecode(response.body);
             detailsDropOff = jsonResponse['results'] as List<dynamic>;

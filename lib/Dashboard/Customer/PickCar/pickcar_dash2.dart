@@ -30,7 +30,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
 
   Future<double> postData(double currentDistance) async {
     final prefs = await SharedPreferences.getInstance();
-    String url = 'https://api.dantay.vn/api/price';
+    String url = 'https://api.dannycode.site/api/price';
     final response = await http.post(
       Uri.parse(url),
       body: {
@@ -161,7 +161,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                             prefs.getString('accessToken') ?? '';
 
                         String url =
-                            'https://api.dantay.vn/API/authentication/getPhone';
+                            'https://api.dannycode.site/API/authentication/getPhone';
 
                         try {
                           final response = await http.post(
@@ -205,7 +205,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
 
                         String phone =
                             await getPhoneAndSave(); // Get the phone number first
-                        String url = 'https://api.dantay.vn/api/pickcar';
+                        String url = 'https://api.dannycode.site/api/pickcar';
                         final prefs = await SharedPreferences.getInstance();
                         final response = await http.post(
                           Uri.parse(url),
@@ -231,7 +231,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                         }
 
                         String url2 =
-                            'https://api.dantay.vn/api/sendNotification';
+                            'https://api.dannycode.site/api/sendNotification';
 
                         final response2 = await http.post(
                           Uri.parse(url2),
@@ -244,7 +244,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                         try {
                           final response = await http.post(
                             Uri.parse(
-                                'https://api.dantay.vn/api/getLastestHistory'),
+                                'https://api.dannycode.site/api/getLastestHistory'),
                             body: {
                               'accessToken': prefs.getString('accessToken') ??
                                   '', // Get the stored access token
@@ -680,7 +680,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
           suffix: Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 10),
             child: Text(
-              'K VND',
+              'Nghìn VND',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -799,7 +799,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                   } else if (selectedSeat == "2") {
                     price = (constPrice * 1.9).round();
                   } else if (selectedSeat == "Bao 4") {
-                    price = (constPrice * 2.8).round();
+                    price = (constPrice * 2.7).round();
                   } else if (selectedSeat == "Bao 7") {
                     price = (constPrice * 3.5).round();
                   }

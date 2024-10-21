@@ -35,7 +35,7 @@ class _HistoryTransactionPageState extends State<HistoryTransactionPage> {
 
   Future<List<Transaction>> fetchTransactions(String accessToken) async {
     final response = await http.post(
-      Uri.parse('https://api.dantay.vn/lsgd'),
+      Uri.parse('https://api.dannycode.site/lsgd'),
       body: {'accessToken': accessToken},
     );
 
@@ -110,6 +110,10 @@ class TransactionListItem extends StatelessWidget {
         ? CupertinoIcons.arrow_down
         : CupertinoIcons.arrow_up;
 
+    // Format the amount to 'nghìn VND'
+    String formattedAmount =
+        '${transaction.type} ${transaction.amount.abs().toStringAsFixed(0)} nghìn VND';
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       padding: EdgeInsets.all(16.0),
@@ -127,71 +131,71 @@ class TransactionListItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Display Transaction ID without truncating it
           Row(
             children: [
               Icon(icon,
                   color: transaction.type == "+" ? Colors.green : Colors.red),
               SizedBox(width: 8),
-              // Ensure the Transaction ID is always fully visible
-              Text(
-                '${transaction.content}',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: CupertinoColors.systemGrey,
+              Expanded(
+                child: Text(
+                  transaction.content, // Ensure full content display
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: CupertinoColors.systemGrey,
+                  ),
+                  softWrap: true, // Allow wrapping
                 ),
               ),
             ],
           ),
           SizedBox(height: 8),
-          // Row for Date and Amount
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Use Flexible for the date
-              Flexible(
+              Expanded(
                 flex: 2,
                 child: Text(
-                  '${transaction.date}',
+                  transaction.date,
                   style: TextStyle(
                     fontSize: 14.0,
                     color: CupertinoColors.systemGrey,
                   ),
-                  overflow: TextOverflow.ellipsis, // Prevent overflow
+                  softWrap: true, // Allow wrapping
                 ),
               ),
               SizedBox(width: 10),
-              // Use Flexible for the amount
-              Flexible(
+              Expanded(
                 flex: 1,
                 child: Text(
-                  '${transaction.type} \$${transaction.amount.abs().toStringAsFixed(2)}',
+                  formattedAmount, // Display the formatted amount
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: transaction.type == "+" ? Colors.green : Colors.red,
                   ),
-                  overflow: TextOverflow.ellipsis, // Prevent overflow
+                  textAlign: TextAlign.right, // Align to the right
+                  softWrap: true, // Allow wrapping
                 ),
               ),
             ],
           ),
           SizedBox(height: 8),
-          // Display total amount at the bottom
           Text(
-            'Tổng Cộng: \$${transaction.total.toStringAsFixed(2)}',
+            'Tổng Cộng: ${transaction.total.toStringAsFixed(0)} nghìn VND',
             style: TextStyle(
               fontSize: 14.0,
               color: CupertinoColors.systemGrey,
             ),
+            softWrap: true, // Allow wrapping
           ),
           SizedBox(height: 8),
           Text(
-            'Mã Số Giao dịch: ${transaction.id.toStringAsFixed(2)}',
+            'Mã Số Giao Dịch: ${transaction.id}',
             style: TextStyle(
               fontSize: 10.0,
               color: Color.fromARGB(255, 141, 82, 46),
             ),
+            softWrap: true, // Allow wrapping
           ),
         ],
       ),

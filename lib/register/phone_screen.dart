@@ -154,7 +154,7 @@ class NextScreen extends StatelessWidget {
       return;
     }
 
-    final url = 'https://api.dantay.vn/API/authentication/login_register';
+    final url = 'https://api.dannycode.site/API/authentication/login_register';
 
     try {
       final response = await http.post(

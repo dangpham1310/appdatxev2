@@ -64,8 +64,8 @@ class _CustomerInputState extends State<CustomerInput> {
 
   Future<bool> _saveData() async {
     try {
-      var uri =
-          Uri.parse('https://api.dantay.vn/API/authentication/create_customer');
+      var uri = Uri.parse(
+          'https://api.dannycode.site/API/authentication/create_customer');
       var response = await http.post(uri, body: {
         'phone': phone,
         'name': _nameController.text,
@@ -221,6 +221,21 @@ class _CustomerInputState extends State<CustomerInput> {
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 10.0), // Add some space
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Text(
+                            'Bằng cách bấm Tiếp Theo, tôi đồng ý với điều khoản và điều kiện của ứng dụng',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black54,
                             ),
                           ),
                         ),

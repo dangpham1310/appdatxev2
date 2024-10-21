@@ -30,10 +30,12 @@ class _DriverGiayToState extends State<DriverGiayTo> {
   String address = '';
   String brandCar = '';
 
+  String _licensePlateError = '';
+  String _imageError = '';
+
   @override
   void initState() {
     super.initState();
-
     _loadPhone();
   }
 
@@ -56,7 +58,6 @@ class _DriverGiayToState extends State<DriverGiayTo> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       phone = prefs.getString('phone') ?? '';
-      print(phone);
       name = prefs.getString('name') ?? '';
       password = prefs.getString('password') ?? '';
       referencePhone = prefs.getString('referencePhone') ?? '';
@@ -67,8 +68,8 @@ class _DriverGiayToState extends State<DriverGiayTo> {
   }
 
   Future<void> _sendDataToServer() async {
-    var uri =
-        Uri.parse('https://api.dantay.vn/API/authentication/create_driver');
+    var uri = Uri.parse(
+        'https://api.dannycode.site/API/authentication/create_driver');
     var request = http.MultipartRequest('POST', uri)
       ..fields['phone'] = phone
       ..fields['name'] = name
@@ -79,9 +80,7 @@ class _DriverGiayToState extends State<DriverGiayTo> {
       ..fields['vehicleSeat'] = vehicleSeat.toString()
       ..fields['numberPlate'] = _licensePlateController.text;
 
-    // Attach images if they are picked
     for (int i = 0; i < _images.length; i++) {
-      print("images i:$i");
       if (_images[i] != null) {
         request.files.add(await http.MultipartFile.fromPath(
           _getFieldNameForImage(i),
@@ -114,6 +113,44 @@ class _DriverGiayToState extends State<DriverGiayTo> {
         return 'nationalCardBack';
       default:
         return 'image$index';
+    }
+  }
+
+  void _validateAndSubmit() {
+    bool isValid = true;
+
+    // Validate license plate
+    if (_licensePlateController.text.isEmpty) {
+      setState(() {
+        _licensePlateError = 'Biển số xe không được để trống';
+      });
+      isValid = false;
+    } else {
+      setState(() {
+        _licensePlateError = '';
+      });
+    }
+
+    // Validate images
+    if (_images.any((image) => image == null)) {
+      setState(() {
+        _imageError = 'Bạn phải chọn đầy đủ các hình ảnh';
+      });
+      isValid = false;
+    } else {
+      setState(() {
+        _imageError = '';
+      });
+    }
+
+    if (isValid) {
+      _sendDataToServer();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DriverDone(),
+        ),
+      );
     }
   }
 
@@ -162,6 +199,14 @@ class _DriverGiayToState extends State<DriverGiayTo> {
                         ),
                       ),
                     ),
+                    if (_licensePlateError.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          _licensePlateError,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
                     SizedBox(height: 10.0),
                     Text(
                       "Hình ảnh bằng lái xe (Mặt trước & mặt sau)",
@@ -368,21 +413,18 @@ class _DriverGiayToState extends State<DriverGiayTo> {
                         );
                       },
                     ),
+                    if (_imageError.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          _imageError,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
                     SizedBox(height: 20.0),
                     Center(
                       child: CupertinoButton(
-                        onPressed: () {
-                          // Print base64 strings for debugging
-                          print(_images.map((img) => img?.path));
-                          _sendDataToServer();
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DriverDone(),
-                            ),
-                          );
-                        },
+                        onPressed: _validateAndSubmit,
                         color: Color(0xFF40B59F),
                         child: Text(
                           'Tiếp Theo',

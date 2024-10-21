@@ -34,7 +34,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
   void _checkOTP() async {
     String enteredOTP = _controller.text;
-    final url = 'https://api.dantay.vn/API/authentication/login';
+    final url = 'https://api.dannycode.site/API/authentication/login';
     final response = await http.post(Uri.parse(url), body: {
       'phone': phone,
       'password': enteredOTP,

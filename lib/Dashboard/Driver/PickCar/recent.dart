@@ -9,7 +9,7 @@ Future<List<Map<String, dynamic>>> fetchRecentHistory() async {
   final accessToken = prefs.getString('accessToken') ?? '';
 
   final response = await http.post(
-    Uri.parse('https://api.dantay.vn/api/recentpickcar'),
+    Uri.parse('https://api.dannycode.site/api/recentpickcar'),
     body: {'accessToken': accessToken},
   );
 
