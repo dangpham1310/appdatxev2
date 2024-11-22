@@ -1,11 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Dashboard/Driver/mainpage.dart';
+import './ForgotPassword/inputphone.dart';
+
 
 class PasswordScreen extends StatefulWidget {
   const PasswordScreen({Key? key}) : super(key: key);
@@ -23,6 +24,13 @@ class _PasswordScreenState extends State<PasswordScreen> {
   void initState() {
     super.initState();
     _loadPhone();
+  }
+
+  void forgotPassword() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PhoneScreen()),
+    );
   }
 
   Future<void> _loadPhone() async {
@@ -56,7 +64,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Mật Khẩu Sai lè rồi tài x'),
+          content: Text('Mật Khẩu Sai'),
           backgroundColor: Colors.red,
         ),
       );
@@ -93,27 +101,6 @@ class _PasswordScreenState extends State<PasswordScreen> {
                 height: MediaQuery.of(context).size.height / 1.65,
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.65,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 110),
-                      Transform.scale(
-                        scale: 1.0,
-                        child: Image.asset(
-                          'assets/images/trangthaicuoi.png',
-                          width: 150,
-                          height: 150,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
                 top: MediaQuery.of(context).size.height * 0.08,
                 left: 0,
                 right: 0,
@@ -130,6 +117,30 @@ class _PasswordScreenState extends State<PasswordScreen> {
                           height: 150,
                         ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: MediaQuery.of(context).size.height *
+                    0.85, // 15% from the top of the screen
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: forgotPassword,
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor:
+                              Color.fromARGB(255, 255, 255, 255), // Text color
+                        ),
+                        child: Text('Quên mật khẩu?'),
+                      )
+
+                      // Adjusted the height to accommodate for the moved text
                     ],
                   ),
                 ),
@@ -160,6 +171,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
                           maxLength: 6,
+                          obscureText: true, // Mask the input with dots
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                             LengthLimitingTextInputFormatter(6),

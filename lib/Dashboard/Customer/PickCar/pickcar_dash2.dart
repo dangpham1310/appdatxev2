@@ -390,7 +390,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                     ],
                                   ),
                                   SizedBox(height: 5),
-                                  Row(
+Row(
                                     children: [
                                       Icon(CupertinoIcons.money_dollar,
                                           size: 20,
@@ -399,12 +399,13 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                       Text('Giá: ',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold)),
-                                      Text(pickprice,
+                                      Text('$pickprice Nghìn VND',
                                           style: TextStyle(
                                               color:
                                                   CupertinoColors.systemGrey)),
                                     ],
                                   ),
+
                                   SizedBox(height: 5),
                                   Row(
                                     children: [

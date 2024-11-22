@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'dart:io';
-
+import './delete_account.dart';
 import 'package:image/image.dart' as img;
 import './../../../register/welcome.dart';
 
@@ -301,9 +301,7 @@ class _InformationState extends State<Information> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CupertinoButton(
-                      onPressed: () {
-                        // Handle Xóa Tài Khoản action
-                      },
+                      onPressed: () async {},
                       color: CupertinoColors.destructiveRed,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -319,8 +317,21 @@ class _InformationState extends State<Information> {
                       onPressed: () async {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
+
+                        // Preserve the FCM Token
+                        String? fcmToken = prefs.getString('FCMToken');
+                        print("FCM Token: $fcmToken");
+                        // Clear all other data
                         await prefs.clear();
-                        await clearCache();
+
+                        // Restore the FCM Token
+                        if (fcmToken != null) {
+                          await prefs.setString('FCMToken', fcmToken);
+                          print('FCM Token preserved: $fcmToken');
+                        }
+
+                        await clearCache(); // Clear app cache if needed
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Welcome()),

@@ -163,78 +163,8 @@ class ChinhSachPage extends StatelessWidget {
                   '4. Người Dùng đã biết rõ và đồng ý rằng, Chính Sách Bảo Mật này chính là Thông báo xử lý dữ liệu cá nhân quy định tại Điều 13 Nghị định 13/2023/NĐ-CP ngày 17/4/2023. Vì vậy, “Đón và Đến” không cần thực hiện thêm bất kỳ biện pháp nào khác nhằm mục đích thông báo việc xử lý Dữ Liệu Người Dùng.'),
               _buildParagraph(
                   '5. Người dùng đã đọc và đồng ý thực hiện nghiêm túc các quy định tại Chính Sách Bảo Mật.'),
-
-              _buildSectionTitle("GIỚI THIỆU VỀ CHÍNH SÁCH HOẠT ĐỘNG"),
-              _buildParagraph(
-                  "Người Dùng vui lòng đọc kỹ Chính Sách Hoạt Động này. Đây là thỏa thuận điện tử và bằng việc đăng ký hoặc sử dụng Dịch Vụ của “Đón và Đến”, Người Dùng xác nhận rằng Người Dùng đã đọc, hiểu, chấp nhận và đồng ý với nội dung Chính Sách Hoạt Động này và sẽ chịu ràng buộc bởi nội dung trong Chính Sách Hoạt Động. 2. Nếu Người Dùng không đồng ý chịu ràng buộc bởi Chính Sách Hoạt Động, Người Dùng sẽ không sử dụng Dịch Vụ của “Đón và Đến”, đồng thời truy cập Ứng Dụng “Đón và Đến”. Chính Sách Hoạt Động này là một thỏa thuận pháp lý ràng buộc giữa Người Dùng và “Đón và Đến”."),
-              _buildSubsectionTitle(
-                  "2. GIỚI THIỆU VỀ DỊCH VỤ CỦA “ĐÓN VÀ ĐẾN”"),
-              _buildParagraph(
-                  "1. “Đón và Đến” là doanh nghiệp cung cấp dịch vụ nhằm tìm kiếm, kết nối Người Dùng để thực hiện Giao Dịch thông qua Ứng Dụng “Đón và Đến”. Người Dùng có thể là Bên Nhận Chuyến hoặc Bên Đẩy Chuyến."),
-              _buildParagraph(
-                  "2. “Đón và Đến” không cung cấp Dịch Vụ Vận Tải, cũng không đóng vai trò đơn vị kinh doanh vận tải, nhà cung cấp dịch vụ chuyển phát nhanh, bưu chính, nhà cung cấp dịch vụ giao hàng, nhà cung ứng hoặc nhà điều hành thực phẩm và đồ uống, nhà điều hành cho thuê taxi hoặc xe tư nhân, cũng không đóng vai trò là đại lý cho bất kỳ chủ thể hoặc đơn vị nào nêu trên."),
-              _buildParagraph(
-                  "3. Tất cả Dịch Vụ Vận Tải được cung cấp trực tiếp cho khách hàng bởi đơn vị kinh doanh vận tải và/hoặc cá nhân thực hiện cung cấp Dịch Vụ Vận Tải. Không có bất kỳ quy định nào trong Chính Sách Hoạt Động này cấu thành bất kỳ nghĩa vụ hay trách nhiệm nào của “Đón và Đến” liên quan đến việc cung cấp các Dịch Vụ Vận Tải."),
-              _buildSubsectionTitle(
-                  "3. QUY TRÌNH NHẬN DỊCH VỤ TỪ “ĐÓN VÀ ĐẾN”"),
-              _buildParagraph("Người Dùng thực hiện theo các bước sau:"),
-              _buildParagraph(
-                  "1. Người Dùng tải và cài đặt Ứng Dụng “Đón và Đến”."),
-              _buildParagraph(
-                  "2. Đăng nhập vào Ứng Dụng và cung cấp các thông tin cần thiết hiện trên Ứng Dụng để tạo Tài Khoản."),
-              _buildParagraph(
-                  "3. Người Dùng nhấn chấp nhận hoặc không chấp nhận các điều khoản sử dụng, Chính sách của “Đón và Đến”. Trường hợp chấp nhận, Người Dùng thực hiện tiếp bước 4. Trường hợp không chấp nhận, Người Dùng hiểu rằng Người Dùng không sử dụng Dịch Vụ của “Đón và Đến” và dừng thực hiện tại bước này."),
-              _buildParagraph(
-                  "4. Người Dùng thực hiện chuyển Phí Bảo Đảm để kích hoạt Tài Khoản:"),
-              _buildParagraph("5. Người dùng ký hợp đồng với “Đón và Đến”."),
-              _buildParagraph(
-                  "6. Thực hiện nhận chuyến: Thực hiện theo video hướng dẫn trên của ứng dụng:"),
-              _buildParagraph(
-                  "7. Thực hiện đẩy chuyến: Thực hiện theo video hướng dẫn của ứng dụng:"),
-              _buildParagraph(
-                  "8. Nhận Tiền Cọc trong trường hợp bên thực hiện Giao Dịch với mình vi phạm thỏa thuận hoặc sẽ bị trừ Tiền Cọc trong trường hợp ngược lại."),
-              _buildSubsectionTitle("4. TÀI KHOẢN TRÊN ỨNG DỤNG 'ĐÓN VÀ ĐẾN'"),
-              _buildParagraph(
-                  "1. Người Dùng chịu trách nhiệm về tất cả các hành vi được thực hiện trên Tài Khoản và tất cả các quyết định được đưa ra liên quan đến việc Người Dùng sử dụng Ứng Dụng. Người Dùng đồng ý:"),
-              _buildIndentedParagraph(
-                  "a. Chỉ được có một Tài Khoản/ phương tiện đăng ký."),
-              _buildIndentedParagraph(
-                  "b. Giữ bí mật và an toàn thông tin Tài Khoản (bao gồm cả thông tin đăng nhập và thông tin thanh toán của Người Dùng)."),
-              _buildIndentedParagraph(
-                  "c. Không cung cấp cho bất kỳ người nào khác quyền truy cập vào Tài Khoản của Người Dùng, bao gồm cả việc chuyển giao Tài Khoản hoặc thông tin từ Tài Khoản cho bất kỳ người nào khác."),
-              _buildIndentedParagraph(
-                  "d. Thông báo ngay cho 'Đón và Đến' nếu Người Dùng nghi ngờ có bất kỳ hành vi truy cập hoặc sử dụng trái phép nào đối với Tài Khoản."),
-              _buildIndentedParagraph(
-                  "e. Nếu Bạn đồng thời là Nhà Cung Cấp Dịch Vụ Vận Tải, không được phép sử dụng Tài Khoản của Bạn để đặt yêu cầu cung cấp dịch vụ với tư cách là Người Dùng mà Bạn sẽ chấp nhận cung cấp dịch vụ đó với tư cách là Nhà Cung Cấp Dịch Vụ Vận Tải, hoặc cộng tác với Nhà Cung cấp dịch vụ khác hoặc Người Dùng khác để làm những việc tương tự."),
-              _buildParagraph(
-                  "2. 'Đón và Đến' có quyền xóa/khóa/tạm dừng/ngăn chặn quyền truy cập vào Tài Khoản của Người Dùng, và/hoặc chặn các tính năng tích hợp sẵn trong Ứng Dụng Người Dùng, mà không ảnh hưởng đến các quyền và chế tài khác của mình:"),
-              _buildIndentedParagraph(
-                  "a. Nếu 'Đón và Đến' cho rằng, theo toàn quyền quyết định của 'Đón và Đến', Người Dùng đã vi phạm quy định pháp luật và/hoặc bất kỳ điều khoản nào trong các Chính sách, quy tắc, quy định, thỏa thuận của 'Đón và Đến'."),
-              _buildIndentedParagraph(
-                  "b. Nếu Người Dùng dừng sử dụng Dịch Vụ của 'Đón và Đến'."),
-              _buildIndentedParagraph(
-                  "c. Nếu Người Dùng không thực hiện thanh toán Phí sử dụng cho 'Đón và Đến'."),
-              _buildIndentedParagraph(
-                  "d. Nếu Người Dùng không đủ mức Phí Bảo Đảm theo quy định của 'Đón và Đến'."),
-              _buildIndentedParagraph(
-                  "e. Nếu Chính Sách Hoạt Động này bị chấm dứt vì bất kỳ lý do nào; hoặc vào bất cứ thời điểm nào khác theo quyết định hợp lý của 'Đón và Đến'."),
-              _buildIndentedParagraph(
-                  "f. Các trường hợp hợp lý khác theo quyết định của 'Đón và Đến' tại từng thời điểm."),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIndentedParagraph(String content) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
-      child: Text(
-        content,
-        style: TextStyle(
-          fontSize: 15.0,
-          color: Colors.black87,
         ),
       ),
     );

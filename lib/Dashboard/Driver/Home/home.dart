@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../PickCar/pickcar.dart';
 import '../Profile/noiquy.dart';
+import '../Profile/chinh-sach-bao-mat.dart';
+import 'News/tintuc.dart';
+import 'Ads/quangcao.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback onImageTap;
@@ -18,21 +21,7 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                // First row: Banner for ads
-                FutureBuilder(
-                  future: getImageUrl(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return loadingBanner();
-                    } else if (snapshot.hasError) {
-                      return errorBanner();
-                    } else if (snapshot.hasData) {
-                      return imageBanner(snapshot.data.toString());
-                    } else {
-                      return Container();
-                    }
-                  },
-                ),
+                imageBanner('assets/images/banner.png'),
                 SizedBox(height: 5),
                 sectionTitle('Dịch Vụ'),
                 SizedBox(height: 5),
@@ -42,7 +31,7 @@ class HomePage extends StatelessWidget {
                 SizedBox(height: 16),
                 horizontalImageScroll(context),
                 SizedBox(height: 16),
-                sectionTitle('Khuyến Mãi'),
+                sectionTitle('Quảng Cáo'),
                 SizedBox(height: 16),
                 horizontalImageScrollKhuyenMai(context),
               ],
@@ -53,40 +42,14 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Widgets for loading and error banners
-  Widget loadingBanner() {
+  Widget imageBanner(String assetPath) {
     return Container(
-      height: 150,
-      decoration: bannerDecoration(),
-      child: Center(child: CircularProgressIndicator()),
+      height: 230,
+      width: double.infinity,
+      decoration: bannerDecoration(assetPath: assetPath),
     );
   }
 
-  Widget errorBanner() {
-    return Container(
-      height: 150,
-      decoration: bannerDecoration(),
-      child: Center(
-        child: Text(
-          'Error loading image',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget imageBanner(String imageUrl) {
-    return Container(
-      height: 150,
-      decoration: bannerDecoration(imageUrl: imageUrl),
-    );
-  }
-
-  // Helper widget to display section titles
   Widget sectionTitle(String title) {
     return Align(
       alignment: Alignment.centerLeft,
@@ -104,7 +67,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Widget to show the service card
   Widget serviceCard(VoidCallback onTap) {
     return Container(
       height: 100,
@@ -138,7 +100,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Horizontal image scroll widget
   Widget horizontalImageScroll(BuildContext context) {
     return Container(
       height: 150,
@@ -149,14 +110,16 @@ class HomePage extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              imageThumbnailRule(
-                  context, 'https://s3-hcm1-r1.longvan.net/baigiang/rule.png'),
+              imageThumbnailTinTuc1(
+                  context, 'assets/images/tintuc1mungkhaitruong.png'),
               SizedBox(width: 10),
               imageThumbnail(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/banner.png'),
+                  'assets/images/tintuc2quytrinhgiaiquyetkhieunai.png'),
               SizedBox(width: 10),
-              imageThumbnail(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/banner.png'),
+              imageThumbnailCSBM(
+                  context, 'assets/images/tintuc3chinhsachbaomat.png'),
+              SizedBox(width: 10),
+              imageThumbnailRule(context, 'assets/images/tintuc4noiquy.png')
             ],
           ),
         ),
@@ -174,14 +137,13 @@ class HomePage extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              imageThumbnail(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/banner.png'),
+              imageThumbnailLienHeQuangCao(
+                  context, 'assets/images/quangcao1lienhequangcao.png'),
               SizedBox(width: 10),
-              imageThumbnail(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/banner.png'),
+              imageThumbnailGioithieubanbe(
+                  context, 'assets/images/quangcao2nggioithieu.png'),
               SizedBox(width: 10),
-              imageThumbnail(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/banner.png'),
+              imageThumbnail(context, 'assets/images/quangcao3.png'),
             ],
           ),
         ),
@@ -189,18 +151,13 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Image thumbnail with navigation
-  Widget imageThumbnail(BuildContext context, String imageUrl) {
+  Widget imageThumbnail(BuildContext context, String assetPath) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DetailPage(imageUrl: imageUrl)),
-        );
+        // Handle image tap
       },
-      child: Image.network(
-        imageUrl,
+      child: Image.asset(
+        assetPath,
         width: 150,
         height: 150,
         fit: BoxFit.cover,
@@ -208,7 +165,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget imageThumbnailRule(BuildContext context, String imageUrl) {
+  Widget imageThumbnailRule(BuildContext context, String assetPath) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -216,8 +173,8 @@ class HomePage extends StatelessWidget {
           MaterialPageRoute(builder: (context) => RulesPage()),
         );
       },
-      child: Image.network(
-        imageUrl,
+      child: Image.asset(
+        assetPath,
         width: 150,
         height: 150,
         fit: BoxFit.cover,
@@ -225,12 +182,31 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Decoration helpers
-  BoxDecoration bannerDecoration({String? imageUrl}) {
+  Widget imageThumbnailCSBM(BuildContext context, String assetPath) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ChinhSachPage()),
+        );
+      },
+      child: Image.asset(
+        assetPath,
+        width: 150,
+        height: 150,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  BoxDecoration bannerDecoration({String? assetPath}) {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(12.0),
-      image: imageUrl != null
-          ? DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover)
+      image: assetPath != null
+          ? DecorationImage(
+              image: AssetImage(assetPath),
+              fit: BoxFit.cover,
+            )
           : null,
     );
   }
@@ -264,30 +240,6 @@ class HomePage extends StatelessWidget {
           offset: Offset(0, 3),
         ),
       ],
-    );
-  }
-
-  // Fetching image URL asynchronously
-  Future<String> getImageUrl() async {
-    return 'https://s3-hcm1-r1.longvan.net/baigiang/banner.png';
-  }
-}
-
-// Detail page to show on image tap
-class DetailPage extends StatelessWidget {
-  final String imageUrl;
-
-  DetailPage({required this.imageUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(
-          'Detail page for $imageUrl',
-          style: TextStyle(fontSize: 24),
-        ),
-      ),
     );
   }
 }

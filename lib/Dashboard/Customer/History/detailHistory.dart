@@ -174,7 +174,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       children: [
                         Text('Trả qua tiền mặt',
                             style: TextStyle(fontSize: 14.0)),
-                        Text('${history['price'] ?? 'N/A'}đ',
+                        Text('${history['price'] ?? 'N/A'} Nghìn VND',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 14.0)),
                       ],

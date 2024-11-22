@@ -153,7 +153,7 @@ class _CongratulationPageState extends State<CongratulationPage> {
             _buildInfoRow(
               icon: CupertinoIcons.money_dollar_circle,
               label: "Giá cước:",
-              value: "${travelData!['price']} VND",
+              value: "${travelData!['price']} nghìn VND",
             ),
             _buildInfoRow(
               icon: CupertinoIcons.phone,

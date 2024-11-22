@@ -27,7 +27,7 @@ class _NapRutPageState extends State<NapRutPage> {
     });
   }
 
-  final String accountNumber = '7777799999123';
+  final String accountNumber = '4801089296';
 // Account number to be copied
   final List<String> amounts = [
     '100,000 VND',
@@ -168,7 +168,7 @@ class _NapRutPageState extends State<NapRutPage> {
           ),
           SizedBox(height: 10),
           Text(
-            'Ngân hàng: MBBank',
+            'Ngân hàng: BIDV',
             style: TextStyle(fontSize: 16.0),
           ),
           SizedBox(height: 5),
@@ -198,7 +198,7 @@ class _NapRutPageState extends State<NapRutPage> {
           ),
           SizedBox(height: 5),
           Text(
-            'Chủ Tài Khoản: Phạm Thiên Đăng',
+            'Chủ Tài Khoản: VU VAN LOI',
             style: TextStyle(fontSize: 16.0),
           ),
         ],

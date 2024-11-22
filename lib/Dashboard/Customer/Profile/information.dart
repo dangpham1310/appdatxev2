@@ -134,7 +134,21 @@ class _InformationState extends State<Information> {
                       onPressed: () async {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
+
+                        // Preserve the FCM Token
+                        String? fcmToken = prefs.getString('FCMToken');
+                        print("FCM Token: $fcmToken");
+                        // Clear all other data
                         await prefs.clear();
+
+                        // Restore the FCM Token
+                        if (fcmToken != null) {
+                          await prefs.setString('FCMToken', fcmToken);
+                          print('FCM Token preserved: $fcmToken');
+                        }
+
+                        await clearCache(); // Clear app cache if needed
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Welcome()),
@@ -159,4 +173,11 @@ class _InformationState extends State<Information> {
       ),
     );
   }
+}
+
+Future<void> clearCache() async {
+  // Clear image cache
+  PaintingBinding.instance.imageCache.clear();
+  // Optionally, also clear network image cache if used
+  PaintingBinding.instance.imageCache.clearLiveImages();
 }

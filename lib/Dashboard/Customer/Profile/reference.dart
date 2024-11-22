@@ -1,51 +1,95 @@
+import 'dart:convert'; // To decode JSON
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http; // For making HTTP requests
+import 'package:shared_preferences/shared_preferences.dart'; // For using SharedPreferences
+
+class InvitedFriendsPage extends StatefulWidget {
+  @override
+  _InvitedFriendsPageState createState() => _InvitedFriendsPageState();
+}
 
 // Model for Invited Friend
 class InvitedFriend {
   final String name;
-  final String phoneNumber; // Phone number of the invited friend
+  final String phoneNumber;
 
   InvitedFriend({
     required this.name,
     required this.phoneNumber,
   });
+
+  // Factory constructor to create InvitedFriend from JSON
+  factory InvitedFriend.fromJson(Map<String, dynamic> json) {
+    return InvitedFriend(
+      name: json['name'],
+      phoneNumber: json['phone'],
+    );
+  }
 }
 
-class InvitedFriendsPage extends StatelessWidget {
-  // Dummy list of invited friends
-  final List<InvitedFriend> invitedFriends = [
-    InvitedFriend(
-      name: 'Phạm Thiên Đăng',
-      phoneNumber: '+1234567890',
-    ),
-    InvitedFriend(
-      name: 'Nghèo',
-      phoneNumber: '+0987654321',
-    ),
-    InvitedFriend(
-      name: 'Vãi Chưởng',
-      phoneNumber: '+1357924680',
-    ),
-    InvitedFriend(
-      name: 'Ước Mơ',
-      phoneNumber: '+1357924680',
-    ),
-    InvitedFriend(
-      name: 'Giàu Như Bác Lợi',
-      phoneNumber: '+1357924680',
-    ),
-    InvitedFriend(
-      name: 'Có Giàn PC xịn cùng màn hình',
-      phoneNumber: '+1357924680',
-    ),
-  ];
+class _InvitedFriendsPageState extends State<InvitedFriendsPage> {
+  List<InvitedFriend> invitedFriends = [];
+  bool isLoading = true;
+  String errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPhoneFromPrefsAndFetchInvitedFriends();
+  }
+
+  Future<void> fetchPhoneFromPrefsAndFetchInvitedFriends() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? phone =
+        prefs.getString('phone'); // Retrieve phone from SharedPreferences
+
+    if (phone != null) {
+      fetchInvitedFriends(phone);
+    } else {
+      setState(() {
+        errorMessage = 'No phone number found in preferences.';
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> fetchInvitedFriends(String phone) async {
+    final String apiUrl = 'https://api.dannycode.site/api/refference';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: {'phone': phone}, // Send the reference phone number
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        List invitedUsers = data['users']; // Get the list of users
+        setState(() {
+          invitedFriends =
+              invitedUsers.map((user) => InvitedFriend.fromJson(user)).toList();
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          errorMessage = 'Không có người dùng nào được mời.';
+          isLoading = false;
+        });
+      }
+    } catch (error) {
+      setState(() {
+        errorMessage = 'Failed to load data: $error';
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: Color(0xFF40B59F), // Set navigation bar color
+        backgroundColor: Color(0xFF40B59F),
         middle: Text(
           'Danh sách bạn bè đã được mời',
           style: TextStyle(color: CupertinoColors.white),
@@ -61,12 +105,17 @@ class InvitedFriendsPage extends StatelessWidget {
         ),
       ),
       child: SafeArea(
-        child: ListView.builder(
-          itemCount: invitedFriends.length,
-          itemBuilder: (context, index) {
-            return _buildInvitedFriendItem(context, invitedFriends[index]);
-          },
-        ),
+        child: isLoading
+            ? Center(child: CupertinoActivityIndicator())
+            : errorMessage.isNotEmpty
+                ? Center(child: Text(errorMessage))
+                : ListView.builder(
+                    itemCount: invitedFriends.length,
+                    itemBuilder: (context, index) {
+                      return _buildInvitedFriendItem(
+                          context, invitedFriends[index]);
+                    },
+                  ),
       ),
     );
   }

@@ -208,7 +208,8 @@ class _ListReceiveState extends State<ListReceive> {
                 },
               );
 
-              if (response.body == "Not enough money") {
+              if (response.body == "Not enough money" ||
+                  response.body == "Taken") {
                 Navigator.of(context).push(
                   CupertinoPageRoute(
                     builder: (context) => DeniedPage(),
@@ -228,7 +229,6 @@ class _ListReceiveState extends State<ListReceive> {
                     "FCMToken": FCMToken,
                   },
                 );
-                print("This is body: ${response.body}");
 
                 Navigator.of(context).push(
                   CupertinoPageRoute(

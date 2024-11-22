@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Dashboard/Customer/mainpage.dart';
+import './ForgotPassword/inputphone.dart';
 
 class PasswordScreenCustomer extends StatefulWidget {
   const PasswordScreenCustomer({Key? key}) : super(key: key);
@@ -16,8 +18,10 @@ class PasswordScreenCustomer extends StatefulWidget {
 }
 
 class _PasswordScreenState extends State<PasswordScreenCustomer> {
+  final TextEditingController _controller = TextEditingController();
   late List<TextEditingController> _controllers;
   late List<FocusNode> _focusNodes;
+  final FocusNode _focusNode = FocusNode();
   final _scrollController = ScrollController(); // Add ScrollController
   String phone = '';
   @override
@@ -38,10 +42,7 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
   @override
   void _checkOTP() {
     // Concatenate all OTP values entered
-    String enteredOTP =
-        _controllers.map((controller) => controller.text).join();
-
-    ;
+    String enteredOTP = _controller.text;
     Future<void> _sendPassword() async {
       final url = 'https://api.dannycode.site/API/authentication/login';
 
@@ -82,6 +83,13 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
     _sendPassword();
 
     ;
+  }
+
+  void forgotPassword() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PhoneScreen()),
+    );
   }
 
   void dispose() {
@@ -139,31 +147,7 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height / 1.65,
               ),
-              Positioned(
-                top: MediaQuery.of(context).size.height *
-                    0.65, // 15% from the top of the screen
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 110,
-                      ), // Adjusted the height to accommodate for the moved text
-                      Transform.scale(
-                        scale: 1.0, // Adjust the scale factor as needed
-                        child: Image.asset(
-                          'assets/images/trangthaicuoi.png', // Provide the path to your image asset
-                          width: 150, // Adjust the width of the image as needed
-                          height:
-                              150, // Adjust the height of the image as needed
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
               Positioned(
                 top: MediaQuery.of(context).size.height *
                     0.08, // 15% from the top of the screen
@@ -209,45 +193,53 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
                       SizedBox(
                         height: 15,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // TextFields for OTP input
-                          for (int i = 0; i < 6; i++)
-                            GestureDetector(
-                              onTap: () {
-                                _focusNodes[i].requestFocus();
-                              },
-                              child: Container(
-                                width: 40,
-                                height: 50,
-                                margin: EdgeInsets.symmetric(horizontal: 5),
-                                child: CupertinoTextField(
-                                  controller: _controllers[i],
-                                  focusNode: _focusNodes[i],
-                                  keyboardType: TextInputType.number,
-                                  textAlign: TextAlign.center,
-                                  maxLength: 1,
-                                  onChanged: (value) {
-                                    if (value.isEmpty) {
-                                      _focusPreviousField(i);
-                                    } else {
-                                      _focusNextField(i);
-                                    }
-                                  },
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
+                      Container(
+                        width: 240,
+                        child: CupertinoTextField(
+                          controller: _controller,
+                          focusNode: _focusNode,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          maxLength: 6,
+                          obscureText: true, // Mask input with dots
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(6),
+                          ],
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: 10,
                       ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: MediaQuery.of(context).size.height *
+                    0.9, // 15% from the top of the screen
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: forgotPassword,
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor:
+                              Color.fromARGB(255, 255, 255, 255), // Text color
+                        ),
+                        child: Text('Quên mật khẩu?'),
+                      )
+
+                      // Adjusted the height to accommodate for the moved text
                     ],
                   ),
                 ),
@@ -276,6 +268,7 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
                   ),
                 ),
               ),
+              // Bạn quên mật khẩu?
             ],
           ),
         ),

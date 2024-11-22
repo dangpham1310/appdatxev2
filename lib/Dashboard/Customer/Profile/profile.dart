@@ -7,6 +7,9 @@ import 'information.dart';
 import './historytrans.dart';
 import './reference.dart';
 import './deAndWi.dart';
+import 'khieunai.dart';
+import 'noiquy.dart';
+import 'chinh-sach-bao-mat.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -33,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       FCMToken = prefs.getString('FCMToken') ?? '';
       name = prefs.getString('name') ?? 'Loading...';
-      coin = prefs.getString('coin') ?? '\$100.00';
+      coin = prefs.getString('coin') ?? '\$';
     });
 
     if (accessToken != null) {
@@ -49,6 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
           setState(() {
             coin = data['coin'].toString();
             phone = data['phone'];
+            name = data['name'];
           });
         } else {
           print('Failed to load profile');
@@ -241,17 +245,38 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 buildIconButton(
                                     CupertinoIcons.exclamationmark_circle,
-                                    'Khiếu Nại',
-                                    () {}),
+                                    'Khiếu Nại', () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          DisputeResolutionPage(),
+                                    ),
+                                  );
+                                }),
                                 buildIconButton(
-                                    CupertinoIcons.doc_text, 'Nội quy', () {}),
+                                    CupertinoIcons.doc_text, 'Nội quy', () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => RulesPage(),
+                                    ),
+                                  );
+                                }),
                               ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 buildIconButton(CupertinoIcons.lock_shield,
-                                    'Chính Sách \nBảo Mật', () {}),
+                                    'Chính Sách \nBảo Mật', () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => ChinhSachPage(),
+                                    ),
+                                  );
+                                }),
                               ],
                             ),
                             SizedBox(height: 20),

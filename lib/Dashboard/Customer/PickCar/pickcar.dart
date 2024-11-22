@@ -426,27 +426,6 @@ class _PickCarState extends State<PickCar> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             GestureDetector(
-                              onTap: () => _showDatePicker(context),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(CupertinoIcons.calendar,
-                                        color: Colors.grey),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      formattedDate,
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
                               onTap: () => _showTimePicker(context),
                               child: Container(
                                 padding: EdgeInsets.symmetric(horizontal: 10),
@@ -462,6 +441,27 @@ class _PickCarState extends State<PickCar> {
                                     SizedBox(width: 5),
                                     Text(
                                       _TimeofDay,
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => _showDatePicker(context),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(CupertinoIcons.calendar,
+                                        color: Colors.grey),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      formattedDate,
                                       style: TextStyle(color: Colors.black),
                                     ),
                                   ],
