@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../PickCar/pickcar.dart';
 import '../Profile/noiquy.dart';
 import '../Profile/chinh-sach-bao-mat.dart';
+import 'News/tintuc.dart';
+import 'Ads/quangcao.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback onImageTap;
@@ -19,20 +21,7 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                FutureBuilder(
-                  future: getImageUrl(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return loadingBanner();
-                    } else if (snapshot.hasError) {
-                      return errorBanner();
-                    } else if (snapshot.hasData) {
-                      return imageBanner(snapshot.data.toString());
-                    } else {
-                      return Container();
-                    }
-                  },
-                ),
+                imageBanner('assets/images/banner.png'),
                 SizedBox(height: 5),
                 sectionTitle('Dịch Vụ'),
                 SizedBox(height: 5),
@@ -53,36 +42,11 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget loadingBanner() {
+  Widget imageBanner(String assetPath) {
     return Container(
       height: 230,
-      decoration: bannerDecoration(),
-      child: Center(child: CircularProgressIndicator()),
-    );
-  }
-
-  Widget errorBanner() {
-    return Container(
-      height: 230,
-      decoration: bannerDecoration(),
-      child: Center(
-        child: Text(
-          'Error loading image',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget imageBanner(String imageUrl) {
-    return Container(
-      height: 230, // Điều chỉnh theo tỉ lệ mong muốn
       width: double.infinity,
-      decoration: bannerDecoration(imageUrl: imageUrl),
+      decoration: bannerDecoration(assetPath: assetPath),
     );
   }
 
@@ -146,17 +110,16 @@ class HomePage extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              imageThumbnail(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/tintuc1mungkhaitruong.png'),
+              imageThumbnailTinTuc1(
+                  context, 'assets/images/tintuc1mungkhaitruong.png'),
               SizedBox(width: 10),
-              imageThumbnail(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/tintuc2quytrinhgiaiquyetkhieunai.png'),
+              imageThumbnailTinTuc2(context,
+                  'assets/images/tintuc2quytrinhgiaiquyetkhieunai.png'),
               SizedBox(width: 10),
-              imageThumbnailCSBM(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/tintuc3chinhsachbaomat.png'),
+              imageThumbnailCSBM(
+                  context, 'assets/images/tintuc3chinhsachbaomat.png'),
               SizedBox(width: 10),
-              imageThumbnailRule(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/tintuc4noiquy.png')
+              imageThumbnailRule(context, 'assets/images/tintuc4noiquy.png')
             ],
           ),
         ),
@@ -174,14 +137,13 @@ class HomePage extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              imageThumbnail(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/quangcao1lienhequangcao.png'),
+              imageThumbnailLienHeQuangCao(
+                  context, 'assets/images/quangcao1lienhequangcao.png'),
               SizedBox(width: 10),
-              imageThumbnail(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/quangcao2nggioithieu.png'),
+              imageThumbnailGioithieubanbe(
+                  context, 'assets/images/quangcao2nggioithieu.png'),
               SizedBox(width: 10),
-              imageThumbnail(context,
-                  'https://s3-hcm1-r1.longvan.net/baigiang/quangcao3.png'),
+              imageThumbnail(context, 'assets/images/quangcao3.png'),
             ],
           ),
         ),
@@ -189,17 +151,13 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget imageThumbnail(BuildContext context, String imageUrl) {
+  Widget imageThumbnail(BuildContext context, String assetPath) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //       builder: (context) => DetailPage(imageUrl: imageUrl)),
-        // );
+        // Handle image tap
       },
-      child: Image.network(
-        imageUrl,
+      child: Image.asset(
+        assetPath,
         width: 150,
         height: 150,
         fit: BoxFit.cover,
@@ -207,7 +165,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget imageThumbnailRule(BuildContext context, String imageUrl) {
+  Widget imageThumbnailRule(BuildContext context, String assetPath) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -215,8 +173,8 @@ class HomePage extends StatelessWidget {
           MaterialPageRoute(builder: (context) => RulesPage()),
         );
       },
-      child: Image.network(
-        imageUrl,
+      child: Image.asset(
+        assetPath,
         width: 150,
         height: 150,
         fit: BoxFit.cover,
@@ -224,7 +182,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget imageThumbnailCSBM(BuildContext context, String imageUrl) {
+  Widget imageThumbnailCSBM(BuildContext context, String assetPath) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -232,8 +190,8 @@ class HomePage extends StatelessWidget {
           MaterialPageRoute(builder: (context) => ChinhSachPage()),
         );
       },
-      child: Image.network(
-        imageUrl,
+      child: Image.asset(
+        assetPath,
         width: 150,
         height: 150,
         fit: BoxFit.cover,
@@ -241,13 +199,13 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  BoxDecoration bannerDecoration({String? imageUrl}) {
+  BoxDecoration bannerDecoration({String? assetPath}) {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(12.0),
-      image: imageUrl != null
+      image: assetPath != null
           ? DecorationImage(
-              image: NetworkImage(imageUrl),
-              fit: BoxFit.cover, // Thay đổi giữa BoxFit.contain và BoxFit.cover
+              image: AssetImage(assetPath),
+              fit: BoxFit.cover,
             )
           : null,
     );
@@ -284,26 +242,4 @@ class HomePage extends StatelessWidget {
       ],
     );
   }
-
-  Future<String> getImageUrl() async {
-    return 'https://s3-hcm1-r1.longvan.net/baigiang/banner.png';
-  }
 }
-
-// class DetailPage extends StatelessWidget {
-//   final String imageUrl;
-
-//   DetailPage({required this.imageUrl});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Center(
-//         child: Text(
-//           'Detail page for $imageUrl',
-//           style: TextStyle(fontSize: 24),
-//         ),
-//       ),
-//     );
-//   }
-// }

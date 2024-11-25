@@ -287,7 +287,8 @@ class _DetailsPageState extends State<DetailsPage> {
                             color: CupertinoColors.systemGrey,
                             onPressed: () {
                               // Handle support action
-                              _showSupportDialog(context);
+                              _showSupportDialog(
+                                  context, widget.idHistory.toString());
                             },
                             child: Text('Bạn cần hỗ trợ?'),
                           ),
@@ -465,7 +466,10 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 }
 
-void _showSupportDialog(BuildContext context) {
+void _showSupportDialog(BuildContext context, String idHistory) {
+  // Tạo TextEditingController để quản lý nội dung nhập
+  TextEditingController _contentController = TextEditingController();
+
   showCupertinoDialog(
     context: context,
     builder: (BuildContext context) {
@@ -479,7 +483,9 @@ void _showSupportDialog(BuildContext context) {
             ),
           ),
           content: CupertinoTextField(
-            placeholder: 'Nhập nội dung khiếu nại của bạn...',
+            controller: _contentController, // Gắn controller vào TextField
+            placeholder:
+                'Nhập nội dung khiếu nại của bạn cho chuyến đi $idHistory',
             maxLines: 5,
             padding: EdgeInsets.all(12.0),
             decoration: BoxDecoration(
@@ -510,9 +516,45 @@ void _showSupportDialog(BuildContext context) {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              onPressed: () {
-                // Xử lý khiếu nại tại đây
-                Navigator.of(context).pop(); // Đóng dialog khi gửi
+              onPressed: () async {
+                // Lấy nội dung từ TextField
+                String content = _contentController.text;
+
+                if (content.isEmpty) {
+                  // Hiển thị thông báo lỗi nếu nội dung rỗng
+                  showCupertinoDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CupertinoAlertDialog(
+                        title: Text('Lỗi'),
+                        content: Text('Vui lòng nhập nội dung khiếu nại.'),
+                        actions: [
+                          CupertinoDialogAction(
+                            child: Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+
+                // Gửi yêu cầu khiếu nại với idHistory và content
+                final response = await http.post(
+                  Uri.parse('https://api.dannycode.site/report'),
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                  },
+                  body: {
+                    'idHistory': idHistory,
+                    'content': content,
+                  },
+                );
+
+                Navigator.of(context).pop(); // Đóng dialog sau khi gửi
 
                 // Hiển thị thông báo cảm ơn
                 _showThankYouDialog(context);

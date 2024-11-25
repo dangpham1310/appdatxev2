@@ -113,7 +113,7 @@ class HomePage extends StatelessWidget {
               imageThumbnailTinTuc1(
                   context, 'assets/images/tintuc1mungkhaitruong.png'),
               SizedBox(width: 10),
-              imageThumbnail(context,
+              imageThumbnailTinTuc2(context,
                   'assets/images/tintuc2quytrinhgiaiquyetkhieunai.png'),
               SizedBox(width: 10),
               imageThumbnailCSBM(

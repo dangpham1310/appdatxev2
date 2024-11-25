@@ -800,7 +800,7 @@ Row(
                   } else if (selectedSeat == "2") {
                     price = (constPrice * 1.9).round();
                   } else if (selectedSeat == "Bao 4") {
-                    price = (constPrice * 2.7).round();
+                    price = (constPrice * 2.75).round();
                   } else if (selectedSeat == "Bao 7") {
                     price = (constPrice * 3.5).round();
                   }
