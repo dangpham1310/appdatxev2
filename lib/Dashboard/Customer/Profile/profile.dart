@@ -286,9 +286,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       Center(
                           child: Text("version: 1.0.0",
                               style: TextStyle(color: Colors.grey))),
-                      Center(
-                          child: Text("FCM Token: $FCMToken",
-                              style: TextStyle(color: Colors.grey))),
+
                     ],
                   ),
                 ],

@@ -390,7 +390,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                     ],
                                   ),
                                   SizedBox(height: 5),
-Row(
+                                  Row(
                                     children: [
                                       Icon(CupertinoIcons.money_dollar,
                                           size: 20,
@@ -800,7 +800,7 @@ Row(
                   } else if (selectedSeat == "2") {
                     price = (constPrice * 1.9).round();
                   } else if (selectedSeat == "Bao 4") {
-                    price = (constPrice * 2.75).round();
+                    price = (constPrice * 2.8).round();
                   } else if (selectedSeat == "Bao 7") {
                     price = (constPrice * 3.5).round();
                   }

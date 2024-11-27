@@ -63,7 +63,10 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
         Uri.parse('https://api.dannycode.site/API/authentication/setpassword');
     var response = await http.post(url,
         body: {'phone': widget.phone, 'password': password, 'OTP': otp});
-
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NextScreen()),
+    );
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
       if (jsonResponse["message"] == "success") {
@@ -73,10 +76,6 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                 Text('Đặt lại mật khẩu thành công. vui lòng đăng nhập lại'),
             backgroundColor: Colors.green,
           ),
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => NextScreen()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

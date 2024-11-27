@@ -301,7 +301,26 @@ class _InformationState extends State<Information> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CupertinoButton(
-                      onPressed: () async {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Thông báo'),
+                              content: Text(
+                                  'Vui lòng liên hệ với tổng đài để xóa tài khoản.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // Đóng dialog
+                                  },
+                                  child: Text('Đóng'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       color: CupertinoColors.destructiveRed,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

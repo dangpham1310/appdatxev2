@@ -117,7 +117,24 @@ class _InformationState extends State<Information> {
                   children: <Widget>[
                     CupertinoButton(
                       onPressed: () {
-                        // Handle Xóa Tài Khoản action
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Thông báo'),
+                              content: Text(
+                                  'Vui lòng liên hệ với tổng đài để xóa tài khoản.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // Đóng dialog
+                                  },
+                                  child: Text('Đóng'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                       color: CupertinoColors.destructiveRed,
                       child: Row(
