@@ -38,6 +38,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                 ),
                 SizedBox(height: 16),
                 CupertinoTextField(
+                  style: TextStyle(color: CupertinoColors.black),
                   controller: _reasonController,
                   placeholder: 'Lý do...',
                   maxLines: 3,

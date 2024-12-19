@@ -484,6 +484,7 @@ void _showSupportDialog(BuildContext context, String idHistory) {
           ),
           content: CupertinoTextField(
             controller: _contentController, // Gắn controller vào TextField
+ 
             placeholder:
                 'Nhập nội dung khiếu nại của bạn cho chuyến đi $idHistory',
             maxLines: 5,
@@ -493,7 +494,7 @@ void _showSupportDialog(BuildContext context, String idHistory) {
               borderRadius: BorderRadius.circular(8.0),
               border: Border.all(color: CupertinoColors.systemGrey, width: 1.0),
             ),
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontSize: 16.0,color: CupertinoColors.black),
           ),
           actions: [
             CupertinoDialogAction(

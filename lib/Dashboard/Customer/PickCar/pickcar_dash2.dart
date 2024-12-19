@@ -653,6 +653,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
           ),
         ),
         child: CupertinoTextField(
+          style: TextStyle(color: CupertinoColors.black),
           controller: _priceController,
           placeholder: 'Nhập Giá',
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -702,6 +703,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
         ),
       ),
       child: CupertinoTextField(
+        style: TextStyle(color: CupertinoColors.black),
         controller: _phonenumberController,
         placeholder: 'Nhập Số Điện Thoại Khách',
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -750,6 +752,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
             ],
           ),
           child: CupertinoTextField(
+
             controller: _noteController,
             placeholder: 'Ghi Chú',
             padding: EdgeInsets.zero,

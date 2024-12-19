@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.push_notification">
+    package="net.donvaden.taxi">
 
 <uses-permission android:name="android.permission.INTERNET"/>                                                                           
     <application
-        android:label="push_notification"
+        android:label="Đón và Đến"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

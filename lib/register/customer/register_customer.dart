@@ -147,6 +147,7 @@ class _CustomerInputState extends State<CustomerInput> {
                       ),
                       SizedBox(height: 20.0),
                       CupertinoTextField(
+                        style: TextStyle(color: CupertinoColors.black),
                         controller: _nameController,
                         placeholder: 'Họ Và Tên',
                         keyboardType: TextInputType.text,
@@ -166,6 +167,7 @@ class _CustomerInputState extends State<CustomerInput> {
                       ),
                       SizedBox(height: 10.0), // SizedBox to add spacing
                       CupertinoTextField(
+                        style: TextStyle(color: CupertinoColors.black),
                         controller: _passwordController,
                         placeholder: 'Mật Khâu',
                         keyboardType: TextInputType.number,
@@ -187,6 +189,7 @@ class _CustomerInputState extends State<CustomerInput> {
                       ),
                       SizedBox(height: 10.0),
                       CupertinoTextField(
+                        style: TextStyle(color: CupertinoColors.black),
                         controller: _confirmPasswordController,
                         placeholder: 'Xác Nhận Mật Khẩu',
                         keyboardType: TextInputType.number,
@@ -201,6 +204,7 @@ class _CustomerInputState extends State<CustomerInput> {
                       SizedBox(height: 20.0),
                       Center(
                         child: CupertinoTextField(
+                          style: TextStyle(color: CupertinoColors.black),
                           controller: _referencePhoneController,
                           placeholder: 'Số Điện Thoại Người Giới Thiệu',
                           keyboardType: TextInputType.number,

@@ -99,6 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.white,
       child: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -180,7 +181,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Text('Tiện ích',
                                 style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
                             SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -237,7 +240,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(height: 20),
                             Text('Chính Sách',
                                 style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
                             SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -285,7 +290,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       Center(
                           child: Text("version: 1.0.0",
                               style: TextStyle(color: Colors.grey))),
-
                     ],
                   ),
                 ],

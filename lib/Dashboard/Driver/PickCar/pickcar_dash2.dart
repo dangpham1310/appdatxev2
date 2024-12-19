@@ -67,6 +67,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       navigationBar: CupertinoNavigationBar(
         middle: Text("Thông Tin Chi Tiết Chuyến Đi",
             style: TextStyle(color: Colors.white)),
@@ -653,6 +654,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
           ),
         ),
         child: CupertinoTextField(
+          style: TextStyle(color: CupertinoColors.black),
           controller: _priceController,
           placeholder: 'Nhập Giá',
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -702,6 +704,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
         ),
       ),
       child: CupertinoTextField(
+        style: TextStyle(color: CupertinoColors.black),
         controller: _phonenumberController,
         placeholder: 'Nhập Số Điện Thoại Khách',
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),

@@ -84,6 +84,7 @@ class _InformationState extends State<Information> {
                   SizedBox(width: 10),
                   Expanded(
                     child: CupertinoTextField(
+                      style: TextStyle(color: CupertinoColors.black),
                       placeholder: 'Họ và tên',
                       prefix: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -102,6 +103,7 @@ class _InformationState extends State<Information> {
               ),
               SizedBox(height: 10),
               CupertinoTextField(
+                style: TextStyle(color: CupertinoColors.black),
                 placeholder: 'Số điện thoại',
                 prefix:
                     Icon(CupertinoIcons.phone_solid, color: Color(0xFF40B59F)),

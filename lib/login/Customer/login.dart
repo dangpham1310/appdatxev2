@@ -196,6 +196,7 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
                       Container(
                         width: 240,
                         child: CupertinoTextField(
+                          style: TextStyle(color: CupertinoColors.black),
                           controller: _controller,
                           focusNode: _focusNode,
                           keyboardType: TextInputType.number,

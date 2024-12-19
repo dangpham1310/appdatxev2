@@ -121,6 +121,7 @@ class _DriverInputState extends State<DriverInput> {
                       ),
                       SizedBox(height: 20.0),
                       CupertinoTextField(
+                        style: TextStyle(color: CupertinoColors.black),
                         controller: _nameController,
                         placeholder: 'Họ Và Tên',
                         keyboardType: TextInputType.text,
@@ -139,6 +140,7 @@ class _DriverInputState extends State<DriverInput> {
                             color: Colors.blueGrey[600]),
                       ),
                       CupertinoTextField(
+                        style: TextStyle(color: CupertinoColors.black),
                         controller: _passwordController,
                         placeholder: 'Nhập 6 Số',
                         maxLength: 6,
@@ -159,6 +161,7 @@ class _DriverInputState extends State<DriverInput> {
                       ),
                       SizedBox(height: 10.0),
                       CupertinoTextField(
+                        style: TextStyle(color: CupertinoColors.black),
                         controller: _confirmPasswordController,
                         placeholder: 'Nhập 6 Số',
                         maxLength: 6,
@@ -174,6 +177,7 @@ class _DriverInputState extends State<DriverInput> {
                       SizedBox(height: 20.0),
                       Center(
                         child: CupertinoTextField(
+                          style: TextStyle(color: CupertinoColors.black),
                           controller:
                               _addressController, // Use different controller for address
                           placeholder: 'Địa Chỉ',
@@ -187,6 +191,7 @@ class _DriverInputState extends State<DriverInput> {
                       SizedBox(height: 20.0),
                       Center(
                         child: CupertinoTextField(
+                          style: TextStyle(color: CupertinoColors.black),
                           controller:
                               _referencePhoneController, // Use different controller for address
                           placeholder: 'Số Điện Thoại Người Giới Thiệu',
@@ -261,6 +266,7 @@ class _DriverInputState extends State<DriverInput> {
                       SizedBox(height: 5.0),
                       Center(
                         child: CupertinoTextField(
+                          style: TextStyle(color: CupertinoColors.black),
                           controller:
                               _brandCar, // Use different controller for address
                           placeholder: 'Hãng Xe',

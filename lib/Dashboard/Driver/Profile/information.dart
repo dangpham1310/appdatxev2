@@ -57,7 +57,6 @@ class _InformationState extends State<Information> {
           driverInfo = responseBody; // Update driverInfo with fetched data
           _cacheDriverInfo(driverInfo);
         });
-        _saveImagesPermanently();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -93,25 +92,6 @@ class _InformationState extends State<Information> {
   void _cacheDriverInfo(Map<String, dynamic> info) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('driverInfo', jsonEncode(info));
-  }
-
-  Future<void> _saveImagesPermanently() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final dio = Dio(
-      BaseOptions(
-        connectTimeout: Duration(seconds: 100),
-        receiveTimeout: Duration(seconds: 100), // 100 seconds
-      ),
-    );
-
-    await _downloadAndSaveImage(dio, driverInfo['driverLicenseFrontUrl'],
-        '${directory.path}/driverLicenseFront.png');
-    await _downloadAndSaveImage(dio, driverInfo['driverLicenseBackUrl'],
-        '${directory.path}/driverLicenseBack.png');
-    await _downloadAndSaveImage(
-        dio, driverInfo['carFrontUrl'], '${directory.path}/carFront.png');
-    await _downloadAndSaveImage(
-        dio, driverInfo['carBackUrl'], '${directory.path}/carBack.png');
   }
 
   Future<void> _downloadAndSaveImage(Dio dio, String url, String path) async {
@@ -151,7 +131,6 @@ class _InformationState extends State<Information> {
           driverInfo = responseBody; // Update driverInfo with fetched data
           _cacheDriverInfo(driverInfo);
         });
-        _saveImagesPermanently();
 
         // Update loadFirstTime to 1
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -184,6 +163,7 @@ class _InformationState extends State<Information> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
         middle: Text(
           "Thông Tin Cá Nhân",
@@ -218,6 +198,7 @@ class _InformationState extends State<Information> {
                   SizedBox(width: 10),
                   Expanded(
                     child: CupertinoTextField(
+                      style: TextStyle(color: CupertinoColors.black),
                       placeholder: 'Họ và tên',
                       prefix: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -231,8 +212,18 @@ class _InformationState extends State<Information> {
                       readOnly: true,
                       padding:
                           EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: CupertinoColors.white, // Set background to white
+                        borderRadius: BorderRadius.circular(
+                            8.0), // Optional rounded corners
+                        border: Border.all(
+                          color: CupertinoColors
+                              .systemGrey, // Optional border color
+                          width: 1.0, // Optional border width
+                        ),
+                      ),
                     ),
-                  ),
+                  )
                 ],
               ),
               SizedBox(height: 10),
@@ -256,6 +247,7 @@ class _InformationState extends State<Information> {
                 onPressed: () {},
               ),
               CupertinoTextField(
+                style: TextStyle(color: CupertinoColors.black),
                 placeholder: 'Số điện thoại',
                 prefix:
                     Icon(CupertinoIcons.phone_solid, color: Color(0xFF40B59F)),
@@ -264,16 +256,27 @@ class _InformationState extends State<Information> {
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 keyboardType: TextInputType.phone,
                 readOnly: true,
+                decoration: BoxDecoration(
+                  color: CupertinoColors.white, // Set background to white
+                  borderRadius:
+                      BorderRadius.circular(8.0), // Optional rounded corners
+                  border: Border.all(
+                    color: CupertinoColors.systemGrey, // Optional border color
+                    width: 0.5, // Optional border width
+                  ),
+                ),
               ),
               SizedBox(height: 20),
               Text('Thông tin xe',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black)),
               SizedBox(height: 10),
               Row(
                 children: [
                   Icon(CupertinoIcons.car_detailed, color: Color(0xFF40B59F)),
                   SizedBox(width: 5),
-                  Text('Tên Xe: ${driverInfo['vehicleType'] ?? ''}'),
+                  Text('Tên Xe: ${driverInfo['vehicleType'] ?? ''}',
+                      style: TextStyle(color: CupertinoColors.inactiveGray)),
                 ],
               ),
               Divider(),
@@ -281,7 +284,8 @@ class _InformationState extends State<Information> {
                 children: [
                   Icon(CupertinoIcons.number, color: Color(0xFF40B59F)),
                   SizedBox(width: 5),
-                  Text('Biển Số Xe: ${driverInfo['numberPlate'] ?? ''}'),
+                  Text('Biển Số Xe: ${driverInfo['numberPlate'] ?? ''}',
+                      style: TextStyle(color: CupertinoColors.inactiveGray)),
                 ],
               ),
               Divider(),
@@ -290,8 +294,8 @@ class _InformationState extends State<Information> {
                   Icon(CupertinoIcons.person_2, color: Color(0xFF40B59F)),
                   SizedBox(width: 5),
                   Text(
-                    'Số chỗ: ${driverInfo['vehicleSeat'] == "0" ? "4 chỗ" : driverInfo['vehicleSeat'] == "1" ? "7 chỗ" : ''}',
-                  ),
+                      'Số chỗ: ${driverInfo['vehicleSeat'] == "0" ? "4 chỗ" : driverInfo['vehicleSeat'] == "1" ? "7 chỗ" : ''}',
+                      style: TextStyle(color: CupertinoColors.inactiveGray)),
                 ],
               ),
               Divider(),

@@ -168,6 +168,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                       Container(
                         width: 240,
                         child: CupertinoTextField(
+                          style: TextStyle(color: CupertinoColors.black),
                           controller: _passwordController,
                           obscureText: true,
                           keyboardType: TextInputType.number,
@@ -187,6 +188,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                       Container(
                         width: 240,
                         child: CupertinoTextField(
+                          style: TextStyle(color: CupertinoColors.black),
                           controller: _confirmPasswordController,
                           obscureText: true,
                           keyboardType: TextInputType.number,

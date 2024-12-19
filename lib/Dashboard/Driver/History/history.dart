@@ -90,6 +90,7 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.white,
       child: SafeArea(
         child: isLoading
             ? Center(child: CupertinoActivityIndicator())
@@ -200,7 +201,9 @@ class _HistoryPageState extends State<HistoryPage> {
                       child: Text(
                         date,
                         style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
                       ),
                     ),
                   ],
@@ -214,7 +217,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     Expanded(
                       child: Text(
                         startPoint,
-                        style: TextStyle(fontSize: 14),
+                        style: TextStyle(fontSize: 14, color: Colors.black),
                       ),
                     ),
                   ],
@@ -227,7 +230,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     Expanded(
                       child: Text(
                         endPoint,
-                        style: TextStyle(fontSize: 14.0),
+                        style: TextStyle(fontSize: 14.0, color: Colors.black),
                       ),
                     ),
                   ],

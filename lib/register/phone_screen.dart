@@ -109,8 +109,10 @@ class NextScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 55, vertical: 5.0),
                   child: CupertinoTextField(
+                    
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
+                    style: TextStyle(color: CupertinoColors.black),
                     prefix: Padding(
                       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                       child: Icon(

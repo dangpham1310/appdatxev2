@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "260704474062",
     "project_id": "appdatxe-da791",
-    "storage_bucket": "appdatxe-da791.appspot.com"
+    "storage_bucket": "appdatxe-da791.firebasestorage.app"
   },
   "client": [
     {
@@ -29,6 +29,25 @@
         "mobilesdk_app_id": "1:260704474062:android:717587899ff9ac1b6c519f",
         "android_client_info": {
           "package_name": "com.example.pushapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFy84dFPPELbH2TaUMAtleU8THLfHgUTU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260704474062:android:622c35ea23b8824f6c519f",
+        "android_client_info": {
+          "package_name": "net.donvaden.taxi"
         }
       },
       "oauth_client": [],

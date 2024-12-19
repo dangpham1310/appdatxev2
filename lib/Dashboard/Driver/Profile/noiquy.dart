@@ -5,6 +5,7 @@ class RulesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: Color(0xFF40B59F),
         middle: Text(

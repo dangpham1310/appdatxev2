@@ -50,6 +50,7 @@ class _HistoryTransactionPageState extends State<HistoryTransactionPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
         middle: Text(
           "Lịch Sử Giao Dịch",

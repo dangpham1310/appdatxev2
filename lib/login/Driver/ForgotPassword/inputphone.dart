@@ -89,6 +89,7 @@ class PhoneScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 55, vertical: 5.0),
                   child: CupertinoTextField(
+                    style: TextStyle(color: CupertinoColors.black),
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
                     prefix: Padding(

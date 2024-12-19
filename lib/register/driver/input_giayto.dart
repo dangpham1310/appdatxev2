@@ -190,6 +190,7 @@ class _DriverGiayToState extends State<DriverGiayTo> {
                     ),
                     Center(
                       child: CupertinoTextField(
+                        style: TextStyle(color: CupertinoColors.black),
                         controller: _licensePlateController,
                         placeholder: '18A12345',
                         padding: EdgeInsets.all(12.0),

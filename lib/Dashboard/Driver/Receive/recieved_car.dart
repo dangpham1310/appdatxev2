@@ -147,10 +147,8 @@ class _ReceiveState extends State<Receive> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus(); // Ẩn bàn phím
-      },
+    return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
       child: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -177,6 +175,7 @@ class _ReceiveState extends State<Receive> {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: CupertinoTextField(
+                            style: TextStyle(color: CupertinoColors.black),
                             placeholder: 'Điểm Đón',
                             placeholderStyle:
                                 TextStyle(color: Colors.grey[200]),
@@ -199,6 +198,7 @@ class _ReceiveState extends State<Receive> {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: CupertinoTextField(
+                            style: TextStyle(color: CupertinoColors.black),
                             placeholder: 'Điểm Đến',
                             placeholderStyle:
                                 TextStyle(color: Colors.grey[200]),

@@ -209,6 +209,7 @@ class _NapRutPageState extends State<NapRutPage> {
   Widget _buildTextField(String placeholder) {
     if (placeholder == "Số Tài Khoản") {
       return CupertinoTextField(
+        style: TextStyle(color: CupertinoColors.black),
         placeholder: placeholder,
         controller: stkruttienController, // Use the controller here
         padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
@@ -220,6 +221,7 @@ class _NapRutPageState extends State<NapRutPage> {
       );
     } else if (placeholder == "Thông Tin Ngân Hàng") {
       return CupertinoTextField(
+        style: TextStyle(color: CupertinoColors.black),
         placeholder: placeholder,
         controller: bankNameController, // Use the controller here
         padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
@@ -231,6 +233,7 @@ class _NapRutPageState extends State<NapRutPage> {
       );
     }
     return CupertinoTextField(
+      style: TextStyle(color: CupertinoColors.black),
       placeholder: placeholder,
       controller: chutaikhoanController, // Use the controller here
       padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
@@ -244,6 +247,7 @@ class _NapRutPageState extends State<NapRutPage> {
 
   Widget _buildAmountField(String placeholder) {
     return CupertinoTextField(
+      style: TextStyle(color: CupertinoColors.black),
       placeholder: placeholder,
       controller: naptienController, // Use the controller here
       padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),

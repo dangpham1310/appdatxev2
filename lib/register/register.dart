@@ -11,6 +11,7 @@ class _StartAppWidgetState extends State<StartAppWidget> {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
+      
       home: CupertinoPageScaffold(
         child: Stack(
           children: [

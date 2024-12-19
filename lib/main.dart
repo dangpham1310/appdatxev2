@@ -126,15 +126,23 @@ void main() async {
   }
 
   runApp(CupertinoApp(
+    theme: CupertinoThemeData(
+      brightness: Brightness.light, // Chỉ dùng chế độ sáng
+      primaryColor: CupertinoColors.activeBlue,
+      barBackgroundColor: CupertinoColors.white, // Thanh bar nền trắng
+      textTheme: CupertinoTextThemeData(
+        textStyle: TextStyle(color: CupertinoColors.black), // Chữ màu đen
+      ),
+    ),
     localizationsDelegates: [
       GlobalCupertinoLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,
     ],
     supportedLocales: <Locale>[
-      Locale('vi', 'VN'), // Vietnamese Locale
+      Locale('vi', 'VN'), // Hỗ trợ Tiếng Việt
     ],
-    home: MyApp(),
+    home: MyApp(), // Chuyển sang MaterialApp trong MyApp
   ));
 }
 
@@ -142,6 +150,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.light(), // Giao diện sáng
+      darkTheme: ThemeData.light(), // Giao diện sáng cả khi dark mode
+      themeMode: ThemeMode.light, // Buộc luôn ở chế độ sáng
       home: StartAppWidget(),
     );
   }

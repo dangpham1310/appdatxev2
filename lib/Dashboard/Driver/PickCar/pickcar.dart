@@ -56,6 +56,10 @@ void showTimeErrorDialog(BuildContext context) {
 class PickCarGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final Brightness brightness = MediaQuery.of(context).platformBrightness;
+    final Color backgroundColor = brightness == Brightness.dark
+        ? CupertinoColors.black
+        : CupertinoColors.white;
     return CupertinoApp(
       localizationsDelegates: [
         GlobalCupertinoLocalizations.delegate,
@@ -206,8 +210,8 @@ class _PickCarState extends State<PickCar> {
       _debounce?.cancel();
 
       // Set a new timer for 3 seconds
-      _debounce = Timer(Duration(seconds: 1), () async {
-        if (input.length >= 8) {
+      _debounce = Timer(Duration(milliseconds: 500), () async {
+        if (input.length >= 2) {
           final url =
               Uri.parse('https://api.dannycode.site/autocomplete/$input');
 
@@ -247,8 +251,8 @@ class _PickCarState extends State<PickCar> {
       _debounce?.cancel();
 
       // Set a new timer for 3 seconds
-      _debounce = Timer(Duration(seconds: 1), () async {
-        if (input.length >= 8) {
+      _debounce = Timer(Duration(milliseconds: 500), () async {
+        if (input.length >= 2) {
           final url =
               Uri.parse('https://api.dannycode.site/autocomplete/$input');
 
@@ -379,10 +383,8 @@ class _PickCarState extends State<PickCar> {
   }
 
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus(); // Hide the keyboard
-      },
+    return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
       child: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -405,7 +407,7 @@ class _PickCarState extends State<PickCar> {
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Theme.of(context).scaffoldBackgroundColor,
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: _buildTextFieldLocationPickUp(
@@ -415,7 +417,7 @@ class _PickCarState extends State<PickCar> {
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Theme.of(context).scaffoldBackgroundColor,
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: _buildTextFieldLocationDropOff(
@@ -597,6 +599,7 @@ class _PickCarState extends State<PickCar> {
             ),
           ),
         CupertinoTextField(
+          style: TextStyle(color: CupertinoColors.black),
           controller: controller,
           onChanged: (text) {
             if (text != null) {
@@ -710,6 +713,7 @@ class _PickCarState extends State<PickCar> {
             child: _buildListViewDropOff(),
           ),
         CupertinoTextField(
+          style: TextStyle(color: CupertinoColors.black),
           controller: controller,
           onChanged: (text) {
             if (text != null) {

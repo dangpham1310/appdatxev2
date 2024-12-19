@@ -88,6 +88,7 @@ class _InvitedFriendsPageState extends State<InvitedFriendsPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: Color(0xFF40B59F),
         middle: Text(
@@ -108,7 +109,10 @@ class _InvitedFriendsPageState extends State<InvitedFriendsPage> {
         child: isLoading
             ? Center(child: CupertinoActivityIndicator())
             : errorMessage.isNotEmpty
-                ? Center(child: Text(errorMessage))
+                ? Center(
+                    child: Text(errorMessage,
+                        style: TextStyle(
+                            fontSize: 18.0, color: CupertinoColors.black)))
                 : ListView.builder(
                     itemCount: invitedFriends.length,
                     itemBuilder: (context, index) {

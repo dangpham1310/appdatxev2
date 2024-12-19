@@ -51,6 +51,7 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
           width: 40.0,
           height: 40.0,
           child: CupertinoTextField(
+            style: TextStyle(color: CupertinoColors.black),
             controller: textControllers[index],
             focusNode: focusNodes[index],
             obscureText: true,

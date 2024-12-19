@@ -26,7 +26,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.push_notification"
+    namespace "net.donvaden.taxi"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.push_notification"
+        applicationId "net.donvaden.taxi"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
@@ -61,6 +61,23 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    // Thêm Vào
+    // signingConfigs {
+    //     release {
+    //         storeFile file("D:/Flutter App/water_reminder/my-release-key.jks")
+    //         storePassword "Loithanh123"
+    //         keyAlias "my-key-alias"
+    //         keyPassword "Loithanh123"
+    //     }
+    // }
+    // buildTypes {
+    //     release {
+    //         signingConfig signingConfigs.release
+    //         minifyEnabled true
+    //         shrinkResources true
+    //     }
+    // }
 }
 
 flutter {

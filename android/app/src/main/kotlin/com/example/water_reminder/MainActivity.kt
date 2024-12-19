@@ -1,4 +1,4 @@
-package com.example.push_notification
+package net.donvaden.taxi
 
 import io.flutter.embedding.android.FlutterActivity
 

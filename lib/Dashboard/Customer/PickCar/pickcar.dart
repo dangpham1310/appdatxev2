@@ -206,8 +206,8 @@ class _PickCarState extends State<PickCar> {
       _debounce?.cancel();
 
       // Set a new timer for 3 seconds
-      _debounce = Timer(Duration(seconds: 1), () async {
-        if (input.length >= 8) {
+      _debounce = Timer(Duration(seconds: 0), () async {
+        if (input.length >= 2) {
           final url =
               Uri.parse('https://api.dannycode.site/autocomplete/$input');
 
@@ -247,8 +247,8 @@ class _PickCarState extends State<PickCar> {
       _debounce?.cancel();
 
       // Set a new timer for 3 seconds
-      _debounce = Timer(Duration(seconds: 1), () async {
-        if (input.length >= 8) {
+      _debounce = Timer(Duration(seconds: 0), () async {
+        if (input.length >= 2) {
           final url =
               Uri.parse('https://api.dannycode.site/autocomplete/$input');
 
@@ -597,6 +597,7 @@ class _PickCarState extends State<PickCar> {
             ),
           ),
         CupertinoTextField(
+          style: TextStyle(color: CupertinoColors.black),
           controller: controller,
           onChanged: (text) {
             if (text != null) {
@@ -711,6 +712,7 @@ class _PickCarState extends State<PickCar> {
           ),
         CupertinoTextField(
           controller: controller,
+          style: TextStyle(color: CupertinoColors.black),
           onChanged: (text) {
             if (text != null) {
               setState(() {

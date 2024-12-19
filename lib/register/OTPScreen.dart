@@ -177,6 +177,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       Container(
                         width: 240,
                         child: CupertinoTextField(
+                          style: TextStyle(color: CupertinoColors.black),
                           controller: _otpController,
                           keyboardType: TextInputType.number,
                           maxLength: 6,
