@@ -12,10 +12,10 @@ import 'package:water_reminder/firebase_options.dart';
 import 'register/register.dart';
 
 // Top-level function to handle background messages
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  print('Handling a background message: ${message.messageId}');
-}
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+//   print('Handling a background message: ${message.messageId}');
+// }
 
 class NotificationController {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -32,7 +32,7 @@ class NotificationController {
     await messaging.requestPermission();
 
     // Set up the background message handler
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // Initialize local notifications
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -86,6 +86,7 @@ class NotificationController {
   // Request Firebase Token
   static Future<String> requestFirebaseToken() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
+    
     String? token = await messaging.getToken();
     print('FCM Token: $token');
     if (token != null) {
@@ -126,7 +127,13 @@ void main() async {
     ));
   }
 
-  runApp(CupertinoApp(
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoApp(
     theme: CupertinoThemeData(
       brightness: Brightness.light, // Chỉ dùng chế độ sáng
       primaryColor: CupertinoColors.activeBlue,
@@ -143,19 +150,8 @@ void main() async {
     supportedLocales: <Locale>[
       Locale('vi', 'VN'), // Hỗ trợ Tiếng Việt
     ],
-    home: MyApp(), // Chuyển sang MaterialApp trong MyApp
-  ));
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.light(), // Giao diện sáng
-      darkTheme: ThemeData.light(), // Giao diện sáng cả khi dark mode
-      themeMode: ThemeMode.light, // Buộc luôn ở chế độ sáng
-      home: StartAppWidget(),
-    );
+    home: StartAppWidget(), // Chuyển sang MaterialApp trong MyApp
+  );
   }
 }
 
