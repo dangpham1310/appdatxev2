@@ -594,7 +594,7 @@ void _showSupportDialog(BuildContext context, String idHistory) {
 
                 Navigator.of(context).pop(); // Đóng dialog sau khi gửi
 
-                // Hiển thị thông báo cảm ơn
+                // Hiển thị thông báo cảm ơnchạy ma
                 _showThankYouDialog(context);
               },
             ),
