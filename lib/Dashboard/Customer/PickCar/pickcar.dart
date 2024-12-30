@@ -206,7 +206,7 @@ class _PickCarState extends State<PickCar> {
       _debounce?.cancel();
 
       // Set a new timer for 3 seconds
-      _debounce = Timer(Duration(seconds: 0), () async {
+      _debounce = Timer(Duration(milliseconds: 500), () async {
         if (input.length >= 2) {
           final url =
               Uri.parse('https://api.dannycode.site/autocomplete/$input');
@@ -247,7 +247,7 @@ class _PickCarState extends State<PickCar> {
       _debounce?.cancel();
 
       // Set a new timer for 3 seconds
-      _debounce = Timer(Duration(seconds: 0), () async {
+      _debounce = Timer(Duration(milliseconds: 500), () async {
         if (input.length >= 2) {
           final url =
               Uri.parse('https://api.dannycode.site/autocomplete/$input');
@@ -379,10 +379,8 @@ class _PickCarState extends State<PickCar> {
   }
 
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus(); // Hide the keyboard
-      },
+    return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
       child: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

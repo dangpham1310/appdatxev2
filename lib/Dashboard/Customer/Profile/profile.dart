@@ -100,6 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
       child: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -128,13 +129,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
-                                  coin,
+                                  'Số dư: $coin',
                                   style: TextStyle(
                                     color: CupertinoColors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+
                               ),
                             ),
                             Positioned(

@@ -128,13 +128,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
-                                  coin,
+                                  'Số dư: $coin',
                                   style: TextStyle(
                                     color: CupertinoColors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+
                               ),
                             ),
                             Positioned(

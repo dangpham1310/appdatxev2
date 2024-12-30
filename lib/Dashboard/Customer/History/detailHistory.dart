@@ -66,6 +66,7 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
         middle: Text("Thông Tin Chi Tiết Chuyến Đi",
             style: TextStyle(color: Colors.white)),
@@ -112,13 +113,16 @@ class _DetailsPageState extends State<DetailsPage> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18.0,
+                                color: Colors.black,
                               ),
                             ),
                             SizedBox(height: 4.0),
                             Text(
                               driver['vehicleType'] ?? 'Chưa thể hiển thị',
-                              style:
-                                  TextStyle(fontSize: 14.0, color: Colors.grey),
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.grey,
+                              ),
                             ),
                             SizedBox(height: 8.0),
                             Container(
@@ -157,15 +161,25 @@ class _DetailsPageState extends State<DetailsPage> {
                     Text(
                       'Thanh toán',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16.0),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                        color: Colors.black,
+                      ),
                     ),
                     SizedBox(height: 8.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Cước phí', style: TextStyle(fontSize: 14.0)),
+                        Text('Cước phí',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black,
+                            )),
                         Text('${history['price'] ?? 'N/A'}đ',
-                            style: TextStyle(fontSize: 14.0)),
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold)),
                       ],
                     ),
                     Divider(height: 24.0),
@@ -173,17 +187,26 @@ class _DetailsPageState extends State<DetailsPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Trả qua tiền mặt',
-                            style: TextStyle(fontSize: 14.0)),
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black,
+                            )),
                         Text('${history['price'] ?? 'N/A'} Nghìn VND',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14.0)),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.0,
+                              color: Colors.black,
+                            )),
                       ],
                     ),
                     Divider(height: 24.0),
                     Text(
                       'Mã chuyến đi: ${history['id'] ?? 'N/A'}',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14.0),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0,
+                        color: Colors.black,
+                      ),
                     ),
                     Text(
                       '${history['date'] ?? 'N/A'} | ${history['time'] ?? 'N/A'}',
@@ -198,7 +221,10 @@ class _DetailsPageState extends State<DetailsPage> {
                         Expanded(
                           child: Text(
                             widget.startPoint,
-                            style: TextStyle(fontSize: 14.0),
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ],
@@ -212,7 +238,10 @@ class _DetailsPageState extends State<DetailsPage> {
                         Expanded(
                           child: Text(
                             widget.endPoint,
-                            style: TextStyle(fontSize: 14.0),
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ],
@@ -225,7 +254,10 @@ class _DetailsPageState extends State<DetailsPage> {
                             child: Text(
                               'Số điện thoại người đặt',
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 13.0),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                           SizedBox(height: 4.0),
@@ -243,7 +275,10 @@ class _DetailsPageState extends State<DetailsPage> {
                             child: Text(
                               'Số điện thoại khách hàng',
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 13.0),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                           SizedBox(height: 4.0),
@@ -264,7 +299,10 @@ class _DetailsPageState extends State<DetailsPage> {
                           Text(
                             'Số điện thoại Tài Xế',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 13.0),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13.0,
+                              color: Colors.black,
+                            ),
                           ),
                           SizedBox(height: 4.0),
                           Text(
@@ -484,7 +522,6 @@ void _showSupportDialog(BuildContext context, String idHistory) {
           ),
           content: CupertinoTextField(
             controller: _contentController, // Gắn controller vào TextField
- 
             placeholder:
                 'Nhập nội dung khiếu nại của bạn cho chuyến đi $idHistory',
             maxLines: 5,
@@ -494,7 +531,7 @@ void _showSupportDialog(BuildContext context, String idHistory) {
               borderRadius: BorderRadius.circular(8.0),
               border: Border.all(color: CupertinoColors.systemGrey, width: 1.0),
             ),
-            style: TextStyle(fontSize: 16.0,color: CupertinoColors.black),
+            style: TextStyle(fontSize: 16.0, color: CupertinoColors.black),
           ),
           actions: [
             CupertinoDialogAction(

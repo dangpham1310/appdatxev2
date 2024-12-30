@@ -343,6 +343,13 @@ class _InformationState extends State<Information> {
 
                         // Preserve the FCM Token
                         String? fcmToken = prefs.getString('FCMToken');
+
+                        String? accessToken = prefs.getString('accessToken');
+
+                        var response = await http.post(
+                          Uri.parse('https://api.dannycode.site/API/authentication/logout'),
+                          body: {'accessToken': accessToken},
+                        );
                         print("FCM Token: $fcmToken");
                         // Clear all other data
                         await prefs.clear();

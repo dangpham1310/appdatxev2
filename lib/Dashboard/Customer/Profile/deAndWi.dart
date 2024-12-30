@@ -59,6 +59,7 @@ class _NapRutPageState extends State<NapRutPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: Color(0xFF40B59F), // Set navigation bar color
         middle: Text(
@@ -101,7 +102,8 @@ class _NapRutPageState extends State<NapRutPage> {
                     Expanded(
                       child: Text(
                         'Nội Dung: $phoneNumber',
-                        style: TextStyle(fontSize: 16.0),
+                        style: TextStyle(
+                            fontSize: 16.0, color: CupertinoColors.black),
                       ),
                     ),
                     GestureDetector(
@@ -164,12 +166,15 @@ class _NapRutPageState extends State<NapRutPage> {
         children: [
           Text(
             'Thông tin ngân hàng Nạp:',
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: CupertinoColors.black),
           ),
           SizedBox(height: 10),
           Text(
             'Ngân hàng: BIDV',
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontSize: 16.0, color: CupertinoColors.black),
           ),
           SizedBox(height: 5),
           Row(
@@ -177,7 +182,8 @@ class _NapRutPageState extends State<NapRutPage> {
               Expanded(
                 child: Text(
                   'Số Tài Khoản: $accountNumber',
-                  style: TextStyle(fontSize: 16.0),
+                  style:
+                  TextStyle(fontSize: 16.0, color: CupertinoColors.black),
                 ),
               ),
               GestureDetector(
@@ -199,7 +205,7 @@ class _NapRutPageState extends State<NapRutPage> {
           SizedBox(height: 5),
           Text(
             'Chủ Tài Khoản: VU VAN LOI',
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontSize: 16.0, color: CupertinoColors.black),
           ),
         ],
       ),
@@ -211,18 +217,26 @@ class _NapRutPageState extends State<NapRutPage> {
       return CupertinoTextField(
         style: TextStyle(color: CupertinoColors.black),
         placeholder: placeholder,
+        placeholderStyle: TextStyle(
+          color: CupertinoColors.systemGrey, // Placeholder text color
+          fontSize: 14.0, // Optional: adjust font size
+        ),
         controller: stkruttienController, // Use the controller here
         padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
         decoration: BoxDecoration(
           color: CupertinoColors.white,
           borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(color: CupertinoColors.systemGrey),
+          border: Border.all(color: CupertinoColors.black),
         ),
       );
     } else if (placeholder == "Thông Tin Ngân Hàng") {
       return CupertinoTextField(
         style: TextStyle(color: CupertinoColors.black),
         placeholder: placeholder,
+        placeholderStyle: TextStyle(
+          color: CupertinoColors.systemGrey, // Placeholder text color
+          fontSize: 14.0, // Optional: adjust font size
+        ),
         controller: bankNameController, // Use the controller here
         padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
         decoration: BoxDecoration(
@@ -235,6 +249,10 @@ class _NapRutPageState extends State<NapRutPage> {
     return CupertinoTextField(
       style: TextStyle(color: CupertinoColors.black),
       placeholder: placeholder,
+      placeholderStyle: TextStyle(
+        color: CupertinoColors.systemGrey, // Placeholder text color
+        fontSize: 14.0, // Optional: adjust font size
+      ),
       controller: chutaikhoanController, // Use the controller here
       padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       decoration: BoxDecoration(
@@ -249,6 +267,10 @@ class _NapRutPageState extends State<NapRutPage> {
     return CupertinoTextField(
       style: TextStyle(color: CupertinoColors.black),
       placeholder: placeholder,
+      placeholderStyle: TextStyle(
+        color: CupertinoColors.systemGrey, // Placeholder text color
+        fontSize: 14.0, // Optional: adjust font size
+      ),
       controller: naptienController, // Use the controller here
       padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       keyboardType: TextInputType.number,
@@ -315,7 +337,7 @@ class _NapRutPageState extends State<NapRutPage> {
             ),
             CupertinoButton(
               child:
-                  Text('Xác nhận', style: TextStyle(color: Color(0xFF40B59F))),
+              Text('Xác nhận', style: TextStyle(color: Color(0xFF40B59F))),
               onPressed: () {
                 setState(() {}); // Ensures the state is updated
                 Navigator.of(modalContext).pop(); // Close the modal
@@ -349,11 +371,11 @@ class _NapRutPageState extends State<NapRutPage> {
                     'accessToken': accessToken,
                     'amount': selectedAmount,
                     'stkruttien':
-                        stkruttienController.text, // Use controller's text
+                    stkruttienController.text, // Use controller's text
                     'bankName':
-                        bankNameController.text, // Use controller's text
+                    bankNameController.text, // Use controller's text
                     'accountName':
-                        chutaikhoanController.text, // Use controller's text
+                    chutaikhoanController.text, // Use controller's text
                   },
                 );
                 if (response.statusCode == 200) {
