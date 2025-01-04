@@ -48,7 +48,16 @@ class _PasswordScreenState extends State<PasswordScreen> {
       'password': enteredOTP,
     });
     final Map<String, dynamic> responseBody = jsonDecode(response.body);
-    if (responseBody['message'] != "fail") {
+    if (responseBody['message'] != "logged"){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Đã Đăng Nhập Nơi Khác'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    if (responseBody['message'] == "success") {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('accessToken', responseBody['accessToken']);
       await prefs.setString("name", responseBody['name']);

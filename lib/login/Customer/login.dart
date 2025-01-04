@@ -53,7 +53,15 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-
+        if (responseData['message'] != "logged"){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Đã Đăng Nhập Nơi Khác'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return;
+        }
         if (responseData['accessToken'] != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('accessToken', responseData['accessToken']);
@@ -71,12 +79,6 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
             ),
           );
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Đã xảy ra lỗi'),
-          ),
-        );
       }
     }
 
