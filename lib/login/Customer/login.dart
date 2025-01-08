@@ -52,8 +52,9 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
       );
 
       if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        if (responseData['message'] != "logged"){
+
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if (responseBody['message'] == "logged"){
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Đã Đăng Nhập Nơi Khác'),
@@ -62,9 +63,9 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
           );
           return;
         }
-        if (responseData['accessToken'] != null) {
+        if (responseBody['accessToken'] != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('accessToken', responseData['accessToken']);
+          await prefs.setString('accessToken', responseBody['accessToken']);
           await prefs.setBool('isLoggedInDriver', false); // Set the login flag
           await prefs.setBool('isLoggedInCustomer', true);
 

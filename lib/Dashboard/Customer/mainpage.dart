@@ -24,7 +24,7 @@ class _DashboardState extends State<DashboardApp> {
   @override
   void initState() {
     super.initState();
-    RunDashboardDriver();
+
   }
 
   void _onTabTapped(int index) {
@@ -87,7 +87,7 @@ void RunDashboardDriver() async {
   Future<void> postData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('FCMToken') ?? '';
-    String url = 'https://api.dannycode.site/api/FCMTokenDriver';
+    String url = 'https://api.dannycode.site/api/FCMTokenCustomer';
     final response = await http.post(
       Uri.parse(url),
       body: {'FCMToken': '${token}'},
