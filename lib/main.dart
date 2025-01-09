@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:water_reminder/firebase_options.dart';
+import 'package:water_reminder/register/welcome.dart';
 
 import 'register/register.dart';
 
@@ -150,7 +151,7 @@ class MyApp extends StatelessWidget {
     supportedLocales: <Locale>[
       Locale('vi', 'VN'), // Hỗ trợ Tiếng Việt
     ],
-    home: StartAppWidget(), // Chuyển sang MaterialApp trong MyApp
+    home: Welcome(), // Chuyển sang MaterialApp trong MyApp
   );
   }
 }

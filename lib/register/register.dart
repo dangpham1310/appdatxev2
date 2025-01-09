@@ -12,12 +12,10 @@ class _StartAppWidgetState extends State<StartAppWidget> {
   Widget build(BuildContext context) {
     return CupertinoApp(
       
-      home: CupertinoPageScaffold(
-        child: Stack(
-          children: [
-            Welcome(), // Add your Welcome widget as the first item in the stack
-          ],
-        ),
+      home: Stack(
+        children: [
+          Welcome(), // Add your Welcome widget as the first item in the stack
+        ],
       ),
     );
   }
