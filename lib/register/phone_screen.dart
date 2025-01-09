@@ -172,6 +172,14 @@ class NextScreen extends StatelessWidget {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('phone', phone);
         print('Role: $role');
+        if (message == 'stack'){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Vui lòng đợi phê duyệt hoặc liên hệ zalo 0941118212'),
+            ),
+          );
+          return;
+        }
         if (message == 'login') {
           if (role == "driver") {
             Navigator.push(

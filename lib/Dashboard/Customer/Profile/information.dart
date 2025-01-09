@@ -51,6 +51,7 @@ class _InformationState extends State<Information> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
         middle:
             Text("Thông Tin Cá Nhân", style: TextStyle(color: Colors.white)),
@@ -97,6 +98,16 @@ class _InformationState extends State<Information> {
                       readOnly: true,
                       padding:
                           EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: CupertinoColors.white, // Set background to white
+                        borderRadius: BorderRadius.circular(
+                            8.0), // Optional rounded corners
+                        border: Border.all(
+                          color: CupertinoColors
+                              .systemGrey, // Optional border color
+                          width: 1.0, // Optional border width
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -111,6 +122,16 @@ class _InformationState extends State<Information> {
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 keyboardType: TextInputType.phone,
                 readOnly: true,
+                decoration: BoxDecoration(
+                  color: CupertinoColors.white, // Set background to white
+                  borderRadius: BorderRadius.circular(
+                      8.0), // Optional rounded corners
+                  border: Border.all(
+                    color: CupertinoColors
+                        .systemGrey, // Optional border color
+                    width: 1.0, // Optional border width
+                  ),
+                ),
               ),
               SizedBox(height: 20),
               Center(
@@ -151,10 +172,19 @@ class _InformationState extends State<Information> {
                     SizedBox(height: 10),
                     CupertinoButton(
                       onPressed: () async {
+
+
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
 
                         // Preserve the FCM Token
+                        String? accessToken = prefs.getString('accessToken');
+
+                        var response = await http.post(
+                          Uri.parse('https://api.dannycode.site/API/authentication/logout'),
+                          body: {'accessToken': accessToken},
+                        );
+
                         String? fcmToken = prefs.getString('FCMToken');
                         print("FCM Token: $fcmToken");
                         // Clear all other data

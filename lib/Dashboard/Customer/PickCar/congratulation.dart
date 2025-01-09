@@ -42,6 +42,7 @@ class _PickCarDoneState extends State<PickCarDone> {
       },
       child: CupertinoApp(
         home: CupertinoPageScaffold(
+          backgroundColor: Colors.white,
           navigationBar: CupertinoNavigationBar(
             middle: Text(
               'Chi Tiết Chuyến Đi',

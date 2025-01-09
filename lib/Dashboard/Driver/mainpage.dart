@@ -36,43 +36,41 @@ class _DashboardState extends State<DashboardDriver> {
 
   @override
   Widget build(BuildContext context) {
+    List pages = [
+      HomePage(onImageTap: () => _onTabTapped(1)),
+      PickCar(),
+      Receive(),
+      HistoryPage(),
+      ProfilePage(),
+    ];
     return WillPopScope(
       onWillPop: () async {
         // Prevent the app from being popped
         return false;
       },
-      child: CupertinoPageScaffold(
-        child: Column(
+      child: Scaffold(
+        extendBodyBehindAppBar: false,
+        extendBody: false,
+        bottomNavigationBar: CupertinoTabBar(
+          backgroundColor: Colors.white,
+          activeColor: Color(0xFF40B59F),
+          items: [
+            _bottomNavigationBarItem(Icons.home, 'Trang Chủ'),
+            _bottomNavigationBarItem(Icons.car_rental, 'Đặt Xe'),
+            _bottomNavigationBarItem(Icons.list, 'Nhận Xe'),
+            _bottomNavigationBarItem(Icons.history, 'Lịch Sử'),
+            _bottomNavigationBarItem(Icons.person, 'Hồ Sơ'),
+          ],
+          onTap: _onTabTapped,
+          currentIndex: _currentIndex,
+        ),
+        body: Column(
           children: <Widget>[
             Expanded(
-              child: IndexedStack(
-                index: _currentIndex,
-                children: <Widget>[
-                  HomePage(onImageTap: () => _onTabTapped(1)),
-                  PickCar(),
-                  Receive(),
-                  HistoryPage(),
-                  ProfilePage(),
-                ],
-              ),
+              child: pages[_currentIndex],
             ),
             // Ensure the CupertinoTabBar remains fixed at the bottom
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: CupertinoTabBar(
-                backgroundColor: Colors.white,
-                activeColor: Color(0xFF40B59F),
-                items: [
-                  _bottomNavigationBarItem(Icons.home, 'Trang Chủ'),
-                  _bottomNavigationBarItem(Icons.car_rental, 'Đặt Xe'),
-                  _bottomNavigationBarItem(Icons.list, 'Nhận Xe'),
-                  _bottomNavigationBarItem(Icons.history, 'Lịch Sử'),
-                  _bottomNavigationBarItem(Icons.person, 'Hồ Sơ'),
-                ],
-                onTap: _onTabTapped,
-                currentIndex: _currentIndex,
-              ),
-            ),
+
           ],
         ),
       ),

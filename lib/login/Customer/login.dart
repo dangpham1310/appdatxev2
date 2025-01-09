@@ -52,11 +52,20 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
       );
 
       if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
 
-        if (responseData['accessToken'] != null) {
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        if (responseBody['message'] == "logged"){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Đã Đăng Nhập Nơi Khác'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return;
+        }
+        if (responseBody['accessToken'] != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('accessToken', responseData['accessToken']);
+          await prefs.setString('accessToken', responseBody['accessToken']);
           await prefs.setBool('isLoggedInDriver', false); // Set the login flag
           await prefs.setBool('isLoggedInCustomer', true);
 
@@ -71,12 +80,6 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
             ),
           );
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Đã xảy ra lỗi'),
-          ),
-        );
       }
     }
 

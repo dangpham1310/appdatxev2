@@ -7,6 +7,7 @@ import './Home/home.dart';
 import './PickCar/pickcar.dart';
 import 'History/history.dart';
 import 'Profile/profile.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +24,7 @@ class _DashboardState extends State<DashboardApp> {
   @override
   void initState() {
     super.initState();
+
   }
 
   void _onTabTapped(int index) {
@@ -33,41 +35,39 @@ class _DashboardState extends State<DashboardApp> {
 
   @override
   Widget build(BuildContext context) {
+    List pages = [
+      HomePage(onImageTap: () => _onTabTapped(1)),
+      PickCar(),
+      HistoryPage(),
+      ProfilePage(),
+    ];
     return WillPopScope(
       onWillPop: () async {
         // Prevent the app from being popped
         return false;
       },
-      child: CupertinoPageScaffold(
-        child: Column(
+      child: Scaffold(
+        extendBodyBehindAppBar: false,
+        extendBody: false,
+        bottomNavigationBar: CupertinoTabBar(
+          backgroundColor: Colors.white,
+          activeColor: Color(0xFF40B59F),
+          items: [
+            _bottomNavigationBarItem(Icons.home, 'Trang Chủ'),
+            _bottomNavigationBarItem(Icons.car_rental, 'Đặt Xe'),
+            _bottomNavigationBarItem(Icons.history, 'Lịch Sử'),
+            _bottomNavigationBarItem(Icons.person, 'Hồ Sơ'),
+          ],
+          onTap: _onTabTapped,
+          currentIndex: _currentIndex,
+        ),
+        body: Column(
           children: <Widget>[
             Expanded(
-              child: IndexedStack(
-                index: _currentIndex,
-                children: <Widget>[
-                  HomePage(onImageTap: () => _onTabTapped(1)),
-                  PickCar(),
-                  HistoryPage(),
-                  ProfilePage(),
-                ],
-              ),
+              child: pages[_currentIndex],
             ),
             // Ensure the CupertinoTabBar remains fixed at the bottom
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: CupertinoTabBar(
-                backgroundColor: Colors.white,
-                activeColor: Color(0xFF40B59F),
-                items: [
-                  _bottomNavigationBarItem(Icons.home, 'Trang Chủ'),
-                  _bottomNavigationBarItem(Icons.car_rental, 'Đặt Xe'),
-                  _bottomNavigationBarItem(Icons.history, 'Lịch Sử'),
-                  _bottomNavigationBarItem(Icons.person, 'Hồ Sơ'),
-                ],
-                onTap: _onTabTapped,
-                currentIndex: _currentIndex,
-              ),
-            ),
+
           ],
         ),
       ),
@@ -81,4 +81,19 @@ class _DashboardState extends State<DashboardApp> {
       label: label,
     );
   }
+}
+
+void RunDashboardDriver() async {
+  Future<void> postData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('FCMToken') ?? '';
+    String url = 'https://api.dannycode.site/api/FCMTokenCustomer';
+    final response = await http.post(
+      Uri.parse(url),
+      body: {'FCMToken': '${token}'},
+    );
+    print(response.body);
+  }
+
+  postData();
 }
