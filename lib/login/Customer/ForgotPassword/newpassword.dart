@@ -126,6 +126,27 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                 height: MediaQuery.of(context).size.height / 1.65,
               ),
               Positioned(
+                top: 40, // Adjust vị trí dưới thanh trạng thái
+                left: 20,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
                 top: MediaQuery.of(context).size.height * 0.08,
                 left: 0,
                 right: 0,

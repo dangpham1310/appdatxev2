@@ -80,7 +80,6 @@ class _DriverGiayToState extends State<DriverGiayTo> {
       ..fields['vehicleSeat'] = vehicleSeat.toString()
       ..fields['numberPlate'] = _licensePlateController.text;
 
-    // Gửi request
     var response = await request.send();
     if (response.statusCode == 200) {
       print('Uploaded!');
@@ -89,29 +88,9 @@ class _DriverGiayToState extends State<DriverGiayTo> {
     }
   }
 
-  String _getFieldNameForImage(int index) {
-    switch (index) {
-      case 0:
-        return 'driverLicenseFront';
-      case 1:
-        return 'driverLicenseBack';
-      case 2:
-        return 'carFront';
-      case 3:
-        return 'carBack';
-      case 4:
-        return 'nationalCardFront';
-      case 5:
-        return 'nationalCardBack';
-      default:
-        return 'image$index';
-    }
-  }
-
   void _validateAndSubmit() {
     bool isValid = true;
 
-    // Validate license plate
     if (_licensePlateController.text.isEmpty) {
       setState(() {
         _licensePlateError = 'Biển số xe không được để trống';
@@ -139,78 +118,101 @@ class _DriverGiayToState extends State<DriverGiayTo> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Transform.scale(
-                      scale: 1,
-                      child: Image.asset(
-                        'assets/images/Group 11.png',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Biển số xe",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.blueGrey[300]),
-                    ),
-                    Center(
-                      child: CupertinoTextField(
-                        style: TextStyle(color: CupertinoColors.black),
-                        controller: _licensePlateController,
-                        placeholder: '18A12345',
-                        padding: EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
-                    if (_licensePlateError.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          _licensePlateError,
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    SizedBox(height: 10.0),
-
-
-                    SizedBox(height: 20.0),
-                    Center(
-                      child: CupertinoButton(
-                        onPressed: _validateAndSubmit,
-                        color: Color(0xFF40B59F),
-                        child: Text(
-                          'Tiếp Theo',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Transform.scale(
+                          scale: 1,
+                          child: Image.asset(
+                            'assets/images/Group 11.png',
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                    SizedBox(height: 20.0),
-                  ],
+                  ),
+                  SizedBox(height: 20.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Biển số xe",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.blueGrey[300]),
+                        ),
+                        Center(
+                          child: CupertinoTextField(
+                            style: TextStyle(color: CupertinoColors.black),
+                            controller: _licensePlateController,
+                            placeholder: '18A12345',
+                            padding: EdgeInsets.all(12.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                        if (_licensePlateError.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              _licensePlateError,
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        SizedBox(height: 10.0),
+                        SizedBox(height: 20.0),
+                        Center(
+                          child: CupertinoButton(
+                            onPressed: _validateAndSubmit,
+                            color: Color(0xFF40B59F),
+                            child: Text(
+                              'Tiếp Theo',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20.0),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              top: 20,
+              left: 20,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

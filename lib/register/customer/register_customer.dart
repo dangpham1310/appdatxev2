@@ -22,7 +22,6 @@ class _CustomerInputState extends State<CustomerInput> {
   @override
   void initState() {
     super.initState();
-
     _loadPhone();
   }
 
@@ -112,139 +111,166 @@ class _CustomerInputState extends State<CustomerInput> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Transform.scale(
-                    scale: 1,
-                    child: Image.asset(
-                      'assets/images/Group 11.png',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                },
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(25.0),
+            // Nền giao diện
+            Column(
+              children: [
+                Center(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 0.0),
-                      Text(
-                        'Nhập thông tin cá nhân',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 20.0),
-                      CupertinoTextField(
-                        style: TextStyle(color: CupertinoColors.black),
-                        controller: _nameController,
-                        placeholder: 'Họ Và Tên',
-                        keyboardType: TextInputType.text,
-                        padding: EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      SizedBox(height: 20.0),
-                      Text(
-                        "Nhập Mật Khẩu",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.blueGrey[600]),
-                      ),
-                      SizedBox(height: 10.0), // SizedBox to add spacing
-                      CupertinoTextField(
-                        style: TextStyle(color: CupertinoColors.black),
-                        controller: _passwordController,
-                        placeholder: 'Mật Khâu',
-                        keyboardType: TextInputType.number,
-                        obscureText: true,
-                        maxLength: 6,
-                        padding: EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      SizedBox(height: 20.0),
-                      Text(
-                        "Xác Nhận Mật Khẩu",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.blueGrey[600]),
-                      ),
-                      SizedBox(height: 10.0),
-                      CupertinoTextField(
-                        style: TextStyle(color: CupertinoColors.black),
-                        controller: _confirmPasswordController,
-                        placeholder: 'Xác Nhận Mật Khẩu',
-                        keyboardType: TextInputType.number,
-                        obscureText: true,
-                        maxLength: 6,
-                        padding: EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      SizedBox(height: 20.0),
-                      Center(
-                        child: CupertinoTextField(
-                          style: TextStyle(color: CupertinoColors.black),
-                          controller: _referencePhoneController,
-                          placeholder: 'Số Điện Thoại Người Giới Thiệu',
-                          keyboardType: TextInputType.number,
-                          padding: EdgeInsets.all(12.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20.0),
-                      Center(
-                        child: CupertinoButton(
-                          onPressed: _validateInputs,
-                          color: Color(0xFF40B59F),
-                          child: Text(
-                            'Tiếp Theo',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 10.0), // Add some space
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Text(
-                            'Bằng cách bấm Tiếp Theo, tôi đồng ý với điều khoản và điều kiện của ứng dụng',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.black54,
-                            ),
-                          ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Transform.scale(
+                        scale: 1,
+                        child: Image.asset(
+                          'assets/images/Group 11.png',
                         ),
                       ),
                     ],
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.all(25.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 0.0),
+                          Text(
+                            'Nhập thông tin cá nhân',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+                          CupertinoTextField(
+                            style: TextStyle(color: CupertinoColors.black),
+                            controller: _nameController,
+                            placeholder: 'Họ Và Tên',
+                            keyboardType: TextInputType.text,
+                            padding: EdgeInsets.all(12.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+                          Text(
+                            "Nhập Mật Khẩu",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.blueGrey[600]),
+                          ),
+                          SizedBox(height: 10.0), // SizedBox to add spacing
+                          CupertinoTextField(
+                            style: TextStyle(color: CupertinoColors.black),
+                            controller: _passwordController,
+                            placeholder: 'Mật Khâu',
+                            keyboardType: TextInputType.number,
+                            obscureText: true,
+                            maxLength: 6,
+                            padding: EdgeInsets.all(12.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+                          Text(
+                            "Xác Nhận Mật Khẩu",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.blueGrey[600]),
+                          ),
+                          SizedBox(height: 10.0),
+                          CupertinoTextField(
+                            style: TextStyle(color: CupertinoColors.black),
+                            controller: _confirmPasswordController,
+                            placeholder: 'Xác Nhận Mật Khẩu',
+                            keyboardType: TextInputType.number,
+                            obscureText: true,
+                            maxLength: 6,
+                            padding: EdgeInsets.all(12.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+                          Center(
+                            child: CupertinoTextField(
+                              style: TextStyle(color: CupertinoColors.black),
+                              controller: _referencePhoneController,
+                              placeholder: 'Số Điện Thoại Người Giới Thiệu',
+                              keyboardType: TextInputType.number,
+                              padding: EdgeInsets.all(12.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+                          Center(
+                            child: CupertinoButton(
+                              onPressed: _validateInputs,
+                              color: Color(0xFF40B59F),
+                              child: Text(
+                                'Tiếp Theo',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10.0), // Add some space
+                          Center(
+                            child: Padding(
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 12.0),
+                              child: Text(
+                                'Bằng cách bấm Tiếp Theo, tôi đồng ý với điều khoản và điều kiện của ứng dụng',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // Nút Back
+            Positioned(
+              top: 20, // Adjust vị trí dưới thanh trạng thái
+              left: 20,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 24,
                   ),
                 ),
               ),

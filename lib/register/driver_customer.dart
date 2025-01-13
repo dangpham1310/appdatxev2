@@ -3,34 +3,57 @@ import 'package:flutter/material.dart';
 import './driver/inputname.dart';
 import './customer/register_customer.dart';
 
+
+
 class Driver_Customer extends StatelessWidget {
   const Driver_Customer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      // Wrap your Stack with Material widget
       child: Stack(
         children: [
+          // Background container
           Container(
-            color: Colors.white, // Set background color to white
+            color: Colors.white,
             width: double.infinity,
             height: MediaQuery.of(context).size.height / 1,
           ),
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/Rectangle 1217.png'), // Path to the background image
-                fit: BoxFit.fill, // Adjust the fit as needed
+                image: AssetImage('assets/images/Rectangle 1217.png'),
+                fit: BoxFit.fill,
               ),
             ),
             width: double.infinity,
             height: MediaQuery.of(context).size.height / 1.65,
           ),
+          // Back button
           Positioned(
-            top: MediaQuery.of(context).size.height *
-                0.70, // 15% from the top of the screen
+            top: 40, // Adjust for safe area
+            left: 20, // Add padding from left
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context); // Navigate back
+              },
+              child: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5), // Semi-transparent black
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+          // Buttons
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.70,
             left: 0,
             right: 0,
             child: Center(
@@ -39,26 +62,26 @@ class Driver_Customer extends StatelessWidget {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: () {
-                      // Handle logic for Người Lái Xe button
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => DriverInput()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color(0xFF40B59F), // Text color
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF40B59F),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10), // Round border
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      elevation: 5, // Add shadow
+                      elevation: 5,
                     ),
                     child: Text(
                       'Người Lái Xe',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  SizedBox(height: 25), // Add spacing between buttons
+                  SizedBox(height: 25),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushReplacement(
@@ -68,25 +91,26 @@ class Driver_Customer extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Color(0xFF40B59F), // Text color
+                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF40B59F),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10), // Round border
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      elevation: 5, // Add shadow
+                      elevation: 5,
                     ),
                     child: Text(
                       'Hành Khách',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
             ),
           ),
+          // Image at the top
           Positioned(
-            top: MediaQuery.of(context).size.height *
-                0.08, // 15% from the top of the screen
+            top: MediaQuery.of(context).size.height * 0.08,
             left: 0,
             right: 0,
             child: Center(
@@ -95,27 +119,17 @@ class Driver_Customer extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(
                     height: 110,
-                  ), // Adjusted the height to accommodate for the moved text
+                  ),
                   Transform.scale(
-                    scale: 2.0, // Adjust the scale factor as needed
+                    scale: 2.0,
                     child: Image.asset(
-                      'assets/images/choose.png', // Provide the path to your image asset
-                      width: 150, // Adjust the width of the image as needed
-                      height: 150, // Adjust the height of the image as needed
+                      'assets/images/choose.png',
+                      width: 150,
+                      height: 150,
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.67,
-            left: 0,
-            right: 0,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 55, vertical: 5.0),
             ),
           ),
         ],

@@ -1,10 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 class DriverDone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => true, // Prevent going back
+      onWillPop: () async => true, // Allow going back
       child: MaterialApp(
         home: Scaffold(
           appBar: AppBar(
@@ -46,6 +47,29 @@ class DriverDone extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      exit(0); // Exit the application
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal, // Button color/ Button color
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 32.0,
+                        vertical: 12.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: Text(
+                      'Thoát Ứng Dụng',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
