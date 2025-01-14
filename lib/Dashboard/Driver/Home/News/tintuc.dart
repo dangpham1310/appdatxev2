@@ -43,6 +43,21 @@ class TinTuc1Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Tin Tức',
+          style: TextStyle(color: Colors.white), // Màu chữ trắng
+        ),
+        centerTitle: true, // Căn giữa tiêu đề
+        backgroundColor: Colors.teal, // Màu nền của AppBar
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white), // Nút màu trắng
+          onPressed: () {
+            Navigator.pop(context); // Quay lại màn hình trước
+          },
+        ),
+        iconTheme: IconThemeData(color: Colors.white), // Màu biểu tượng trong AppBar
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

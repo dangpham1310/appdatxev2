@@ -55,13 +55,25 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
 
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
         if (responseBody['message'] == "logged"){
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Đã Đăng Nhập Nơi Khác'),
-              backgroundColor: Colors.red,
-            ),
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                title: Text('Thông báo'),
+                content: Text('Đã Đăng Nhập chỗ khác'),
+                actions: [
+                  CupertinoDialogAction(
+                    isDefaultAction: true,
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Đóng dialog
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
           );
-          return;
+
         }
         if (responseBody['accessToken'] != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -74,11 +86,25 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
             MaterialPageRoute(builder: (context) => DashboardApp()),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Mật Khẩu không đúng'),
-            ),
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                title: Text('Thông báo'),
+                content: Text('Mật Khẩu Sai'),
+                actions: [
+                  CupertinoDialogAction(
+                    isDefaultAction: true,
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Đóng dialog
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
           );
+
         }
       }
     }

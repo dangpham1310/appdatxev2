@@ -768,7 +768,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                   } else if (selectedSeat == "2") {
                     price = (constPrice * 1.9).round();
                   } else if (selectedSeat == "Bao 4") {
-                    price = (constPrice * 2.95).round();
+                    price = (constPrice * 3.05).round();
                   } else if (selectedSeat == "Bao 7") {
                     price = (constPrice * 3.5).round();
                   }

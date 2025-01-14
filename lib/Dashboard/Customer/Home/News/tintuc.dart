@@ -43,6 +43,21 @@ class TinTuc1Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Tin Tức',
+          style: TextStyle(color: Colors.white), // Màu chữ trắng
+        ),
+        centerTitle: true, // Căn giữa tiêu đề
+        backgroundColor: Colors.teal, // Màu nền của AppBar
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white), // Nút màu trắng
+          onPressed: () {
+            Navigator.pop(context); // Quay lại màn hình trước
+          },
+        ),
+        iconTheme: IconThemeData(color: Colors.white), // Màu biểu tượng trong AppBar
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -59,7 +74,7 @@ class TinTuc1Page extends StatelessWidget {
               SizedBox(height: 16),
               Text(
                 'Chúng tôi vui mừng giới thiệu ứng dụng đặt xe Đón Và Đến – giải pháp di chuyển tiện lợi và an toàn cho mọi hành trình của bạn! '
-                'Để chào mừng sự ra mắt này, Đón Và Đến mang đến chương trình khuyến mại đặc biệt: Giảm ngay 10% giá trị mỗi cuốc xe khi bạn đặt chuyến qua ứng dụng!',
+                    'Để chào mừng sự ra mắt này, Đón Và Đến mang đến chương trình khuyến mại đặc biệt: Giảm ngay 10% giá trị mỗi cuốc xe khi bạn đặt chuyến qua ứng dụng!',
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 16),
@@ -70,8 +85,8 @@ class TinTuc1Page extends StatelessWidget {
               SizedBox(height: 8),
               Text(
                 '1. Tải ngay ứng dụng Đón Và Đến từ App Store hoặc Google Play.\n'
-                '2. Đặt xe và trải nghiệm dịch vụ với ưu đãi 10% được áp dụng tự động.\n'
-                '3. Thoải mái di chuyển, an tâm tận hưởng dịch vụ với mức giá siêu hấp dẫn!',
+                    '2. Đặt xe và trải nghiệm dịch vụ với ưu đãi 10% được áp dụng tự động.\n'
+                    '3. Thoải mái di chuyển, an tâm tận hưởng dịch vụ với mức giá siêu hấp dẫn!',
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 16),
