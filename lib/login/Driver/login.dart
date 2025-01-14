@@ -88,6 +88,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
         MaterialPageRoute(builder: (context) => DashboardDriver()),
       );
     } else {
+      if(responseBody['message'] == "logged"){
+        return;
+      }
       showDialog(
         context: context,
         builder: (BuildContext context) {

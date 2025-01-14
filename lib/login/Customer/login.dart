@@ -52,7 +52,6 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
       );
 
       if (response.statusCode == 200) {
-
         final Map<String, dynamic> responseBody = jsonDecode(response.body);
         if (responseBody['message'] == "logged"){
           showDialog(
@@ -73,8 +72,8 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
               );
             },
           );
-
         }
+
         if (responseBody['accessToken'] != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('accessToken', responseBody['accessToken']);
@@ -86,6 +85,9 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
             MaterialPageRoute(builder: (context) => DashboardApp()),
           );
         } else {
+          if(responseBody['message'] == "logged"){
+            return;
+          }
           showDialog(
             context: context,
             builder: (BuildContext context) {
