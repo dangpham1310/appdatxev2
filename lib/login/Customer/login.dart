@@ -159,7 +159,7 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
         // Wrap your Scaffold body with SingleChildScrollView
         body: SingleChildScrollView(
           controller:
-              _scrollController, // Assign ScrollController to SingleChildScrollView
+          _scrollController, // Assign ScrollController to SingleChildScrollView
           child: Stack(
             children: [
               Container(
@@ -197,7 +197,7 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
                           'assets/images/OTP.png', // Provide the path to your image asset
                           width: 150, // Adjust the width of the image as needed
                           height:
-                              150, // Adjust the height of the image as needed
+                          150, // Adjust the height of the image as needed
                         ),
                       ),
                     ],
@@ -287,7 +287,7 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
                           backgroundColor:
-                              Color.fromARGB(255, 255, 255, 255), // Text color
+                          Color.fromARGB(255, 255, 255, 255), // Text color
                         ),
                         child: Text('Quên mật khẩu?'),
                       )
@@ -311,7 +311,7 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
                           backgroundColor:
-                              Color.fromARGB(255, 70, 196, 173), // Text color
+                          Color.fromARGB(255, 70, 196, 173), // Text color
                         ),
                         child: Text('Xác Nhận'),
                       )

@@ -199,7 +199,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
                           backgroundColor:
-                              Color.fromARGB(255, 255, 255, 255), // Text color
+                          Color.fromARGB(255, 255, 255, 255), // Text color
                         ),
                         child: Text('Quên mật khẩu?'),
                       )

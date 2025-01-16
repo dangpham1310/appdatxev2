@@ -84,7 +84,7 @@ class TinTuc1Page extends StatelessWidget {
               ),
               SizedBox(height: 8),
               Text(
-                '1. Tải ngay ứng dụng Đón Và Đến từ App Store hoặc Google Play.\n'
+                '1. Tải ngay ứng dụng Đón Và Đến.\n'
                 '2. Đặt xe và trải nghiệm dịch vụ với ưu đãi 10% được áp dụng tự động.\n'
                 '3. Thoải mái di chuyển, an tâm tận hưởng dịch vụ với mức giá siêu hấp dẫn!',
                 style: TextStyle(fontSize: 16),

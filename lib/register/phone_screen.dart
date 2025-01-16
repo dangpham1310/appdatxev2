@@ -14,148 +14,123 @@ class NextScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Stack(
+          child: Column(
             children: [
-              Container(
-                color: Colors.white,
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/Rectangle 1217.png'),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height / 1.65,
-              ),
-              Positioned(
-                top: 20, // Adjust vị trí dưới thanh trạng thái
-                left: 20,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(10),
+              Stack(
+                children: [
+                  Container(
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(30),
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/Rectangle 1217.png'),
+                        fit: BoxFit.fill,
+                      ),
                     ),
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height / 1.65,
+                  ),
+                  Positioned(
+                    top: MediaQuery.of(context).size.height * 0.08,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(height: 110),
+                          Transform.scale(
+                            scale: 2.0,
+                            child: Image.asset(
+                              'assets/images/phone_register.png',
+                              width: 150,
+                              height: 150,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 20, // Adjust vị trí dưới thanh trạng thái
+                    left: 20,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+
+
+                ],
+              ),
+              const SizedBox(height: 50,),
+
+              Container(
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: 55),
+                child: CupertinoTextField(
+
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  style: TextStyle(color: CupertinoColors.black),
+                  prefix: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 24,
+                      Icons.phone,
+                      color: Color.fromARGB(255, 75, 185, 130),
                     ),
                   ),
-                ),
-              ),
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.65,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 110),
-                      Transform.scale(
-                        scale: 1.0,
-                        child: Image.asset(
-                          'assets/images/chuyendoi.png',
-                          width: 150,
-                          height: 150,
-                        ),
+                  placeholder: 'Nhập Số Điện Thoại',
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
                 ),
               ),
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.55,
-                left: 0,
-                right: 0,
-                child: GestureDetector(
-                  onTap: () async {
-                    await _postNumber(context);
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 110),
-                      Transform.scale(
-                        scale: 2.0,
-                        child: Image.asset(
-                          'assets/images/Group 300.png',
-                          width: 150,
-                          height: 150,
-                        ),
-                      ),
-                    ],
+              GestureDetector(
+                onTap: () async {
+                  await _postNumber(context);
+                },
+                child: Transform.scale(
+                  scale: 2.0,
+                  child: Image.asset(
+                    'assets/images/Group 300.png',
+                    width: 150,
+                    height: 150,
                   ),
                 ),
               ),
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.08,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 110),
-                      Transform.scale(
-                        scale: 2.0,
-                        child: Image.asset(
-                          'assets/images/phone_register.png',
-                          width: 150,
-                          height: 150,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.67,
-                left: 0,
-                right: 0,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 55, vertical: 5.0),
-                  child: CupertinoTextField(
-                    
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                    style: TextStyle(color: CupertinoColors.black),
-                    prefix: Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: Icon(
-                        Icons.phone,
-                        color: Color.fromARGB(255, 75, 185, 130),
-                      ),
-                    ),
-                    placeholder: 'Nhập Số Điện Thoại',
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                  ),
+              Transform.scale(
+                scale: 1.0,
+                child: Image.asset(
+                  'assets/images/chuyendoi.png',
+                  width: 150,
+                  height: 10,
                 ),
               ),
             ],

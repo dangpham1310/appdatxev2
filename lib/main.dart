@@ -24,7 +24,7 @@ class NotificationController {
 
   static Future<void> initializeNotifications() async {
     // Initialize Firebase
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
 
     // Initialize Firebase Messaging
     FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -97,16 +97,7 @@ class NotificationController {
     return '';
   }
 }
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Permission.notification.isDenied.then((value) {
-    if (value) {
-      Permission.notification.request();
-    }
-  });
-
+Future<void>initializePushNotifications()async{
   await createNotificationChannel();
   await NotificationController.initializeNotifications();
 
@@ -115,8 +106,7 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('FCMToken', token);
 
-  initializeDateFormatting(
-      'vi', null); // Initialize date formatting for Vietnamese
+   // Initialize date formatting for Vietnamese
 
   // Handle notification when app is terminated
   RemoteMessage? initialMessage =
@@ -127,6 +117,19 @@ void main() async {
       notificationResponseType: NotificationResponseType.selectedNotification,
     ));
   }
+}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Permission.notification.isDenied.then((value) {
+    if (value) {
+      Permission.notification.request();
+    }
+  });
+  // await initializePushNotifications();
+  initializeDateFormatting(
+      'vi', null);
+
 
   runApp(MyApp());
 }
@@ -135,7 +138,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
+      debugShowCheckedModeBanner: false,
     theme: CupertinoThemeData(
+
       brightness: Brightness.light, // Chỉ dùng chế độ sáng
       primaryColor: CupertinoColors.activeBlue,
       barBackgroundColor: CupertinoColors.white, // Thanh bar nền trắng
