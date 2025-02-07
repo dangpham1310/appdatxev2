@@ -112,7 +112,7 @@ class HomePage extends StatelessWidget {
           child: Row(
             children: [
               imageThumbnailTinTuc1(
-                  context, 'assets/images/tintuc1mungkhaitruong.png'),
+                  context, 'assets/images/hdsd.jpg'),
               SizedBox(width: 10),
               imageThumbnailTinTuc2(context,
                   'assets/images/tintuc2quytrinhgiaiquyetkhieunai.png'),

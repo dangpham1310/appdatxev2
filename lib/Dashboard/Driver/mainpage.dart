@@ -57,7 +57,7 @@ class _DashboardState extends State<DashboardDriver> {
           items: [
             _bottomNavigationBarItem(Icons.home, 'Trang Chủ'),
             _bottomNavigationBarItem(Icons.car_rental, 'Đặt Xe'),
-            _bottomNavigationBarItem(Icons.list, 'Nhận Xe'),
+            _bottomNavigationBarItem(Icons.list, 'Tìm Khách'),
             _bottomNavigationBarItem(Icons.history, 'Lịch Sử'),
             _bottomNavigationBarItem(Icons.person, 'Hồ Sơ'),
           ],

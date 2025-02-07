@@ -4,7 +4,7 @@ import '../../Profile/khieunai.dart';
 Widget imageThumbnailTinTuc1(BuildContext context, String assetPath) {
   return GestureDetector(
     onTap: () {
-      if (assetPath == 'assets/images/tintuc1mungkhaitruong.png') {
+      if (assetPath == 'assets/images/hdsd.jpg') {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => TinTuc1Page()),
@@ -39,24 +39,25 @@ Widget imageThumbnailTinTuc2(BuildContext context, String assetPath) {
   );
 }
 
+
 class TinTuc1Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Tin Tức',
-          style: TextStyle(color: Colors.white), // Màu chữ trắng
+          'Hướng Dẫn Đặt Xe',
+          style: TextStyle(color: Colors.white),
         ),
-        centerTitle: true, // Căn giữa tiêu đề
-        backgroundColor: Colors.teal, // Màu nền của AppBar
+        centerTitle: true,
+        backgroundColor: Colors.teal,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white), // Nút màu trắng
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context); // Quay lại màn hình trước
+            Navigator.pop(context);
           },
         ),
-        iconTheme: IconThemeData(color: Colors.white), // Màu biểu tượng trong AppBar
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -65,44 +66,63 @@ class TinTuc1Page extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '🎉 Khai trương ứng dụng Đón Và Đến - Nhận ngay ưu đãi 10% 🎉',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                'Hướng dẫn đặt xe:',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16),
-              Text(
-                'Chúng tôi vui mừng giới thiệu ứng dụng đặt xe Đón Và Đến – giải pháp di chuyển tiện lợi và an toàn cho mọi hành trình của bạn! '
-                    'Để chào mừng sự ra mắt này, Đón Và Đến mang đến chương trình khuyến mại đặc biệt: Giảm ngay 10% giá trị mỗi cuốc xe khi bạn đặt chuyến qua ứng dụng!',
-                style: TextStyle(fontSize: 16),
+              _buildStep('1. Nhập địa điểm Đón và Đến',
+                  'Tại giao diện chính, nhập địa điểm Đón và Đến cụ thể vào các ô tương ứng.\n\nỨng dụng sẽ gợi ý các địa điểm có sẵn, hãy chọn điểm phù hợp mà ứng dụng đưa ra.'),
+              _buildStep('2. Chọn ngày giờ khởi hành',
+                  'Chọn ngày giờ bạn cần đi. Bạn có thể tùy chỉnh theo nhu cầu cá nhân. Hãy lên kế hoạch cụ thể cho chuyến đi của bạn.'),
+
+              Image.asset(
+                'assets/images/hinh1.jpg',
               ),
+
               SizedBox(height: 16),
-              Text(
-                '🚗 Cách nhận ưu đãi:',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              _buildStep('3. Chọn số ghế và giá',
+                  'Chọn số ghế muốn đặt.\n\nỨng dụng sẽ hiển thị giá ước lượng (ví dụ: 534 nghìn VND). Bạn chỉ cần nhập 550.\n\nLưu ý: Giá bạn trả nên cao hơn giá ước lượng, làm tròn số tiền hoặc thêm một khoản nhỏ sẽ giúp lái xe tăng thêm thu nhập.'),
+              _buildStep('4. Nhập số điện thoại',
+                  'Nhập số điện thoại của người đi để lái xe có thể liên hệ. Để trống nếu chính bạn là người đi.\n\nNếu đặt hộ (bắn cuốc), số điện thoại này sẽ là phương thức để lái xe liên lạc trực tiếp với người được đặt.'),
+              _buildStep('5. Thêm ghi chú nếu cần thiết',
+                  'Có thể thêm ghi chú về hành lý đặc biệt như: mang theo mèo, balo to,...\n\nCuối cùng là Đặt Xe và Xác nhận.'),
+              Image.asset(
+                'assets/images/hinh2.jpg',
               ),
-              SizedBox(height: 8),
-              Text(
-                '1. Tải ngay ứng dụng Đón Và Đến.\n'
-                    '2. Đặt xe và trải nghiệm dịch vụ với ưu đãi 10% được áp dụng tự động.\n'
-                    '3. Thoải mái di chuyển, an tâm tận hưởng dịch vụ với mức giá siêu hấp dẫn!',
-                style: TextStyle(fontSize: 16),
-              ),
+              _buildStep('6. Xem lại và quản lý chuyến đi',
+                  'Sau khi đặt, bạn có thể vào phần Lịch sử để kiểm tra thông tin chi tiết chuyến đi, lái xe đón, biển số xe,...\n\nTrong mục này, bạn có thể:\n- Hủy chuyến.\n- Gọi điện cho lái xe.\n- Báo cáo vấn đề cho nhà phát triển nếu cần thiết.'),
               SizedBox(height: 16),
-              Text(
-                '📱 Nhanh tay tải app Đón Và Đến để không bỏ lỡ ưu đãi và bắt đầu hành trình thuận tiện, dễ dàng cùng chúng tôi ngay hôm nay!',
-                style: TextStyle(fontSize: 16),
+              Image.asset(
+                'assets/images/hinh3.jpg',
               ),
-              SizedBox(height: 16),
               Text(
-                'Đón Và Đến - Cùng bạn đi bất cứ đâu!',
+                'Hãy đọc kỹ hướng dẫn sử dụng để thao tác dễ dàng trên ứng dụng.',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+
+
+  Widget _buildStep(String title, String content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8),
+        Text(
+          content,
+          style: TextStyle(fontSize: 16),
+        ),
+        SizedBox(height: 16),
+      ],
     );
   }
 }

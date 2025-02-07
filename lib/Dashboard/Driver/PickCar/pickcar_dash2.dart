@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "./congratulation.dart";
+import 'package:flutter/services.dart';
 
 class PickCarDash2 extends StatefulWidget {
   @override
@@ -624,6 +625,10 @@ class _PickCarDash2State extends State<PickCarDash2> {
           placeholder: 'Nhập Giá',
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly, // Chỉ cho phép nhập số
+            LengthLimitingTextInputFormatter(4), // Giới hạn tối đa 4 số
+          ],
           prefix: Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -657,6 +662,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
             ),
           ),
         ));
+
   }
 
   Widget _buildPhoneTextField() {

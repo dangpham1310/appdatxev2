@@ -105,6 +105,8 @@ Future<void>initializePushNotifications()async{
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('FCMToken', token);
+  print("FCMToken ");
+  print(token);
 
    // Initialize date formatting for Vietnamese
 
@@ -126,10 +128,9 @@ void main() async {
       Permission.notification.request();
     }
   });
-  // await initializePushNotifications();
+  await initializePushNotifications();
   initializeDateFormatting(
       'vi', null);
-
 
   runApp(MyApp());
 }
