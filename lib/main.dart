@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:water_reminder/cloud_messaging_service.dart';
 import 'package:water_reminder/firebase_options.dart';
 import 'package:water_reminder/register/welcome.dart';
 
@@ -123,12 +124,10 @@ Future<void>initializePushNotifications()async{
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Permission.notification.isDenied.then((value) {
-    if (value) {
-      Permission.notification.request();
-    }
-  });
-  await initializePushNotifications();
+  final CloudMessagingService cloudMessagingService = CloudMessagingService();
+  cloudMessagingService.initialize();
+
+  // await initializePushNotifications();
   initializeDateFormatting(
       'vi', null);
 
@@ -138,7 +137,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
+    return const CupertinoApp(
       debugShowCheckedModeBanner: false,
     theme: CupertinoThemeData(
 
