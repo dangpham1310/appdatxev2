@@ -36,10 +36,9 @@ class _DetailsPageState extends State<DetailsPage> {
   Future<Map<String, dynamic>> fetchDetails(int idHistory) async {
     final prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('accessToken') ?? '';
-    final phone = prefs.getString('phone') ?? '';
 
     final response = await http.post(
-      Uri.parse('https://api.dannycode.site/api/details'),
+      Uri.parse('https://api.donvaden.net/api/details'),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -246,7 +245,24 @@ class _DetailsPageState extends State<DetailsPage> {
                         ),
                       ],
                     ),
+                    Divider(height: 24.0),
+                    Text(
+                      'Ghi chú:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                    Text(
+                      history['note']?.toString().isEmpty ?? true
+                          ? 'Không có ghi chú'
+                          : history['note'],
+                      style: TextStyle(fontSize: 14.0, color: Colors.grey),
+                    ),
                     SizedBox(height: 32.0),
+                    
                     Row(children: [
                       Column(
                         children: [
@@ -317,39 +333,46 @@ class _DetailsPageState extends State<DetailsPage> {
                     if (driver["phone"] !=
                         "Chưa có thông tin số điện thoại tài xế") ...[
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CupertinoButton(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 32.0, vertical: 12.0),
-                            color: CupertinoColors.systemGrey,
-                            onPressed: () {
-                              // Handle support action
-                              _showSupportDialog(
-                                  context, widget.idHistory.toString());
-                            },
-                            child: Text('Bạn cần hỗ trợ?'),
+                          Expanded(
+                            child: CupertinoButton(
+                              padding: EdgeInsets.symmetric(vertical: 16.0),
+                              color: CupertinoColors.systemGrey2,
+                              onPressed: () {
+                                _showSupportDialog(
+                                    context, widget.idHistory.toString());
+                              },
+                              child: Text(
+                                'Bạn cần hỗ trợ?',
+                                style: TextStyle(color: CupertinoColors.black),
+                              ),
+                            ),
                           ),
-                          CupertinoButton(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 32.0, vertical: 12.0),
-                            color: CupertinoColors.activeBlue,
-                            onPressed: () async {
-                              final prefs =
-                                  await SharedPreferences.getInstance();
+                          SizedBox(width: 16.0),
+                          Expanded(
+                            child: CupertinoButton(
+                              padding: EdgeInsets.symmetric(vertical: 16.0),
+                              color: CupertinoColors.activeBlue,
+                              onPressed: () async {
+                                final prefs =
+                                    await SharedPreferences.getInstance();
 
-                              final phone = prefs.getString('phone') ?? '';
-                              if (widget.bookerPhoneNumber != driver["phone"]) {
-                                if (phone == driver["phone"]) {
-                                  _launchCaller(widget.customerPhoneNumber);
+                                final phone = prefs.getString('phone') ?? '';
+                                if (widget.bookerPhoneNumber != driver["phone"]) {
+                                  if (phone == driver["phone"]) {
+                                    _launchCaller(widget.customerPhoneNumber);
+                                  } else {
+                                    _launchCaller(driver["phone"]);
+                                  }
                                 } else {
-                                  _launchCaller(driver["phone"]);
+                                  _launchCaller(widget.customerPhoneNumber);
                                 }
-                              } else {
-                                _launchCaller(widget.customerPhoneNumber);
-                              }
-                            },
-                            child: Text('Liên hệ'),
+                              },
+                              child: Text(
+                                'Liên hệ',
+                                style: TextStyle(color: CupertinoColors.white),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -357,131 +380,130 @@ class _DetailsPageState extends State<DetailsPage> {
                     SizedBox(height: 16.0),
                     if (history["done"] == false &&
                         history["cancel"] == false) ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CupertinoButton(
-                            color: CupertinoColors.systemRed,
-                            onPressed: () async {
-                              bool? confirm = await showCupertinoDialog<bool>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CupertinoAlertDialog(
-                                    title: Text(
-                                      "Xác nhận hủy chuyến",
+                      SizedBox(
+                        width: double.infinity,
+                        child: CupertinoButton(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          color: CupertinoColors.systemRed,
+                          onPressed: () async {
+                            bool? confirm = await showCupertinoDialog<bool>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CupertinoAlertDialog(
+                                  title: Text(
+                                    "Xác nhận hủy chuyến",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: CupertinoColors.systemRed,
+                                    ),
+                                  ),
+                                  content: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: Text(
+                                      "Bạn có chắc chắn muốn hủy chuyến này không?",
                                       style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: CupertinoColors.systemRed,
+                                        fontSize: 16,
+                                        color: Colors.black87,
                                       ),
                                     ),
-                                    content: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10),
+                                  ),
+                                  actions: [
+                                    CupertinoDialogAction(
                                       child: Text(
-                                        "Bạn có chắc chắn muốn hủy chuyến này không?",
+                                        "Không",
                                         style: TextStyle(
                                           fontSize: 16,
-                                          color: Colors.black87,
+                                          color: CupertinoColors.systemBlue,
                                         ),
                                       ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop(
+                                            false); // User cancels the dialog
+                                      },
                                     ),
-                                    actions: [
-                                      CupertinoDialogAction(
-                                        child: Text(
-                                          "Không",
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: CupertinoColors.systemBlue,
-                                          ),
+                                    CupertinoDialogAction(
+                                      child: Text(
+                                        "Có",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: CupertinoColors.systemRed,
                                         ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop(
-                                              false); // User cancels the dialog
-                                        },
                                       ),
-                                      CupertinoDialogAction(
-                                        child: Text(
-                                          "Có",
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: CupertinoColors.systemRed,
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          Future<void> postData() async {
-                                            final prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            final accessToken = prefs
-                                                    .getString('accessToken') ??
-                                                '';
-                                            final FCMToken =
-                                                prefs.getString('FCMToken') ??
-                                                    '';
+                                      onPressed: () {
+                                        Future<void> postData() async {
+                                          final prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          final accessToken = prefs
+                                                  .getString('accessToken') ??
+                                              '';
+                                          final FCMToken =
+                                              prefs.getString('FCMToken') ??
+                                                  '';
 
-                                            final response = await http.post(
-                                              Uri.parse(
-                                                  'https://api.dannycode.site/cancel'),
-                                              headers: {
-                                                'Content-Type':
-                                                    'application/x-www-form-urlencoded',
-                                              },
-                                              body: {
-                                                'accessToken': accessToken,
-                                                'id':
-                                                    widget.idHistory.toString()
-                                              },
-                                            );
+                                          final response = await http.post(
+                                            Uri.parse(
+                                                'https://api.donvaden.net/cancel'),
+                                            headers: {
+                                              'Content-Type':
+                                                  'application/x-www-form-urlencoded',
+                                            },
+                                            body: {
+                                              'accessToken': accessToken,
+                                              'id':
+                                                  widget.idHistory.toString()
+                                            },
+                                          );
 
-                                            final response2 = await http.post(
-                                              Uri.parse(
-                                                  'https://api.dannycode.site/api/cancelNotification'),
-                                              headers: {
-                                                'Content-Type':
-                                                    'application/x-www-form-urlencoded',
-                                              },
-                                              body: {
-                                                'accessToken': accessToken,
-                                                'id':
-                                                    widget.idHistory.toString(),
-                                                "FCMToken": FCMToken
-                                              },
-                                            );
+                                          final response2 = await http.post(
+                                            Uri.parse(
+                                                'https://api.donvaden.net/api/cancelNotification'),
+                                            headers: {
+                                              'Content-Type':
+                                                  'application/x-www-form-urlencoded',
+                                            },
+                                            body: {
+                                              'accessToken': accessToken,
+                                              'id':
+                                                  widget.idHistory.toString(),
+                                              "FCMToken": FCMToken
+                                            },
+                                          );
 
-                                            if (response.statusCode == 200) {
-                                              print("it is work");
-                                            } else {
-                                              print(
-                                                  'Error: ${response.statusCode}');
-                                              throw Exception(
-                                                  'Failed to load details');
-                                            }
+                                          if (response.statusCode == 200) {
+                                            print("it is work");
+                                          } else {
+                                            print(
+                                                'Error: ${response.statusCode}');
+                                            throw Exception(
+                                                'Failed to load details');
                                           }
+                                        }
 
-                                          postData();
-                                          Navigator.of(context).pop(
-                                              true); // User confirms the cancellation
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                                        postData();
+                                        Navigator.of(context).pop(
+                                            true); // User confirms the cancellation
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
 
-                              if (confirm == true) {
-                                Navigator.of(context)
-                                    .pop(); // Close the current page after cancellation
-                              }
-                            },
-                            child: Text(
-                              'Hủy chuyến',
-                              style: TextStyle(
-                                  fontSize: 14.0, fontWeight: FontWeight.bold),
-                            ),
+                            if (confirm == true) {
+                              Navigator.of(context)
+                                  .pop(); // Close the current page after cancellation
+                            }
+                          },
+                          child: Text(
+                            'Hủy chuyến',
+                            style: TextStyle(
+                                fontSize: 14.0, fontWeight: FontWeight.bold),
                           ),
-                        ],
+                        ),
                       ),
                     ]
                   ],
@@ -581,8 +603,8 @@ void _showSupportDialog(BuildContext context, String idHistory) {
                 }
 
                 // Gửi yêu cầu khiếu nại với idHistory và content
-                final response = await http.post(
-                  Uri.parse('https://api.dannycode.site/report'),
+                await http.post(
+                  Uri.parse('https://api.donvaden.net/report'),
                   headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                   },

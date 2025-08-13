@@ -60,7 +60,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
     String? otp = prefs.getString('OTP');
 
     var url =
-        Uri.parse('https://api.dannycode.site/API/authentication/setpassword');
+        Uri.parse('https://api.donvaden.net/API/authentication/setpassword');
     var response = await http.post(url,
         body: {'phone': widget.phone, 'password': password, 'OTP': otp});
     Navigator.push(

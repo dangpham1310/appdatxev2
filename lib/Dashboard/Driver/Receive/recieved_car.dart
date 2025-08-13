@@ -154,6 +154,7 @@ class _ReceiveState extends State<Receive> {
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   height: 300,
@@ -166,8 +167,9 @@ class _ReceiveState extends State<Receive> {
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(height: 20),
+                        Flexible(child: SizedBox(height: 20)),
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
@@ -190,7 +192,7 @@ class _ReceiveState extends State<Receive> {
                             controller: _pickUpController,
                           ),
                         ),
-                        SizedBox(height: 20),
+                        Flexible(child: SizedBox(height: 20)),
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
@@ -213,56 +215,69 @@ class _ReceiveState extends State<Receive> {
                             controller: _dropOffController,
                           ),
                         ),
-                        SizedBox(height: 30),
+                        Flexible(child: SizedBox(height: 30)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
-                              onTap: () => _showDatePicker(context),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(CupertinoIcons.calendar,
-                                        color: Colors.grey),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      formattedDate,
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ],
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => _showDatePicker(context),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(CupertinoIcons.calendar,
+                                          color: Colors.grey),
+                                      SizedBox(width: 5),
+                                      Flexible(
+                                        child: Text(
+                                          formattedDate,
+                                          style: TextStyle(color: Colors.black),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () => _showTimePicker(context),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(CupertinoIcons.time,
-                                        color:
-                                            Color.fromARGB(255, 146, 129, 129)),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      '$_TimeofDay',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ],
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => _showTimePicker(context),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(CupertinoIcons.time,
+                                          color:
+                                              Color.fromARGB(255, 146, 129, 129)),
+                                      SizedBox(width: 5),
+                                      Flexible(
+                                        child: Text(
+                                          '$_TimeofDay',
+                                          style: TextStyle(color: Colors.black),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        Flexible(child: SizedBox(height: 20)),
                         Center(
                           child: CupertinoButton(
                             borderRadius: BorderRadius.circular(15.0),
@@ -285,7 +300,7 @@ class _ReceiveState extends State<Receive> {
 
                                 final response = await http.post(
                                     Uri.parse(
-                                        'https://api.dannycode.site/api/postRecent'),
+                                        'https://api.donvaden.net/api/postRecent'),
                                     body: {
                                       'phone': phone,
                                       'pickUp': _pickUpController.text,

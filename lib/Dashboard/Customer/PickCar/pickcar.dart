@@ -87,6 +87,8 @@ Position createPositionFromJson(Map<String, dynamic> json) {
     heading: 0,
     speed: 0,
     speedAccuracy: 0,
+    altitudeAccuracy: 0,
+    headingAccuracy: 0,
   );
 }
 
@@ -174,7 +176,7 @@ class _PickCarState extends State<PickCar> {
 
   Future<double> fetchDistance() async {
     final url = Uri.parse(
-        "https://api.dannycode.site/getdistance/${positionPickUp?.latitude}/${positionPickUp?.longitude}/${positionDropOff?.latitude}/${positionDropOff?.longitude}");
+        "https://api.donvaden.net/getdistance/${positionPickUp?.latitude}/${positionPickUp?.longitude}/${positionDropOff?.latitude}/${positionDropOff?.longitude}");
     try {
       final response = await http.get(url);
 
@@ -209,7 +211,7 @@ class _PickCarState extends State<PickCar> {
       _debounce = Timer(Duration(milliseconds: 500), () async {
         if (input.length >= 2) {
           final url =
-              Uri.parse('https://api.dannycode.site/autocomplete/$input');
+              Uri.parse('https://api.donvaden.net/autocomplete/$input');
 
           var response = await http.get(url);
 
@@ -250,7 +252,7 @@ class _PickCarState extends State<PickCar> {
       _debounce = Timer(Duration(milliseconds: 500), () async {
         if (input.length >= 2) {
           final url =
-              Uri.parse('https://api.dannycode.site/autocomplete/$input');
+              Uri.parse('https://api.donvaden.net/autocomplete/$input');
 
           var response = await http.get(url);
 
@@ -645,7 +647,7 @@ class _PickCarState extends State<PickCar> {
             });
 
             final url = Uri.parse(
-                'https://api.dannycode.site/buildlist/${coordinate['description']}');
+                'https://api.donvaden.net/buildlist/${coordinate['description']}');
             var response = await http.get(url);
             final jsonResponse = jsonDecode(response.body);
             detailsPickUp = jsonResponse['results'] as List<dynamic>;
@@ -757,7 +759,7 @@ class _PickCarState extends State<PickCar> {
             });
 
             final url = Uri.parse(
-                'https://api.dannycode.site/buildlist/${coordinate['description']}');
+                'https://api.donvaden.net/buildlist/${coordinate['description']}');
             var response = await http.get(url);
             final jsonResponse = jsonDecode(response.body);
             detailsDropOff = jsonResponse['results'] as List<dynamic>;

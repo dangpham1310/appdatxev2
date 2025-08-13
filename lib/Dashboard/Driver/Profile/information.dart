@@ -44,7 +44,7 @@ class _InformationState extends State<Information> {
   }
 
   void _fetchDriverInfo() async {
-    final url = 'https://api.dannycode.site/API/authentication/reload';
+    final url = 'https://api.donvaden.net/API/authentication/reload';
     final response = await http.post(
       Uri.parse(url),
       body: {'accessToken': accessToken},
@@ -118,7 +118,7 @@ class _InformationState extends State<Information> {
   }
 
   void _reloadDriverInfo() async {
-    final url = 'https://api.dannycode.site/API/authentication/reload';
+    final url = 'https://api.donvaden.net/API/authentication/reload';
     final response = await http.post(
       Uri.parse(url),
       body: {'accessToken': accessToken},
@@ -347,7 +347,7 @@ class _InformationState extends State<Information> {
                         String? accessToken = prefs.getString('accessToken');
 
                         var response = await http.post(
-                          Uri.parse('https://api.dannycode.site/API/authentication/logout'),
+                          Uri.parse('https://api.donvaden.net/API/authentication/logout'),
                           body: {'accessToken': accessToken},
                         );
                         print("FCM Token: $fcmToken");

@@ -55,7 +55,7 @@ class _InvitedFriendsPageState extends State<InvitedFriendsPage> {
   }
 
   Future<void> fetchInvitedFriends(String phone) async {
-    final String apiUrl = 'https://api.dannycode.site/api/refference';
+    final String apiUrl = 'https://api.donvaden.net/api/refference';
 
     try {
       final response = await http.post(

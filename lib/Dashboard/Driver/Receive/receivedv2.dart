@@ -16,7 +16,7 @@ Future<List<Map<String, dynamic>>> fetchData(String accessToken, String time,
   final dateString = datetime.toIso8601String();
 
   final response = await http.post(
-    Uri.parse('https://api.dannycode.site/viewlist'),
+    Uri.parse('https://api.donvaden.net/viewlist'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -201,7 +201,7 @@ class _ListReceiveState extends State<ListReceive> {
               String? FCMToken = prefs.getString('FCMToken');
 
               final response = await http.post(
-                Uri.parse('https://api.dannycode.site/received'),
+                Uri.parse('https://api.donvaden.net/received'),
                 body: {
                   'accessToken': accessToken,
                   'id': item['id'],
@@ -222,7 +222,7 @@ class _ListReceiveState extends State<ListReceive> {
 
                 final response = await http.post(
                   Uri.parse(
-                      'https://api.dannycode.site/api/receiveNotification'),
+                      'https://api.donvaden.net/api/receiveNotification'),
                   body: {
                     'accessToken': accessToken,
                     'id': item['id'],

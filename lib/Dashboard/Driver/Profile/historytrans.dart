@@ -10,7 +10,7 @@ class HistoryTransactionPage extends StatefulWidget {
 }
 
 class _HistoryTransactionPageState extends State<HistoryTransactionPage> {
-  late Future<List<Transaction>> transactionData;
+  Future<List<Transaction>>? transactionData;
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _HistoryTransactionPageState extends State<HistoryTransactionPage> {
 
   Future<List<Transaction>> fetchTransactions(String accessToken) async {
     final response = await http.post(
-      Uri.parse('https://api.dannycode.site/lsgd'),
+      Uri.parse('https://api.donvaden.net/lsgd'),
       body: {'accessToken': accessToken},
     );
 
@@ -70,26 +70,28 @@ class _HistoryTransactionPageState extends State<HistoryTransactionPage> {
         ),
       ),
       child: SafeArea(
-        child: FutureBuilder<List<Transaction>>(
-          future: transactionData,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('Không Tìm Thấy Lịch Sử Giao Dịch'));
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return TransactionListItem(
-                      transaction: snapshot.data![index]);
+        child: transactionData == null
+            ? Center(child: CircularProgressIndicator())
+            : FutureBuilder<List<Transaction>>(
+                future: transactionData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('Không Tìm Thấy Lịch Sử Giao Dịch'));
+                  } else {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return TransactionListItem(
+                            transaction: snapshot.data![index]);
+                      },
+                    );
+                  }
                 },
-              );
-            }
-          },
-        ),
+              ),
       ),
     );
   }

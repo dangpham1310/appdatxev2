@@ -64,7 +64,7 @@ class _CustomerInputState extends State<CustomerInput> {
   Future<bool> _saveData() async {
     try {
       var uri = Uri.parse(
-          'https://api.dannycode.site/API/authentication/create_customer');
+          'https://api.donvaden.net/API/authentication/create_customer');
       var response = await http.post(uri, body: {
         'phone': phone,
         'name': _nameController.text,

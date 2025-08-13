@@ -69,7 +69,7 @@ class _DriverGiayToState extends State<DriverGiayTo> {
 
   Future<void> _sendDataToServer() async {
     var uri = Uri.parse(
-        'https://api.dannycode.site/API/authentication/create_driver');
+        'https://api.donvaden.net/API/authentication/create_driver');
     var request = http.MultipartRequest('POST', uri)
       ..fields['phone'] = phone
       ..fields['name'] = name

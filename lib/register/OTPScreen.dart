@@ -33,7 +33,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
   Future<void> sendOTPfromServer() async {
     var url = Uri.parse(
-        'https://api.dannycode.site/API/authentication/register/$phone');
+        'https://api.donvaden.net/API/authentication/register/$phone');
     await http.post(url);
   }
 
@@ -50,7 +50,7 @@ class _OTPScreenState extends State<OTPScreen> {
     }
 
     var url =
-        Uri.parse('https://api.dannycode.site/API/authentication/checkOTP');
+        Uri.parse('https://api.donvaden.net/API/authentication/checkOTP');
     var response =
         await http.post(url, body: {'phone': phone, 'OTP': enteredOTP});
 

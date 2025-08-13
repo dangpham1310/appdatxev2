@@ -87,7 +87,7 @@ void RunDashboardDriver() async {
   Future<void> postData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('FCMToken') ?? '';
-    String url = 'https://api.dannycode.site/api/FCMTokenCustomer';
+    String url = 'https://api.donvaden.net/api/FCMTokenCustomer';
     final response = await http.post(
       Uri.parse(url),
       body: {'FCMToken': '${token}'},

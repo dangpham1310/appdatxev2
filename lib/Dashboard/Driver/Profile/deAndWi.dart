@@ -366,7 +366,7 @@ class _NapRutPageState extends State<NapRutPage> {
 
               if (accessToken != null && accessToken.isNotEmpty) {
                 final response = await http.post(
-                  Uri.parse('https://api.dannycode.site/api/ruttien'),
+                  Uri.parse('https://api.donvaden.net/api/ruttien'),
                   body: {
                     'accessToken': accessToken,
                     'amount': selectedAmount,
@@ -397,7 +397,7 @@ class _NapRutPageState extends State<NapRutPage> {
 
               if (accessToken != null && accessToken.isNotEmpty) {
                 final response = await http.post(
-                  Uri.parse('https://api.dannycode.site/api/naptien'),
+                  Uri.parse('https://api.donvaden.net/api/naptien'),
                   body: {
                     'accessToken': accessToken,
                     'amount': naptienController.text,

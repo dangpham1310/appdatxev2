@@ -26,7 +26,7 @@ class _InformationState extends State<Information> {
 
     if (accessToken != null) {
       var response = await http.post(
-        Uri.parse('https://api.dannycode.site/API/authentication/infoCustom'),
+        Uri.parse('https://api.donvaden.net/API/authentication/infoCustom'),
         body: {'accessToken': accessToken},
       );
 
@@ -181,7 +181,7 @@ class _InformationState extends State<Information> {
                         String? accessToken = prefs.getString('accessToken');
 
                         var response = await http.post(
-                          Uri.parse('https://api.dannycode.site/API/authentication/logout'),
+                          Uri.parse('https://api.donvaden.net/API/authentication/logout'),
                           body: {'accessToken': accessToken},
                         );
 

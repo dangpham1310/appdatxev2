@@ -30,7 +30,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
 
   Future<double> postData(double currentDistance) async {
     final prefs = await SharedPreferences.getInstance();
-    String url = 'https://api.dannycode.site/api/price';
+    String url = 'https://api.donvaden.net/api/price';
     final response = await http.post(
       Uri.parse(url),
       body: {
@@ -162,7 +162,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                             prefs.getString('accessToken') ?? '';
 
                         String url =
-                            'https://api.dannycode.site/API/authentication/getPhone';
+                            'https://api.donvaden.net/API/authentication/getPhone';
 
                         try {
                           final response = await http.post(
@@ -203,7 +203,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                         }
                         String phone =
                             await getPhoneAndSave(); // Get the phone number first
-                        String url = 'https://api.dannycode.site/api/pickcar';
+                        String url = 'https://api.donvaden.net/api/pickcar';
 
                         final response = await http.post(
                           Uri.parse(url),
@@ -233,7 +233,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                         }
 
                         String url2 =
-                            'https://api.dannycode.site/api/sendNotification';
+                            'https://api.donvaden.net/api/sendNotification';
 
                         final response2 = await http.post(
                           Uri.parse(url2),
@@ -246,7 +246,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                         try {
                           final response = await http.post(
                             Uri.parse(
-                                'https://api.dannycode.site/api/getLastestHistory'),
+                                'https://api.donvaden.net/api/getLastestHistory'),
                             body: {
                               'accessToken': prefs.getString('accessToken') ??
                                   '', // Get the stored access token

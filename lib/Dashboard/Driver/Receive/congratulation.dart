@@ -24,7 +24,7 @@ class _CongratulationPageState extends State<CongratulationPage> {
   }
 
   Future<void> fetchTravelData(String id) async {
-    final url = Uri.parse('https://api.dannycode.site/get-history');
+    final url = Uri.parse('https://api.donvaden.net/get-history');
 
     try {
       final response = await http.post(

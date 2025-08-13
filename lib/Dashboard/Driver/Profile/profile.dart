@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (accessToken != null) {
       var response = await http.post(
-        Uri.parse('https://api.dannycode.site/API/authentication/getCoin'),
+        Uri.parse('https://api.donvaden.net/API/authentication/getCoin'),
         body: {'accessToken': accessToken},
       );
 

@@ -39,7 +39,7 @@ class _DetailsPageState extends State<DetailsPage> {
     final phone = prefs.getString('phone') ?? '';
 
     final response = await http.post(
-      Uri.parse('https://api.dannycode.site/api/details'),
+      Uri.parse('https://api.donvaden.net/api/details'),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -423,7 +423,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
                                             final response = await http.post(
                                               Uri.parse(
-                                                  'https://api.dannycode.site/cancel'),
+                                                  'https://api.donvaden.net/cancel'),
                                               headers: {
                                                 'Content-Type':
                                                     'application/x-www-form-urlencoded',
@@ -437,7 +437,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
                                             final response2 = await http.post(
                                               Uri.parse(
-                                                  'https://api.dannycode.site/api/cancelNotification'),
+                                                  'https://api.donvaden.net/api/cancelNotification'),
                                               headers: {
                                                 'Content-Type':
                                                     'application/x-www-form-urlencoded',
@@ -582,7 +582,7 @@ void _showSupportDialog(BuildContext context, String idHistory) {
 
                 // Gửi yêu cầu khiếu nại với idHistory và content
                 final response = await http.post(
-                  Uri.parse('https://api.dannycode.site/report'),
+                  Uri.parse('https://api.donvaden.net/report'),
                   headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                   },

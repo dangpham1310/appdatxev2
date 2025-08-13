@@ -32,7 +32,7 @@ class _RecentState extends State<Recent> {
     String? phone = prefs.getString('phone') ?? '';
 
     final response = await http.post(
-      Uri.parse('https://api.dannycode.site/api/getRecent'),
+      Uri.parse('https://api.donvaden.net/api/getRecent'),
       body: {'phone': phone},
     );
 

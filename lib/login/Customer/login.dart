@@ -44,7 +44,7 @@ class _PasswordScreenState extends State<PasswordScreenCustomer> {
     // Concatenate all OTP values entered
     String enteredOTP = _controller.text;
     Future<void> _sendPassword() async {
-      final url = 'https://api.dannycode.site/API/authentication/login';
+      final url = 'https://api.donvaden.net/API/authentication/login';
 
       final response = await http.post(
         Uri.parse(url),
