@@ -70,6 +70,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
     return CupertinoPageScaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       navigationBar: CupertinoNavigationBar(
+            automaticBackgroundVisibility: false,
         middle: Text("Thông Tin Chi Tiết Chuyến Đi",
             style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF40B59F),

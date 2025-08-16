@@ -66,45 +66,45 @@ class _SuccessAnimationWidgetState extends State<_SuccessAnimationWidget>
   late Animation<double> _scaleAnimation;
   late Animation<double> _rotateAnimation;
   late Animation<double> _fadeAnimation;
-  
+
   List<_Confetti> _confettis = [];
   Timer? _confettiTimer;
 
   @override
   void initState() {
     super.initState();
-    
+
     _scaleController = AnimationController(
       duration: Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _rotateController = AnimationController(
       duration: Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeController = AnimationController(
       duration: Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
-    
+
     _rotateAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _rotateController, curve: Curves.easeInOut),
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
     );
-    
+
     _startAnimation();
     _startConfetti();
   }
-  
+
   void _startAnimation() {
     _scaleController.forward();
     Future.delayed(Duration(milliseconds: 200), () {
@@ -114,7 +114,7 @@ class _SuccessAnimationWidgetState extends State<_SuccessAnimationWidget>
       _fadeController.forward();
     });
   }
-  
+
   void _startConfetti() {
     _confettiTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
       if (mounted) {
@@ -126,7 +126,7 @@ class _SuccessAnimationWidgetState extends State<_SuccessAnimationWidget>
         });
       }
     });
-    
+
     // Dừng confetti sau 3 giây
     Future.delayed(Duration(seconds: 3), () {
       if (_confettiTimer != null) {
@@ -134,7 +134,7 @@ class _SuccessAnimationWidgetState extends State<_SuccessAnimationWidget>
       }
     });
   }
-  
+
   @override
   void dispose() {
     _scaleController.dispose();
@@ -151,7 +151,7 @@ class _SuccessAnimationWidgetState extends State<_SuccessAnimationWidget>
         children: [
           // Confetti background
           ..._confettis.map((confetti) => confetti.build()),
-          
+
           // Main success card
           Container(
             width: 280,
@@ -216,9 +216,9 @@ class _SuccessAnimationWidgetState extends State<_SuccessAnimationWidget>
                     );
                   },
                 ),
-                
+
                 SizedBox(height: 24),
-                
+
                 // Success text
                 AnimatedBuilder(
                   animation: _fadeAnimation,
@@ -250,9 +250,9 @@ class _SuccessAnimationWidgetState extends State<_SuccessAnimationWidget>
                     );
                   },
                 ),
-                
+
                 SizedBox(height: 32),
-                
+
                 // Close button
                 AnimatedBuilder(
                   animation: _fadeAnimation,
@@ -319,7 +319,7 @@ class _Confetti {
   ][Random().nextInt(8)];
   final double speed = Random().nextDouble() * 2 + 1;
   double currentY = 0;
-  
+
   Widget build() {
     return Positioned(
       left: x,
@@ -342,22 +342,22 @@ class _Confetti {
 
 class _ConfettiPainter extends CustomPainter {
   final Color color;
-  
+
   _ConfettiPainter({required this.color});
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.fill;
-    
+
     canvas.drawCircle(
       Offset(size.width / 2, size.height / 2),
       size.width / 2,
       paint,
     );
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
@@ -388,7 +388,7 @@ class _PickCarState extends State<PickCar> {
   TextEditingController _bookingController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   TextEditingController _customerPhoneController = TextEditingController();
-  
+
   bool _isLoading = false;
 
   @override
@@ -410,19 +410,18 @@ class _PickCarState extends State<PickCar> {
       // Xử lý giá tiền - nếu để trống thì mặc định là 0
       String priceText = _priceController.text.trim();
       String finalPrice = priceText.isEmpty ? '0' : priceText;
-      
+
       // Lưu thông tin vào SharedPreferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('price', finalPrice);
 
-      await prefs.setString(
-          'booking_info', _bookingController.text.trim());
+      await prefs.setString('booking_info', _bookingController.text.trim());
       await prefs.setString(
           'customer_phone', _customerPhoneController.text.trim());
 
       // Luôn đặt thời gian gửi đi là thời gian hiện tại + 15 phút
       final DateTime sendTime = DateTime.now().add(Duration(minutes: 15));
-      
+
       String formattedDate = DateFormat('dd/MM/yyyy').format(sendTime);
       // Format time để khớp với yêu cầu của server Python (%H:%M)
       String formattedTime = DateFormat('HH:mm').format(sendTime);
@@ -449,7 +448,7 @@ class _PickCarState extends State<PickCar> {
       if (response.statusCode == 200) {
         if (response.body == 'Data saved successfully') {
           showSuccessAnimation(context);
-          
+
           // Clear form
           _bookingController.clear();
           _priceController.clear();
@@ -462,42 +461,37 @@ class _PickCarState extends State<PickCar> {
         _showErrorDialog('Đặt xe thất bại: HTTP ${response.statusCode}');
       }
 
-                              String url2 =
-                            'https://api.donvaden.net/api/sendNotification';
+      String url2 = 'https://api.donvaden.net/api/sendNotification';
 
-                        final response2 = await http.post(
-                          Uri.parse(url2),
-                          body: {
-                            'pickUp': '0',
-                            'pickDrop': '0',
-                          },
-                        );
+      final response2 = await http.post(
+        Uri.parse(url2),
+        body: {
+          'pickUp': '0',
+          'pickDrop': '0',
+        },
+      );
 
+      try {
+        final response = await http.post(
+          Uri.parse('https://api.donvaden.net/api/getLastestHistory'),
+          body: {
+            'accessToken': prefs.getString('accessToken') ??
+                '', // Get the stored access token
+            'FCMToken':
+                prefs.getString('FCMToken') ?? '', // Get the stored FCM token
+          },
+        );
 
-                                                try {
-                          final response = await http.post(
-                            Uri.parse(
-                                'https://api.donvaden.net/api/getLastestHistory'),
-                            body: {
-                              'accessToken': prefs.getString('accessToken') ??
-                                  '', // Get the stored access token
-                              'FCMToken': prefs.getString('FCMToken') ??
-                                  '', // Get the stored FCM token
-                            },
-                          );
-
-                          if (response.statusCode == 200) {
-                            final responseBody = jsonDecode(response.body);
-                            // Handle the response if needed
-                            print('Response from server: $responseBody');
-                          } else {
-                            print(
-                                'Failed to send tokens. Status code: ${response.statusCode}');
-                          }
-                        } catch (e) {
-                          print('Error occurred: $e');
-                        }
-      
+        if (response.statusCode == 200) {
+          final responseBody = jsonDecode(response.body);
+          // Handle the response if needed
+          print('Response from server: $responseBody');
+        } else {
+          print('Failed to send tokens. Status code: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Error occurred: $e');
+      }
     } catch (e) {
       _showErrorDialog('Có lỗi xảy ra: $e');
     } finally {
@@ -530,14 +524,14 @@ class _PickCarState extends State<PickCar> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-
       navigationBar: CupertinoNavigationBar(
+        automaticBackgroundVisibility: false,
         middle: Text(
           'Đặt Xe',
           style: TextStyle(
             fontWeight: FontWeight.normal,
             fontSize: 24,
-            color: const Color.fromARGB(255, 0, 0, 0),
+            color: Colors.white,
           ),
         ),
         backgroundColor: const Color.fromARGB(255, 0, 136, 122),
@@ -561,9 +555,9 @@ class _PickCarState extends State<PickCar> {
                       _bookingController,
                       CupertinoIcons.location_solid,
                     ),
-                    
+
                     SizedBox(height: 16),
-                    
+
                     _buildSimpleField(
                       'Giá tiền',
                       'Để trống nếu miễn phí',
@@ -571,9 +565,9 @@ class _PickCarState extends State<PickCar> {
                       CupertinoIcons.money_dollar,
                       keyboardType: TextInputType.number,
                     ),
-                    
+
                     SizedBox(height: 16),
-                    
+
                     _buildSimpleField(
                       'Số điện thoại khách',
                       'Để trống nếu dùng số của bạn',
@@ -581,9 +575,9 @@ class _PickCarState extends State<PickCar> {
                       CupertinoIcons.phone_solid,
                       keyboardType: TextInputType.phone,
                     ),
-                    
+
                     SizedBox(height: 32),
-                    
+
                     // Đặt Xe button
                     Container(
                       width: double.infinity,
@@ -609,9 +603,9 @@ class _PickCarState extends State<PickCar> {
                         onPressed: _isLoading ? null : _submitBooking,
                       ),
                     ),
-                    
+
                     SizedBox(height: 20),
-                    
+
                     // Important notes
                     _buildImportantNotes(),
                   ],
@@ -624,9 +618,9 @@ class _PickCarState extends State<PickCar> {
     );
   }
 
-
-
-  Widget _buildSimpleField(String label, String hint, TextEditingController controller, IconData icon, {TextInputType? keyboardType}) {
+  Widget _buildSimpleField(String label, String hint,
+      TextEditingController controller, IconData icon,
+      {TextInputType? keyboardType}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -696,7 +690,8 @@ class _PickCarState extends State<PickCar> {
             ],
           ),
           SizedBox(height: 8),
-          _buildNoteItem('• Anh em chỉ đặt cuốc cùng nội dung 15\' 1 lần, nếu muốn đổi lại thông tin đặt xe thì huỷ chuyến đi đã đặt trong phần lịch sử rồi hẳng đặt lại'),
+          _buildNoteItem(
+              '• Anh em chỉ đặt cuốc cùng nội dung 15\' 1 lần, nếu muốn đổi lại thông tin đặt xe thì huỷ chuyến đi đã đặt trong phần lịch sử rồi hẳng đặt lại'),
           _buildNoteItem('• Nghiêm cấm tình trạng spam chuyến đi nhiều lần.'),
           _buildNoteItem('• Tất cả mọi thắc mắc liên hệ Ad và ban key sdt'),
           SizedBox(height: 6),

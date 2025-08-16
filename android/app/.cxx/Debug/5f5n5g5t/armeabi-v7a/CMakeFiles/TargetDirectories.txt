@@ -1,0 +1,2 @@
+C:/Users/nth43/Music/Documents/dev/appdatxev2/android/app/.cxx/Debug/5f5n5g5t/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/nth43/Music/Documents/dev/appdatxev2/android/app/.cxx/Debug/5f5n5g5t/armeabi-v7a/CMakeFiles/rebuild_cache.dir

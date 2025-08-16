@@ -26,7 +26,6 @@ class NotificationController {
   static Future<void> initializeNotifications() async {
     // Initialize Firebase
 
-
     // Initialize Firebase Messaging
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
@@ -88,7 +87,7 @@ class NotificationController {
   // Request Firebase Token
   static Future<String> requestFirebaseToken() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-    
+
     String? token = await messaging.getToken();
     print('FCM Token: $token');
     if (token != null) {
@@ -98,7 +97,8 @@ class NotificationController {
     return '';
   }
 }
-Future<void>initializePushNotifications()async{
+
+Future<void> initializePushNotifications() async {
   await createNotificationChannel();
   await NotificationController.initializeNotifications();
 
@@ -109,7 +109,7 @@ Future<void>initializePushNotifications()async{
   print("FCMToken ");
   print(token);
 
-   // Initialize date formatting for Vietnamese
+  // Initialize date formatting for Vietnamese
 
   // Handle notification when app is terminated
   RemoteMessage? initialMessage =
@@ -121,6 +121,7 @@ Future<void>initializePushNotifications()async{
     ));
   }
 }
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -128,8 +129,7 @@ void main() async {
   cloudMessagingService.initialize();
 
   // await initializePushNotifications();
-  initializeDateFormatting(
-      'vi', null);
+  initializeDateFormatting('vi', null);
 
   runApp(MyApp());
 }
@@ -139,25 +139,24 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const CupertinoApp(
       debugShowCheckedModeBanner: false,
-    theme: CupertinoThemeData(
-
-      brightness: Brightness.light, // Chỉ dùng chế độ sáng
-      primaryColor: CupertinoColors.activeBlue,
-      barBackgroundColor: CupertinoColors.white, // Thanh bar nền trắng
-      textTheme: CupertinoTextThemeData(
-        textStyle: TextStyle(color: CupertinoColors.black), // Chữ màu đen
+      theme: CupertinoThemeData(
+        brightness: Brightness.light,
+        primaryColor: CupertinoColors.activeBlue,
+        barBackgroundColor: CupertinoColors.white, // Thanh bar nền trắng
+        textTheme: CupertinoTextThemeData(
+          textStyle: TextStyle(color: CupertinoColors.black), // Chữ màu đen
+        ),
       ),
-    ),
-    localizationsDelegates: [
-      GlobalCupertinoLocalizations.delegate,
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-    ],
-    supportedLocales: <Locale>[
-      Locale('vi', 'VN'), // Hỗ trợ Tiếng Việt
-    ],
-    home: Welcome(), // Chuyển sang MaterialApp trong MyApp
-  );
+      localizationsDelegates: [
+        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: <Locale>[
+        Locale('vi', 'VN'), // Hỗ trợ Tiếng Việt
+      ],
+      home: Welcome(), // Chuyển sang MaterialApp trong MyApp
+    );
   }
 }
 

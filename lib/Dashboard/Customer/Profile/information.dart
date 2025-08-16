@@ -53,6 +53,7 @@ class _InformationState extends State<Information> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
+            automaticBackgroundVisibility: false,
         middle:
             Text("Thông Tin Cá Nhân", style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF40B59F),

@@ -95,6 +95,7 @@ class _ListReceiveState extends State<ListReceive> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+            automaticBackgroundVisibility: false,
         middle: Text(
           "Danh Sách Nhận Xe",
           style: TextStyle(color: Colors.white),
