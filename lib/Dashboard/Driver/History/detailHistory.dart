@@ -250,8 +250,8 @@ class _DetailsPageState extends State<DetailsPage> {
                     Text(
                       'Ghi chú:',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.0,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 16.0,
                         color: Colors.black,
                       ),
                     ),
@@ -260,7 +260,11 @@ class _DetailsPageState extends State<DetailsPage> {
                       history['note']?.toString().isEmpty ?? true
                           ? 'Không có ghi chú'
                           : history['note'],
-                      style: TextStyle(fontSize: 14.0, color: Colors.grey),
+                      style: TextStyle(
+                        fontSize: 14.0, 
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 32.0),
                     
@@ -441,9 +445,6 @@ class _DetailsPageState extends State<DetailsPage> {
                                           final accessToken = prefs
                                                   .getString('accessToken') ??
                                               '';
-                                          final FCMToken =
-                                              prefs.getString('FCMToken') ??
-                                                  '';
 
                                           final response = await http.post(
                                             Uri.parse(
@@ -456,21 +457,6 @@ class _DetailsPageState extends State<DetailsPage> {
                                               'accessToken': accessToken,
                                               'id':
                                                   widget.idHistory.toString()
-                                            },
-                                          );
-
-                                          final response2 = await http.post(
-                                            Uri.parse(
-                                                'https://api.donvaden.net/api/cancelNotification'),
-                                            headers: {
-                                              'Content-Type':
-                                                  'application/x-www-form-urlencoded',
-                                            },
-                                            body: {
-                                              'accessToken': accessToken,
-                                              'id':
-                                                  widget.idHistory.toString(),
-                                              "FCMToken": FCMToken
                                             },
                                           );
 
