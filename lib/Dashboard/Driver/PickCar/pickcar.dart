@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:marquee/marquee.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
@@ -427,6 +427,7 @@ class _PickCarState extends State<PickCar> {
       String formattedTime = DateFormat('HH:mm').format(sendTime);
 
       // Gửi API call đến /api/pickcar
+      String phonenumberpick = prefs.getString('phone') ?? '';
       final response = await http.post(
         Uri.parse('https://api.donvaden.net/api/pickcar'), // URL API thực tế
         body: {
@@ -439,8 +440,7 @@ class _PickCarState extends State<PickCar> {
           'phonenumber': _customerPhoneController.text.trim().isEmpty
               ? 'N/A'
               : _customerPhoneController.text.trim(),
-          'phonenumberpick':
-              '0123456789', // Số điện thoại hiện tại (cần thay đổi theo số thực tế)
+          'phonenumberpick': phonenumberpick, // Số điện thoại từ SharedPreferences
           'note': _bookingController.text.trim(),
         },
       );
@@ -468,8 +468,10 @@ class _PickCarState extends State<PickCar> {
         body: {
           'pickUp': '0',
           'pickDrop': '0',
+          "pickphone": phonenumberpick,
         },
       );
+
 
       try {
         final response = await http.post(
@@ -551,9 +553,11 @@ class _PickCarState extends State<PickCar> {
                     // Form fields - simplified
                     _buildSimpleField(
                       'Thông tin chuyến đi',
-                      'Ghi chú chi tiết',
+                      '"Thời gian", "Số lượng khách", "Điểm đón", "Điểm Đến", "Giá Tiền"',
                       _bookingController,
                       CupertinoIcons.location_solid,
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
                     ),
 
                     SizedBox(height: 16),
@@ -564,6 +568,8 @@ class _PickCarState extends State<PickCar> {
                       _priceController,
                       CupertinoIcons.money_dollar,
                       keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4)],
+                      suffix: Text(' nghìn đồng', style: TextStyle(color: Colors.grey, fontSize: 14)),
                     ),
 
                     SizedBox(height: 16),
@@ -620,7 +626,7 @@ class _PickCarState extends State<PickCar> {
 
   Widget _buildSimpleField(String label, String hint,
       TextEditingController controller, IconData icon,
-      {TextInputType? keyboardType}) {
+      {TextInputType? keyboardType, int? maxLines, List<TextInputFormatter>? inputFormatters, Widget? suffix}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -655,6 +661,10 @@ class _PickCarState extends State<PickCar> {
             borderRadius: BorderRadius.circular(8),
           ),
           keyboardType: keyboardType,
+          maxLines: maxLines,
+          inputFormatters: inputFormatters,
+          suffix: suffix,
+          suffixMode: OverlayVisibilityMode.always,
         ),
       ],
     );
@@ -741,35 +751,6 @@ class _PickCarState extends State<PickCar> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, bool isActive) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: isActive ? Colors.blue[100]! : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            icon,
-            color: isActive ? Colors.blue : Colors.grey[600]!,
-            size: 24,
-          ),
-        ),
-        SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: isActive ? Colors.blue : Colors.grey[600]!,
-            fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-          ),
-        ),
-      ],
     );
   }
 }
