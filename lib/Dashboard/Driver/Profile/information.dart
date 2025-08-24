@@ -165,7 +165,6 @@ class _InformationState extends State<Information> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         middle: Text(
           "Thông Tin Cá Nhân",
           style: TextStyle(color: Colors.white),
@@ -348,7 +347,8 @@ class _InformationState extends State<Information> {
                         String? accessToken = prefs.getString('accessToken');
 
                         var response = await http.post(
-                          Uri.parse('https://api.donvaden.net/API/authentication/logout'),
+                          Uri.parse(
+                              'https://api.donvaden.net/API/authentication/logout'),
                           body: {'accessToken': accessToken},
                         );
                         print("FCM Token: $fcmToken");

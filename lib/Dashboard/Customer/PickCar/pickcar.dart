@@ -87,8 +87,6 @@ Position createPositionFromJson(Map<String, dynamic> json) {
     heading: 0,
     speed: 0,
     speedAccuracy: 0,
-    altitudeAccuracy: 0,
-    headingAccuracy: 0,
   );
 }
 

@@ -53,7 +53,6 @@ class _InformationState extends State<Information> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         middle:
             Text("Thông Tin Cá Nhân", style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF40B59F),
@@ -125,11 +124,10 @@ class _InformationState extends State<Information> {
                 readOnly: true,
                 decoration: BoxDecoration(
                   color: CupertinoColors.white, // Set background to white
-                  borderRadius: BorderRadius.circular(
-                      8.0), // Optional rounded corners
+                  borderRadius:
+                      BorderRadius.circular(8.0), // Optional rounded corners
                   border: Border.all(
-                    color: CupertinoColors
-                        .systemGrey, // Optional border color
+                    color: CupertinoColors.systemGrey, // Optional border color
                     width: 1.0, // Optional border width
                   ),
                 ),
@@ -173,8 +171,6 @@ class _InformationState extends State<Information> {
                     SizedBox(height: 10),
                     CupertinoButton(
                       onPressed: () async {
-
-
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
 
@@ -182,7 +178,8 @@ class _InformationState extends State<Information> {
                         String? accessToken = prefs.getString('accessToken');
 
                         var response = await http.post(
-                          Uri.parse('https://api.donvaden.net/API/authentication/logout'),
+                          Uri.parse(
+                              'https://api.donvaden.net/API/authentication/logout'),
                           body: {'accessToken': accessToken},
                         );
 

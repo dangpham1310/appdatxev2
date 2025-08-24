@@ -90,7 +90,6 @@ class _InvitedFriendsPageState extends State<InvitedFriendsPage> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         backgroundColor: Color(0xFF40B59F),
         middle: Text(
           'Danh sách bạn bè đã được mời',

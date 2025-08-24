@@ -61,7 +61,6 @@ class _NapRutPageState extends State<NapRutPage> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         backgroundColor: Color(0xFF40B59F), // Set navigation bar color
         middle: Text(
           'Nạp Rút',
@@ -184,7 +183,7 @@ class _NapRutPageState extends State<NapRutPage> {
                 child: Text(
                   'Số Tài Khoản: $accountNumber',
                   style:
-                  TextStyle(fontSize: 16.0, color: CupertinoColors.black),
+                      TextStyle(fontSize: 16.0, color: CupertinoColors.black),
                 ),
               ),
               GestureDetector(
@@ -338,7 +337,7 @@ class _NapRutPageState extends State<NapRutPage> {
             ),
             CupertinoButton(
               child:
-              Text('Xác nhận', style: TextStyle(color: Color(0xFF40B59F))),
+                  Text('Xác nhận', style: TextStyle(color: Color(0xFF40B59F))),
               onPressed: () {
                 setState(() {}); // Ensures the state is updated
                 Navigator.of(modalContext).pop(); // Close the modal
@@ -372,11 +371,11 @@ class _NapRutPageState extends State<NapRutPage> {
                     'accessToken': accessToken,
                     'amount': selectedAmount,
                     'stkruttien':
-                    stkruttienController.text, // Use controller's text
+                        stkruttienController.text, // Use controller's text
                     'bankName':
-                    bankNameController.text, // Use controller's text
+                        bankNameController.text, // Use controller's text
                     'accountName':
-                    chutaikhoanController.text, // Use controller's text
+                        chutaikhoanController.text, // Use controller's text
                   },
                 );
                 if (response.statusCode == 200) {

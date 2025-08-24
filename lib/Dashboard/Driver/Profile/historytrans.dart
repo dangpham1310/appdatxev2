@@ -52,7 +52,6 @@ class _HistoryTransactionPageState extends State<HistoryTransactionPage> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         middle: Text(
           "Lịch Sử Giao Dịch",
           style: TextStyle(color: Colors.white),
@@ -81,7 +80,8 @@ class _HistoryTransactionPageState extends State<HistoryTransactionPage> {
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('Không Tìm Thấy Lịch Sử Giao Dịch'));
+                    return Center(
+                        child: Text('Không Tìm Thấy Lịch Sử Giao Dịch'));
                   } else {
                     return ListView.builder(
                       itemCount: snapshot.data!.length,

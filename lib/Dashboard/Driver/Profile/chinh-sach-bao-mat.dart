@@ -7,7 +7,6 @@ class ChinhSachPage extends StatelessWidget {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         backgroundColor: Color(0xFF40B59F),
         middle: Text(
           'Chính Sách Bảo Mật',

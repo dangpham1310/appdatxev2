@@ -440,7 +440,8 @@ class _PickCarState extends State<PickCar> {
           'phonenumber': _customerPhoneController.text.trim().isEmpty
               ? 'N/A'
               : _customerPhoneController.text.trim(),
-          'phonenumberpick': phonenumberpick, // Số điện thoại từ SharedPreferences
+          'phonenumberpick':
+              phonenumberpick, // Số điện thoại từ SharedPreferences
           'note': _bookingController.text.trim(),
         },
       );
@@ -471,7 +472,6 @@ class _PickCarState extends State<PickCar> {
           "pickphone": phonenumberpick,
         },
       );
-
 
       try {
         final response = await http.post(
@@ -527,7 +527,6 @@ class _PickCarState extends State<PickCar> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        automaticBackgroundVisibility: false,
         middle: Text(
           'Đặt Xe',
           style: TextStyle(
@@ -568,8 +567,12 @@ class _PickCarState extends State<PickCar> {
                       _priceController,
                       CupertinoIcons.money_dollar,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4)],
-                      suffix: Text(' nghìn đồng', style: TextStyle(color: Colors.grey, fontSize: 14)),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(4)
+                      ],
+                      suffix: Text(' nghìn đồng',
+                          style: TextStyle(color: Colors.grey, fontSize: 14)),
                     ),
 
                     SizedBox(height: 16),
@@ -626,7 +629,10 @@ class _PickCarState extends State<PickCar> {
 
   Widget _buildSimpleField(String label, String hint,
       TextEditingController controller, IconData icon,
-      {TextInputType? keyboardType, int? maxLines, List<TextInputFormatter>? inputFormatters, Widget? suffix}) {
+      {TextInputType? keyboardType,
+      int? maxLines,
+      List<TextInputFormatter>? inputFormatters,
+      Widget? suffix}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

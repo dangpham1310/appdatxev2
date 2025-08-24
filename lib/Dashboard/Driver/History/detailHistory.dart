@@ -67,7 +67,6 @@ class _DetailsPageState extends State<DetailsPage> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         middle: Text("Thông Tin Chi Tiết Chuyến Đi",
             style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF40B59F),
@@ -261,13 +260,12 @@ class _DetailsPageState extends State<DetailsPage> {
                           ? 'Không có ghi chú'
                           : history['note'],
                       style: TextStyle(
-                        fontSize: 14.0, 
+                        fontSize: 14.0,
                         color: Colors.grey,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 32.0),
-                    
                     Row(children: [
                       Column(
                         children: [
@@ -363,7 +361,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                     await SharedPreferences.getInstance();
 
                                 final phone = prefs.getString('phone') ?? '';
-                                if (widget.bookerPhoneNumber != driver["phone"]) {
+                                if (widget.bookerPhoneNumber !=
+                                    driver["phone"]) {
                                   if (phone == driver["phone"]) {
                                     _launchCaller(widget.customerPhoneNumber);
                                   } else {
@@ -439,12 +438,11 @@ class _DetailsPageState extends State<DetailsPage> {
                                       ),
                                       onPressed: () {
                                         Future<void> postData() async {
-                                          final prefs =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          final accessToken = prefs
-                                                  .getString('accessToken') ??
-                                              '';
+                                          final prefs = await SharedPreferences
+                                              .getInstance();
+                                          final accessToken =
+                                              prefs.getString('accessToken') ??
+                                                  '';
 
                                           final response = await http.post(
                                             Uri.parse(
@@ -455,8 +453,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                             },
                                             body: {
                                               'accessToken': accessToken,
-                                              'id':
-                                                  widget.idHistory.toString()
+                                              'id': widget.idHistory.toString()
                                             },
                                           );
 

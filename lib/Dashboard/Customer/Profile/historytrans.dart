@@ -52,7 +52,6 @@ class _HistoryTransactionPageState extends State<HistoryTransactionPage> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         middle: Text(
           "Lịch Sử Giao Dịch",
           style: TextStyle(color: Colors.white),

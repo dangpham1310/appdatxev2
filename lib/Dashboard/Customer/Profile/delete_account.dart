@@ -14,7 +14,6 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         middle: Text('Xóa Tài Khoản',
             style: TextStyle(color: CupertinoColors.white)),
         backgroundColor: Color(0xFF40B59F),

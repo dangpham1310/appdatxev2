@@ -69,7 +69,6 @@ class _PickCarDash2State extends State<PickCarDash2> {
     return CupertinoPageScaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         middle: Text("Thông Tin Chi Tiết Chuyến Đi",
             style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF40B59F),
@@ -217,14 +216,15 @@ class _PickCarDash2State extends State<PickCarDash2> {
                             'price': _priceController.text.trim().isNotEmpty
                                 ? _priceController.text
                                 : price.toString(),
-                            'phonenumber': _phonenumberController.text.trim().isNotEmpty
-                                ? _phonenumberController.text
-                                : phone,
-                            'phonenumberpick': phone, // Use the phone number obtained
+                            'phonenumber':
+                                _phonenumberController.text.trim().isNotEmpty
+                                    ? _phonenumberController.text
+                                    : phone,
+                            'phonenumberpick':
+                                phone, // Use the phone number obtained
                             'note': _noteController.text,
                           },
                         );
-
 
                         if (response.statusCode == 200) {
                           print("Post data successfully");
@@ -283,8 +283,13 @@ class _PickCarDash2State extends State<PickCarDash2> {
                             prefs.getString('pickDrop') ?? 'Điểm Đến';
                         final date = prefs.getString('date') ?? 'Ngày';
                         final time = prefs.getString('time') ?? 'Giờ';
-                        final pickprice = _priceController.text.isEmpty ? price : _priceController.text;
-                        final phoneNumber = _phonenumberController.text.isNotEmpty ? _phonenumberController.text : phone;
+                        final pickprice = _priceController.text.isEmpty
+                            ? price
+                            : _priceController.text;
+                        final phoneNumber =
+                            _phonenumberController.text.isNotEmpty
+                                ? _phonenumberController.text
+                                : phone;
 
                         final note = _noteController.text;
 
@@ -470,8 +475,13 @@ class _PickCarDash2State extends State<PickCarDash2> {
 
                                     if (selectedSeat.isEmpty) {
                                       return;
-                                    } else if (_priceController.text.trim().isNotEmpty &&
-                                        price >= (int.tryParse(_priceController.text) ?? 0)) {
+                                    } else if (_priceController.text
+                                            .trim()
+                                            .isNotEmpty &&
+                                        price >=
+                                            (int.tryParse(
+                                                    _priceController.text) ??
+                                                0)) {
                                       return;
                                     } else {
                                       Navigator.push(
@@ -492,7 +502,9 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                                 selectedSeat, // Số ghế đã chọn
                                             notes: _noteController
                                                 .text, // Ghi chú từ trường nhập liệu ghi chú
-                                            price: _priceController.text.trim().isNotEmpty
+                                            price: _priceController.text
+                                                    .trim()
+                                                    .isNotEmpty
                                                 ? _priceController.text
                                                 : price.toString(),
                                             accessToken: prefs
@@ -532,9 +544,9 @@ class _PickCarDash2State extends State<PickCarDash2> {
                               );
                             },
                           );
-
                         } else if (_priceController.text.trim().isNotEmpty &&
-                            price >= (int.tryParse(_priceController.text) ?? 0)) {
+                            price >=
+                                (int.tryParse(_priceController.text) ?? 0)) {
                           showCupertinoDialog(
                             context: context,
                             builder: (context) {
@@ -554,7 +566,6 @@ class _PickCarDash2State extends State<PickCarDash2> {
                             },
                           );
                         } else {
-
                           showConfirmDialog();
                         }
                       }
@@ -663,7 +674,6 @@ class _PickCarDash2State extends State<PickCarDash2> {
             ),
           ),
         ));
-
   }
 
   Widget _buildPhoneTextField() {

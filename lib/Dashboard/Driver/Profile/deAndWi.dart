@@ -61,7 +61,6 @@ class _NapRutPageState extends State<NapRutPage> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         backgroundColor: Color(0xFF40B59F), // Set navigation bar color
         middle: Text(
           'Nạp Rút',

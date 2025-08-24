@@ -53,7 +53,6 @@ class _CongratulationPageState extends State<CongratulationPage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         middle: Text(
           "Nhận Chuyến Thành Công",
           style: TextStyle(color: Colors.white),

@@ -70,7 +70,6 @@ class _PickCarDash2State extends State<PickCarDash2> {
     return CupertinoPageScaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         middle: Text("Thông Tin Chi Tiết Chuyến Đi",
             style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF40B59F),
@@ -174,7 +173,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
 
                           if (response.statusCode == 200) {
                             Map<String, dynamic> responseData =
-                            json.decode(response.body);
+                                json.decode(response.body);
                             String phone =
                                 responseData['phone'] ?? ''; // Handle null case
                             print("This is phone: $phone");
@@ -204,7 +203,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                           return;
                         }
                         String phone =
-                        await getPhoneAndSave(); // Get the phone number first
+                            await getPhoneAndSave(); // Get the phone number first
                         String url = 'https://api.donvaden.net/api/pickcar';
 
                         final response = await http.post(
@@ -218,14 +217,15 @@ class _PickCarDash2State extends State<PickCarDash2> {
                             'price': _priceController.text.trim().isNotEmpty
                                 ? _priceController.text
                                 : price.toString(),
-                            'phonenumber': _phonenumberController.text.trim().isNotEmpty
-                                ? _phonenumberController.text
-                                : phone,
-                            'phonenumberpick': phone, // Use the phone number obtained
+                            'phonenumber':
+                                _phonenumberController.text.trim().isNotEmpty
+                                    ? _phonenumberController.text
+                                    : phone,
+                            'phonenumberpick':
+                                phone, // Use the phone number obtained
                             'note': _noteController.text,
                           },
                         );
-
 
                         if (response.statusCode == 200) {
                           print("Post data successfully");
@@ -284,8 +284,13 @@ class _PickCarDash2State extends State<PickCarDash2> {
                             prefs.getString('pickDrop') ?? 'Điểm Đến';
                         final date = prefs.getString('date') ?? 'Ngày';
                         final time = prefs.getString('time') ?? 'Giờ';
-                        final pickprice = _priceController.text.isEmpty ? price : _priceController.text;
-                        final phoneNumber = _phonenumberController.text.isNotEmpty ? _phonenumberController.text : phone;
+                        final pickprice = _priceController.text.isEmpty
+                            ? price
+                            : _priceController.text;
+                        final phoneNumber =
+                            _phonenumberController.text.isNotEmpty
+                                ? _phonenumberController.text
+                                : phone;
 
                         final note = _noteController.text;
 
@@ -313,7 +318,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                           pickUp,
                                           style: TextStyle(
                                               color:
-                                              CupertinoColors.systemGrey),
+                                                  CupertinoColors.systemGrey),
                                         ),
                                       ),
                                     ],
@@ -333,7 +338,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                           dropOff,
                                           style: TextStyle(
                                               color:
-                                              CupertinoColors.systemGrey),
+                                                  CupertinoColors.systemGrey),
                                         ),
                                       ),
                                     ],
@@ -353,7 +358,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                           date,
                                           style: TextStyle(
                                               color:
-                                              CupertinoColors.systemGrey),
+                                                  CupertinoColors.systemGrey),
                                         ),
                                       ),
                                     ],
@@ -373,7 +378,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                           time,
                                           style: TextStyle(
                                               color:
-                                              CupertinoColors.systemGrey),
+                                                  CupertinoColors.systemGrey),
                                         ),
                                       ),
                                     ],
@@ -391,7 +396,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                       Text(selectedSeat,
                                           style: TextStyle(
                                               color:
-                                              CupertinoColors.systemGrey)),
+                                                  CupertinoColors.systemGrey)),
                                     ],
                                   ),
                                   SizedBox(height: 5),
@@ -407,7 +412,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                       Text('$pickprice Nghìn VND',
                                           style: TextStyle(
                                               color:
-                                              CupertinoColors.systemGrey)),
+                                                  CupertinoColors.systemGrey)),
                                     ],
                                   ),
 
@@ -424,13 +429,13 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                       Text(phoneNumber,
                                           style: TextStyle(
                                               color:
-                                              CupertinoColors.systemGrey)),
+                                                  CupertinoColors.systemGrey)),
                                     ],
                                   ),
                                   SizedBox(height: 5),
                                   Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Icon(CupertinoIcons.text_bubble,
                                           size: 20,
@@ -444,14 +449,14 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                           note,
                                           style: TextStyle(
                                               color:
-                                              CupertinoColors.systemGrey),
+                                                  CupertinoColors.systemGrey),
                                         ),
                                       ),
                                     ],
                                   ),
                                   SizedBox(
                                       height:
-                                      10), // Add some space at the bottom
+                                          10), // Add some space at the bottom
                                 ],
                               ),
                               actions: [
@@ -467,12 +472,17 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                     performPostDataOperation();
 
                                     final prefs =
-                                    await SharedPreferences.getInstance();
+                                        await SharedPreferences.getInstance();
 
                                     if (selectedSeat.isEmpty) {
                                       return;
-                                    } else if (_priceController.text.trim().isNotEmpty &&
-                                        price >= (int.tryParse(_priceController.text) ?? 0)) {
+                                    } else if (_priceController.text
+                                            .trim()
+                                            .isNotEmpty &&
+                                        price >=
+                                            (int.tryParse(
+                                                    _priceController.text) ??
+                                                0)) {
                                       return;
                                     } else {
                                       Navigator.push(
@@ -484,24 +494,26 @@ class _PickCarDash2State extends State<PickCarDash2> {
                                             tripTime: prefs.getString('time') ??
                                                 'Giờ chuyến đi', // Giờ chuyến đi từ SharedPreferences
                                             pickupPoint: prefs
-                                                .getString('pickUp') ??
+                                                    .getString('pickUp') ??
                                                 'Địa chỉ đón', // Điểm đón từ SharedPreferences
                                             destination: prefs
-                                                .getString('pickDrop') ??
+                                                    .getString('pickDrop') ??
                                                 'Địa chỉ đến', // Điểm đến từ SharedPreferences // Thay thế bằng thời gian thực tế nếu có
                                             seats:
-                                            selectedSeat, // Số ghế đã chọn
+                                                selectedSeat, // Số ghế đã chọn
                                             notes: _noteController
                                                 .text, // Ghi chú từ trường nhập liệu ghi chú
-                                            price: _priceController.text.trim().isNotEmpty
+                                            price: _priceController.text
+                                                    .trim()
+                                                    .isNotEmpty
                                                 ? _priceController.text
                                                 : price.toString(),
                                             accessToken: prefs
-                                                .getString("accessToken") ??
+                                                    .getString("accessToken") ??
                                                 '',
                                             FCMToken:
-                                            prefs.getString("FCMToken") ??
-                                                '',
+                                                prefs.getString("FCMToken") ??
+                                                    '',
                                           ),
                                         ),
                                       );
@@ -533,9 +545,9 @@ class _PickCarDash2State extends State<PickCarDash2> {
                               );
                             },
                           );
-
                         } else if (_priceController.text.trim().isNotEmpty &&
-                            price >= (int.tryParse(_priceController.text) ?? 0)) {
+                            price >=
+                                (int.tryParse(_priceController.text) ?? 0)) {
                           showCupertinoDialog(
                             context: context,
                             builder: (context) {
@@ -555,7 +567,6 @@ class _PickCarDash2State extends State<PickCarDash2> {
                             },
                           );
                         } else {
-
                           showConfirmDialog();
                         }
                       }
@@ -599,7 +610,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
                     ? Colors.blueGrey.shade400
                     : Colors.blueGrey.shade800,
                 fontWeight:
-                selectedSeat.isEmpty ? FontWeight.normal : FontWeight.bold,
+                    selectedSeat.isEmpty ? FontWeight.normal : FontWeight.bold,
               ),
             ),
             Icon(
@@ -695,7 +706,7 @@ class _PickCarDash2State extends State<PickCarDash2> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius:
-          BorderRadius.circular(8), // Adjust to match the outer container
+              BorderRadius.circular(8), // Adjust to match the outer container
         ),
       ),
     );

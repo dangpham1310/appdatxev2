@@ -6,7 +6,6 @@ class DeniedPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         middle: Text("Không Thể Nhận Chuyến",
             style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.red,

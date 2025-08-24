@@ -68,7 +68,6 @@ class _DetailsPageState extends State<DetailsPage> {
     return CupertinoPageScaffold(
       backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-            automaticBackgroundVisibility: false,
         middle: Text("Thông Tin Chi Tiết Chuyến Đi",
             style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF40B59F),
