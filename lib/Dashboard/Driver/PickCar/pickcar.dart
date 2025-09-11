@@ -431,7 +431,7 @@ class _PickCarState extends State<PickCar> {
       final response = await http.post(
         Uri.parse('https://api.donvaden.net/api/pickcar'), // URL API thực tế
         body: {
-          'pickUp': '0',
+          'pickUp': _bookingController.text.trim(),
           'pickDrop': '0',
           'date': formattedDate,
           'time': formattedTime, // Sẽ có dạng HH:mm, ví dụ: 14:05
@@ -441,7 +441,7 @@ class _PickCarState extends State<PickCar> {
               ? 'N/A'
               : _customerPhoneController.text.trim(),
           'phonenumberpick': phonenumberpick, // Số điện thoại từ SharedPreferences
-          'note': _bookingController.text.trim(),
+          'note':  "",
         },
       );
 
