@@ -402,6 +402,11 @@ class _PickCarState extends State<PickCar> {
       return;
     }
 
+    if (_customerPhoneController.text.trim().isEmpty) {
+      _showErrorDialog('Vui lòng nhập số điện thoại khách hàng');
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -437,9 +442,7 @@ class _PickCarState extends State<PickCar> {
           'time': formattedTime, // Sẽ có dạng HH:mm, ví dụ: 14:05
           'numberofSeat': '4', // Mặc định 4 ghế
           'price': finalPrice,
-          'phonenumber': _customerPhoneController.text.trim().isEmpty
-              ? 'N/A'
-              : _customerPhoneController.text.trim(),
+          'phonenumber': _customerPhoneController.text.trim(),
           'phonenumberpick': phonenumberpick, // Số điện thoại từ SharedPreferences
           'note':  "",
         },
@@ -463,7 +466,7 @@ class _PickCarState extends State<PickCar> {
 
       String url2 = 'https://api.donvaden.net/api/sendNotification';
 
-      final response2 = await http.post(
+      await http.post(
         Uri.parse(url2),
         body: {
           'pickUp': '0',
@@ -553,7 +556,7 @@ class _PickCarState extends State<PickCar> {
                     // Form fields - simplified
                     _buildSimpleField(
                       'Thông tin chuyến đi',
-                      '"Thời gian", "Số lượng khách", "Điểm đón", "Điểm Đến", "Giá Tiền"',
+                      '"Thời gian", "Số lượng khách", "Điểm đón", "Điểm Đến", "Giá Tiền "',
                       _bookingController,
                       CupertinoIcons.location_solid,
                       maxLines: null,
@@ -563,7 +566,7 @@ class _PickCarState extends State<PickCar> {
                     SizedBox(height: 16),
 
                     _buildSimpleField(
-                      'Giá tiền',
+                      'Giá tiền\n(Cắt 20% cho chủ lịch)',
                       'Để trống nếu miễn phí',
                       _priceController,
                       CupertinoIcons.money_dollar,
@@ -576,7 +579,7 @@ class _PickCarState extends State<PickCar> {
 
                     _buildSimpleField(
                       'Số điện thoại khách',
-                      'Để trống nếu dùng số của bạn',
+                      'Bắt buộc nhập số khách hàng, cho tài xế tiện nhận chuyến',
                       _customerPhoneController,
                       CupertinoIcons.phone_solid,
                       keyboardType: TextInputType.phone,
@@ -631,6 +634,7 @@ class _PickCarState extends State<PickCar> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(
               icon,
@@ -638,12 +642,15 @@ class _PickCarState extends State<PickCar> {
               size: 20,
             ),
             SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: label.contains('\n') ? 14 : 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                  height: 1.2,
+                ),
               ),
             ),
           ],
