@@ -402,11 +402,6 @@ class _PickCarState extends State<PickCar> {
       return;
     }
 
-    if (_customerPhoneController.text.trim().isEmpty) {
-      _showErrorDialog('Vui lòng nhập số điện thoại khách hàng');
-      return;
-    }
-
     setState(() {
       _isLoading = true;
     });
@@ -566,7 +561,7 @@ class _PickCarState extends State<PickCar> {
                     SizedBox(height: 16),
 
                     _buildSimpleField(
-                      'Giá tiền\n(Cắt 20% cho chủ lịch)',
+                      'Giá tiền\n(Cắt 30% cho chủ lịch)',
                       'Để trống nếu miễn phí',
                       _priceController,
                       CupertinoIcons.money_dollar,
@@ -579,7 +574,7 @@ class _PickCarState extends State<PickCar> {
 
                     _buildSimpleField(
                       'Số điện thoại khách',
-                      'Bắt buộc nhập số khách hàng, cho tài xế tiện nhận chuyến',
+                      'Nhập số khách hàng (tùy chọn), cho tài xế tiện nhận chuyến',
                       _customerPhoneController,
                       CupertinoIcons.phone_solid,
                       keyboardType: TextInputType.phone,
